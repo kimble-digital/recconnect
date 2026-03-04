@@ -1,0 +1,214 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with RecConnect. Reach us via WhatsApp, email, or LinkedIn — we'd love to hear from you."
+>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-14 md:pt-44 md:pb-20">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
+
+    <div class="container-wide relative z-10">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          Get in <span class="text-primary">Touch</span>
+        </h1>
+        <p class="text-lg text-slate-400 leading-relaxed">
+          Whether you're a recruitment leader looking to join, a supplier wanting to connect, or just curious about what we do — we'd love to hear from you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT CARDS ═══ -->
+  <section class="bg-white py-14 md:py-20">
+    <div class="container-wide">
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+        <!-- WhatsApp -->
+        <a
+          href="https://wa.me/447379123176"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group relative flex flex-col items-center text-center p-8 rounded-2xl border border-slate-200 hover:border-emerald-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+        >
+          <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center mb-5 group-hover:bg-emerald-100 transition-colors">
+            <svg class="w-7 h-7 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-brand-navy mb-1">WhatsApp</h3>
+          <p class="text-sm text-slate-500 mb-4">The fastest way to reach us. Message us directly or join our community groups.</p>
+          <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 group-hover:gap-2.5 transition-all">
+            Message us
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </span>
+        </a>
+
+        <!-- Email -->
+        <a
+          href="mailto:hello@recconnect.co"
+          class="group relative flex flex-col items-center text-center p-8 rounded-2xl border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+        >
+          <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/15 transition-colors">
+            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-brand-navy mb-1">Email</h3>
+          <p class="text-sm text-slate-500 mb-4">For partnerships, sponsorships, or detailed enquiries.</p>
+          <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-primary group-hover:gap-2.5 transition-all">
+            hello@recconnect.co
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </span>
+        </a>
+
+        <!-- LinkedIn -->
+        <a
+          href="https://www.linkedin.com/company/recconnect"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group relative flex flex-col items-center text-center p-8 rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+        >
+          <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:bg-blue-100 transition-colors">
+            <svg class="w-7 h-7 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-brand-navy mb-1">LinkedIn</h3>
+          <p class="text-sm text-slate-500 mb-4">Follow us for industry updates, event announcements, and community news.</p>
+          <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 group-hover:gap-2.5 transition-all">
+            Follow us
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SIMON SECTION ═══ -->
+  <section class="bg-slate-50 border-t border-slate-200 py-14 md:py-20">
+    <div class="container-wide">
+      <div class="max-w-3xl mx-auto">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+          <div class="flex-shrink-0">
+            <div class="w-28 h-28 rounded-2xl overflow-hidden bg-brand-navy">
+              <img
+                src="/images/authors/simon-lewis.jpg"
+                alt="Simon Lewis"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-primary mb-1">Founder, RecConnect</p>
+            <h2 class="text-2xl font-bold text-brand-navy mb-3">Simon Lewis</h2>
+            <p class="text-slate-600 leading-relaxed mb-5">
+              With over 20 years in the recruitment industry, Simon founded RecConnect to bring recruitment leaders together. Whether you want to chat about membership, events, partnerships, or just the state of the market — his door is always open.
+            </p>
+            <div class="flex flex-wrap items-center gap-4">
+              <a
+                href="https://wa.me/447379123176"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-brand-navy text-white text-sm font-medium rounded-lg hover:bg-brand-slate transition-colors"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                WhatsApp Simon
+              </a>
+              <a
+                href="https://www.linkedin.com/in/simonlewisrecconnect/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                LinkedIn
+              </a>
+              <a
+                href="mailto:simon@recconnect.co"
+                class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-primary transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                simon@recconnect.co
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ JOIN CTA ═══ -->
+  <section class="relative overflow-hidden bg-[#0a0e17] py-14 md:py-20">
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22469%22%20y2%3D%2214%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22160%22%20y2%3D%2250%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22197%22%20y2%3D%22150%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22492%22%20y2%3D%22510%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22541%22%20y2%3D%2276%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22406%22%20y2%3D%2272%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22448%22%20y1%3D%22425%22%20x2%3D%22481%22%20y2%3D%22478%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22435%22%20y1%3D%22138%22%20x2%3D%22368%22%20y2%3D%2282%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22227%22%20y1%3D%22514%22%20x2%3D%22178%22%20y2%3D%22453%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%2282%22%20y1%3D%2266%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22368%22%20y2%3D%22164%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2271%22%20y1%3D%22180%22%20x2%3D%22137%22%20y2%3D%22216%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22492%22%20y1%3D%22510%22%20x2%3D%22431%22%20y2%3D%22462%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22188%22%20y1%3D%22178%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22218%22%20y1%3D%22553%22%20x2%3D%22221%22%20y2%3D%22547%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22221%22%20y1%3D%22547%22%20x2%3D%22292%22%20y2%3D%22588%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22444%22%20y1%3D%22407%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22694%22%20y1%3D%22193%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%22164%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22407%22%20y1%3D%2263%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22682%22%20y1%3D%2299%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22215%22%20y1%3D%22300%22%20x2%3D%22165%22%20y2%3D%22227%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22165%22%20y1%3D%22227%22%20x2%3D%22227%22%20y2%3D%22292%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22726%22%20y1%3D%22357%22%20x2%3D%22735%22%20y2%3D%22448%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2225%22%20y1%3D%22549%22%20x2%3D%22113%22%20y2%3D%22553%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22197%22%20y1%3D%22150%22%20x2%3D%22167%22%20y2%3D%22191%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%2260%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%22106%22%20x2%3D%22681%22%20y2%3D%2251%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22509%22%20cy%3D%2225%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22201%22%20cy%3D%2291%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22538%22%20cy%3D%22527%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22471%22%20cy%3D%2228%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22181%22%20cy%3D%22303%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22448%22%20cy%3D%22425%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22435%22%20cy%3D%22138%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22514%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22555%22%20cy%3D%22207%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22453%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2266%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22481%22%20cy%3D%22478%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%2282%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%22180%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22492%22%20cy%3D%22510%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%2250%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22188%22%20cy%3D%22178%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22677%22%20cy%3D%22513%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22379%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22137%22%20cy%3D%22216%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22218%22%20cy%3D%22553%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%22378%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22579%22%20cy%3D%22105%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22221%22%20cy%3D%22547%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22444%22%20cy%3D%22407%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22189%22%20cy%3D%2229%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22323%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22694%22%20cy%3D%22193%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22399%22%20cy%3D%22523%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%22164%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22591%22%20cy%3D%22323%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22466%22%20cy%3D%22531%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22292%22%20cy%3D%22588%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22407%22%20cy%3D%2263%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22682%22%20cy%3D%2299%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22628%22%20cy%3D%22255%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22356%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22423%22%20cy%3D%22573%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22541%22%20cy%3D%2276%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22596%22%20cy%3D%22456%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%22262%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%22429%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22215%22%20cy%3D%22300%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22406%22%20cy%3D%2272%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22243%22%20cy%3D%22381%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%22227%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22431%22%20cy%3D%22462%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22726%22%20cy%3D%22357%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%22549%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22197%22%20cy%3D%22150%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%2260%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22646%22%20cy%3D%22577%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22607%22%20cy%3D%2284%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%22106%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22690%22%20cy%3D%22255%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22735%22%20cy%3D%22448%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22167%22%20cy%3D%22191%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22517%22%20cy%3D%22264%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22362%22%20cy%3D%22154%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22274%22%20cy%3D%22351%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22469%22%20cy%3D%2214%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22502%22%20cy%3D%22143%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22681%22%20cy%3D%2251%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22292%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22113%22%20cy%3D%22553%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/6 rounded-full blur-[150px]"></div>
+    <div class="container-wide relative z-10">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight text-center">
+          Ready to Join?
+        </h2>
+        <p class="text-slate-400 text-center mb-10 max-w-xl mx-auto">
+          Whether you're a recruitment professional or a supplier to the industry, there's a place for you at RecConnect.
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-6">
+          <!-- Member -->
+          <div class="rounded-xl border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.06] transition-colors">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">Recruitment Professionals</h3>
+                <p class="text-xs text-slate-400">From £39/month</p>
+              </div>
+            </div>
+            <p class="text-sm text-slate-400 mb-5">WhatsApp groups, events, insights, supplier discounts, and a community of peers who get it.</p>
+            <a href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06" target="_blank" rel="noopener noreferrer" class="btn-primary w-full text-sm py-2.5">
+              Join as Member
+            </a>
+          </div>
+
+          <!-- Supplier -->
+          <div class="rounded-xl border border-white/10 bg-white/[0.03] p-6 hover:bg-white/[0.06] transition-colors">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.15c0 .415.336.75.75.75z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">Suppliers & Partners</h3>
+                <p class="text-xs text-slate-400">£149/month</p>
+              </div>
+            </div>
+            <p class="text-sm text-slate-400 mb-5">Directory listing, event sponsorship, direct access to recruitment decision-makers.</p>
+            <a href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06" target="_blank" rel="noopener noreferrer" class="btn-outline-light w-full text-sm py-2.5">
+              Join as Supplier
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,374 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SupplierCard from '@/components/SupplierCard.astro';
+import { suppliersData } from '@/data/suppliers';
+// Future Contentful swap:
+// import { getSuppliers, getCategories } from '@/lib/contentful';
+// const suppliers = await getSuppliers({ order: 'fields.name' });
+
+// ─── Prepare data ────────────────────────────────────────────────────
+const suppliers = suppliersData;
+
+// Extract unique categories sorted alphabetically
+const allCategories = [...new Set(suppliers.flatMap(s => s.categories))].sort();
+
+// Separate featured from rest
+const featured = suppliers.filter(s => s.featured);
+const allSorted = [...suppliers].sort((a, b) => a.name.localeCompare(b.name));
+
+// Category counts
+const categoryCounts: Record<string, number> = {};
+for (const cat of allCategories) {
+  categoryCounts[cat] = suppliers.filter(s => s.categories.includes(cat)).length;
+}
+---
+
+<BaseLayout
+  title="Supplier Directory"
+  description={`Discover trusted recruitment tools and services recommended by our community. Browse ${suppliers.length}+ suppliers across ${allCategories.length} categories.`}
+>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-12 md:pt-44 md:pb-16 transition-all duration-500" id="hero-section">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
+
+    <div class="container-wide relative z-10 text-center">
+      {/* Collapsible intro — fades/collapses when searching */}
+      <div id="hero-intro" class="transition-all duration-500 overflow-hidden" style="max-height: 400px; opacity: 1;">
+        <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+          <span class="text-primary text-sm font-medium">{suppliers.length} trusted suppliers</span>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+          Supplier <span class="text-primary">Directory</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
+          Discover tools, platforms and services trusted by the UK recruitment community — all vetted and recommended by your peers.
+        </p>
+      </div>
+
+      {/* Search bar — always visible */}
+      <div class="max-w-xl mx-auto">
+        <div class="relative group">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search by name, category or service..."
+            class="w-full pl-12 pr-12 py-3.5 bg-white/[0.07] backdrop-blur border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/30 transition-all"
+            id="supplier-search"
+          />
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden" id="search-clear">
+            <button class="p-1 rounded-md text-slate-500 hover:text-white hover:bg-white/10 transition-colors" aria-label="Clear search">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Live search results indicator — appears when typing */}
+        <div id="search-results-hint" class="mt-3 transition-all duration-300 overflow-hidden" style="max-height: 0; opacity: 0;">
+          <p class="text-sm text-slate-400">
+            <span id="search-results-count" class="text-primary font-medium">0 results</span>
+            <span class="text-slate-500 mx-1.5">·</span>
+            <button id="scroll-to-results" class="text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1">
+              View results
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CATEGORY PILLS ═══ -->
+  <section class="bg-brand-navy pb-10">
+    <div class="container-wide">
+      <div class="flex flex-wrap justify-center gap-2" id="category-filters" role="tablist">
+        <button class="category-pill active" data-category="all" role="tab" aria-selected="true">
+          All <span class="pill-count">{suppliers.length}</span>
+        </button>
+        {allCategories.map(cat => (
+          <button class="category-pill" data-category={cat} role="tab" aria-selected="false">
+            {cat} <span class="pill-count">{categoryCounts[cat]}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURED PARTNERS ═══ -->
+  {featured.length > 0 && (
+    <section class="bg-slate-50 py-12 md:py-16 border-b border-slate-200" id="featured-section">
+      <div class="container-wide">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-amber-100">
+            <svg class="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-brand-navy">Featured Partners</h2>
+            <p class="text-sm text-slate-500">Recommended by the RecConnect community</p>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {featured.map(s => (
+            <SupplierCard {...s} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ═══ ALL SUPPLIERS GRID ═══ -->
+  <section class="bg-white py-12 md:py-16" id="results-section">
+    <div class="container-wide">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-xl font-bold text-brand-navy">All Suppliers</h2>
+          <p class="text-sm text-slate-500" id="results-count">
+            Showing {allSorted.length} suppliers across {allCategories.length} categories
+          </p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="suppliers-grid">
+        {allSorted.map(s => (
+          <SupplierCard {...s} />
+        ))}
+      </div>
+
+      {/* Empty state */}
+      <div class="hidden text-center py-16" id="empty-state">
+        <div class="w-16 h-16 rounded-2xl bg-slate-100 mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-brand-navy mb-1">No suppliers found</h3>
+        <p class="text-slate-500 text-sm mb-4">Try a different search term or category.</p>
+        <button class="text-primary font-medium text-sm hover:underline" id="clear-filters">Clear all filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BECOME A SUPPLIER CTA ═══ -->
+  <section class="relative overflow-hidden bg-[#0a0e17] py-16 md:py-20">
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22469%22%20y2%3D%2214%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22160%22%20y2%3D%2250%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22197%22%20y2%3D%22150%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22492%22%20y2%3D%22510%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22541%22%20y2%3D%2276%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22406%22%20y2%3D%2272%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22448%22%20y1%3D%22425%22%20x2%3D%22481%22%20y2%3D%22478%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22435%22%20y1%3D%22138%22%20x2%3D%22368%22%20y2%3D%2282%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22227%22%20y1%3D%22514%22%20x2%3D%22178%22%20y2%3D%22453%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%2282%22%20y1%3D%2266%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22368%22%20y2%3D%22164%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2271%22%20y1%3D%22180%22%20x2%3D%22137%22%20y2%3D%22216%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22492%22%20y1%3D%22510%22%20x2%3D%22431%22%20y2%3D%22462%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22188%22%20y1%3D%22178%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22218%22%20y1%3D%22553%22%20x2%3D%22221%22%20y2%3D%22547%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22221%22%20y1%3D%22547%22%20x2%3D%22292%22%20y2%3D%22588%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22444%22%20y1%3D%22407%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22694%22%20y1%3D%22193%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%22164%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22407%22%20y1%3D%2263%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22682%22%20y1%3D%2299%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22215%22%20y1%3D%22300%22%20x2%3D%22165%22%20y2%3D%22227%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22165%22%20y1%3D%22227%22%20x2%3D%22227%22%20y2%3D%22292%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22726%22%20y1%3D%22357%22%20x2%3D%22735%22%20y2%3D%22448%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2225%22%20y1%3D%22549%22%20x2%3D%22113%22%20y2%3D%22553%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22197%22%20y1%3D%22150%22%20x2%3D%22167%22%20y2%3D%22191%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%2260%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%22106%22%20x2%3D%22681%22%20y2%3D%2251%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22509%22%20cy%3D%2225%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22201%22%20cy%3D%2291%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22538%22%20cy%3D%22527%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22471%22%20cy%3D%2228%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22181%22%20cy%3D%22303%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22448%22%20cy%3D%22425%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22435%22%20cy%3D%22138%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22514%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22555%22%20cy%3D%22207%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22453%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2266%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22481%22%20cy%3D%22478%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%2282%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%22180%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22492%22%20cy%3D%22510%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%2250%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22188%22%20cy%3D%22178%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22677%22%20cy%3D%22513%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22379%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22137%22%20cy%3D%22216%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22218%22%20cy%3D%22553%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%22378%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22579%22%20cy%3D%22105%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22221%22%20cy%3D%22547%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22444%22%20cy%3D%22407%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22189%22%20cy%3D%2229%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22323%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22694%22%20cy%3D%22193%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22399%22%20cy%3D%22523%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%22164%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22591%22%20cy%3D%22323%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22466%22%20cy%3D%22531%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22292%22%20cy%3D%22588%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22407%22%20cy%3D%2263%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22682%22%20cy%3D%2299%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22628%22%20cy%3D%22255%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22356%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22423%22%20cy%3D%22573%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22541%22%20cy%3D%2276%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22596%22%20cy%3D%22456%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%22262%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%22429%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22215%22%20cy%3D%22300%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22406%22%20cy%3D%2272%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22243%22%20cy%3D%22381%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%22227%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22431%22%20cy%3D%22462%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22726%22%20cy%3D%22357%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%22549%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22197%22%20cy%3D%22150%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%2260%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22646%22%20cy%3D%22577%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22607%22%20cy%3D%2284%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%22106%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22690%22%20cy%3D%22255%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22735%22%20cy%3D%22448%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22167%22%20cy%3D%22191%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22517%22%20cy%3D%22264%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22362%22%20cy%3D%22154%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22274%22%20cy%3D%22351%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22469%22%20cy%3D%2214%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22502%22%20cy%3D%22143%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22681%22%20cy%3D%2251%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22292%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22113%22%20cy%3D%22553%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/6 rounded-full blur-[150px]"></div>
+    <div class="container-narrow text-center relative z-10">
+      <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
+        <span class="text-primary text-sm font-medium">Supplier Membership</span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+        Want to Reach Our Community?
+      </h2>
+      <p class="text-slate-400 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
+        Join as a supplier partner and get your product or service in front of hundreds of recruitment decision-makers.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/join?tier=supplier" class="btn-primary text-base px-8 py-3.5">
+          Become a Partner — £149/month
+        </a>
+        <a href="/contact" class="btn-outline-light text-base px-8 py-3.5">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<!-- ═══ STYLES ═══ -->
+<style>
+  .category-pill {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium 
+           transition-all duration-200 cursor-pointer border
+           bg-white/[0.05] border-white/10 text-slate-400 hover:text-white hover:bg-white/10;
+  }
+  .category-pill.active {
+    @apply bg-primary border-primary text-white shadow-sm shadow-primary/20;
+  }
+  .pill-count {
+    @apply text-xs opacity-60;
+  }
+  .category-pill.active .pill-count {
+    @apply opacity-80;
+  }
+
+  .supplier-card {
+    animation: cardIn 0.3s ease-out both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .supplier-card:nth-child(1) { animation-delay: 0ms; }
+  .supplier-card:nth-child(2) { animation-delay: 30ms; }
+  .supplier-card:nth-child(3) { animation-delay: 60ms; }
+  .supplier-card:nth-child(4) { animation-delay: 90ms; }
+  .supplier-card:nth-child(5) { animation-delay: 120ms; }
+  .supplier-card:nth-child(6) { animation-delay: 150ms; }
+  .supplier-card:nth-child(7) { animation-delay: 180ms; }
+  .supplier-card:nth-child(8) { animation-delay: 210ms; }
+</style>
+
+<!-- ═══ CLIENT-SIDE FILTERING ═══ -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('supplier-search') as HTMLInputElement;
+    const searchClear = document.getElementById('search-clear') as HTMLElement;
+    const grid = document.getElementById('suppliers-grid') as HTMLElement;
+    const featuredSection = document.getElementById('featured-section') as HTMLElement | null;
+    const emptyState = document.getElementById('empty-state') as HTMLElement;
+    const resultsCount = document.getElementById('results-count') as HTMLElement;
+    const resultsSection = document.getElementById('results-section') as HTMLElement;
+    const clearFiltersBtn = document.getElementById('clear-filters') as HTMLElement;
+    const pills = document.querySelectorAll('.category-pill') as NodeListOf<HTMLButtonElement>;
+    const cards = grid.querySelectorAll('.supplier-card') as NodeListOf<HTMLElement>;
+
+    // Hero collapse elements
+    const heroSection = document.getElementById('hero-section') as HTMLElement;
+    const heroIntro = document.getElementById('hero-intro') as HTMLElement;
+    const searchHint = document.getElementById('search-results-hint') as HTMLElement;
+    const searchCountEl = document.getElementById('search-results-count') as HTMLElement;
+    const scrollToResultsBtn = document.getElementById('scroll-to-results') as HTMLElement;
+
+    let activeCategory = 'all';
+    let searchTerm = '';
+
+    // Collapse/expand the hero intro based on search state
+    function updateHeroState(isSearching: boolean) {
+      if (isSearching) {
+        heroIntro.style.maxHeight = '0px';
+        heroIntro.style.opacity = '0';
+        heroIntro.style.marginBottom = '0';
+        heroSection.style.paddingBottom = '2rem';
+        searchHint.style.maxHeight = '40px';
+        searchHint.style.opacity = '1';
+      } else {
+        heroIntro.style.maxHeight = '400px';
+        heroIntro.style.opacity = '1';
+        heroIntro.style.marginBottom = '';
+        heroSection.style.paddingBottom = '';
+        searchHint.style.maxHeight = '0';
+        searchHint.style.opacity = '0';
+      }
+    }
+
+    // Gentle scroll to results
+    function scrollToResults() {
+      const rect = resultsSection.getBoundingClientRect();
+      if (rect.top > 120) {
+        const targetY = resultsSection.offsetTop - 80;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
+    }
+
+    function filterCards(shouldScroll = false) {
+      let visible = 0;
+
+      cards.forEach(card => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.description || '';
+        const cats: string[] = JSON.parse(card.dataset.categories || '[]');
+
+        const matchesCategory = activeCategory === 'all' || cats.includes(activeCategory);
+        const matchesSearch = !searchTerm ||
+          name.includes(searchTerm) ||
+          desc.includes(searchTerm) ||
+          cats.some(c => c.toLowerCase().includes(searchTerm));
+
+        const show = matchesCategory && matchesSearch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      // Update count text
+      if (searchTerm || activeCategory !== 'all') {
+        const label = activeCategory !== 'all' ? ` in ${activeCategory}` : '';
+        resultsCount.textContent = `Showing ${visible} supplier${visible !== 1 ? 's' : ''}${label}`;
+      } else {
+        resultsCount.textContent = `Showing ${cards.length} suppliers across all categories`;
+      }
+
+      // Update search hint count
+      searchCountEl.textContent = `${visible} result${visible !== 1 ? 's' : ''} found`;
+
+      // Toggle empty state
+      emptyState.classList.toggle('hidden', visible > 0);
+      grid.classList.toggle('hidden', visible === 0);
+
+      // Hide featured section when filtering
+      if (featuredSection) {
+        featuredSection.style.display = (activeCategory !== 'all' || searchTerm) ? 'none' : '';
+      }
+
+      // Show/hide search clear
+      searchClear.style.display = searchTerm ? '' : 'none';
+
+      // Scroll to results when clicking category pills
+      if (shouldScroll && (searchTerm || activeCategory !== 'all')) {
+        scrollToResults();
+      }
+    }
+
+    // Search: collapse hero, filter in place, no scroll
+    searchInput.addEventListener('input', () => {
+      searchTerm = searchInput.value.toLowerCase().trim();
+      activeCategory = 'all';
+      pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+      pills[0]?.classList.add('active');
+      pills[0]?.setAttribute('aria-selected', 'true');
+      updateHeroState(!!searchTerm);
+      filterCards(false);
+    });
+
+    // "View results" link in search hint
+    scrollToResultsBtn?.addEventListener('click', () => {
+      scrollToResults();
+    });
+
+    searchClear.querySelector('button')?.addEventListener('click', () => {
+      searchInput.value = '';
+      searchTerm = '';
+      updateHeroState(activeCategory !== 'all');
+      filterCards(false);
+      if (activeCategory === 'all') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      searchInput.focus();
+    });
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+        pill.classList.add('active');
+        pill.setAttribute('aria-selected', 'true');
+        activeCategory = pill.dataset.category || 'all';
+        updateHeroState(activeCategory !== 'all' || !!searchTerm);
+        filterCards(false);
+      });
+    });
+
+    clearFiltersBtn?.addEventListener('click', () => {
+      searchInput.value = '';
+      searchTerm = '';
+      activeCategory = 'all';
+      updateHeroState(false);
+      pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+      pills[0]?.classList.add('active');
+      pills[0]?.setAttribute('aria-selected', 'true');
+      filterCards(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>

@@ -1,0 +1,322 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// ─── Eventbrite config ──────────────────────────────────────────────
+// To enable: add EVENTBRITE_TOKEN to .env
+// Get your token: Eventbrite → Account Settings → Developer Links → API Keys
+// Org ID: found via GET /v3/users/me/organizations/ with your token
+const EB_TOKEN = import.meta.env.EVENTBRITE_TOKEN || '';
+const EB_ORG_ID = import.meta.env.EVENTBRITE_ORG_ID || '';
+const EB_ORGANIZER_URL = 'https://www.eventbrite.co.uk/o/recconnect-events-18388567194';
+
+interface EBEvent {
+  id: string;
+  name: { text: string; html: string };
+  description: { text: string; html: string } | null;
+  summary: string;
+  url: string;
+  start: { local: string; utc: string; timezone: string };
+  end: { local: string; utc: string; timezone: string };
+  status: string;
+  is_free: boolean;
+  online_event: boolean;
+  logo: { url: string; original: { url: string } } | null;
+  venue?: {
+    name: string;
+    address: {
+      localized_address_display: string;
+      city: string;
+      region: string;
+    };
+  } | null;
+  ticket_availability?: {
+    is_sold_out: boolean;
+    minimum_ticket_price?: { display: string };
+    maximum_ticket_price?: { display: string };
+  };
+}
+
+let events: EBEvent[] = [];
+let fetchError = false;
+
+if (EB_TOKEN && EB_ORG_ID) {
+  try {
+    const res = await fetch(
+      `https://www.eventbriteapi.com/v3/organizations/${EB_ORG_ID}/events/?status=live,started&expand=venue,ticket_availability&order_by=start_asc`,
+      { headers: { Authorization: `Bearer ${EB_TOKEN}` } }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      events = data.events || [];
+    } else {
+      console.error(`Eventbrite API error: ${res.status}`);
+      fetchError = true;
+    }
+  } catch (e) {
+    console.error('Eventbrite fetch failed:', e);
+    fetchError = true;
+  }
+}
+
+const hasApiConfig = !!(EB_TOKEN && EB_ORG_ID);
+
+// Past events could be fetched separately if wanted
+// For now we just show upcoming/live events
+
+function formatEventDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function formatEventTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function getEventMonth(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-GB', { month: 'short' }).toUpperCase();
+}
+
+function getEventDay(dateStr: string) {
+  return new Date(dateStr).getDate().toString();
+}
+---
+
+<BaseLayout
+  title="Events"
+  description="Join RecConnect at in-person and online events for recruitment leaders. Summits, workshops, networking, and more."
+>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-12 md:pt-44 md:pb-16">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
+
+    <div class="container-wide relative z-10 text-center">
+      <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
+        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <span class="text-primary text-sm font-medium">{events.length > 0 ? `${events.length} upcoming event${events.length !== 1 ? 's' : ''}` : 'Events for recruitment leaders'}</span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+        RecConnect <span class="text-primary">Events</span>
+      </h1>
+      <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Summits, workshops, networking, and immersive experiences — in-person and online. Where recruitment leaders connect, learn, and grow.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ EVENTS LIST ═══ -->
+  <section class="bg-white py-12 md:py-16">
+    <div class="container-wide max-w-4xl">
+
+      {/* API connected — show live events */}
+      {events.length > 0 && (
+        <div class="space-y-6">
+          {events.map((event) => (
+            <a
+              href={event.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex flex-col sm:flex-row gap-5 p-5 md:p-6 rounded-xl border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+            >
+              {/* Date badge */}
+              <div class="flex-shrink-0 flex sm:flex-col items-center sm:items-center gap-2 sm:gap-0 sm:w-20 sm:pt-1">
+                <span class="text-xs font-bold text-primary tracking-wider">{getEventMonth(event.start.local)}</span>
+                <span class="text-3xl sm:text-4xl font-bold text-brand-navy leading-none">{getEventDay(event.start.local)}</span>
+              </div>
+
+              {/* Event details */}
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                  {event.online_event && (
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Online
+                    </span>
+                  )}
+                  {!event.online_event && (
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-primary/5 text-primary border border-primary/10">
+                      In Person
+                    </span>
+                  )}
+                  {event.is_free && (
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                      Free
+                    </span>
+                  )}
+                  {event.ticket_availability?.is_sold_out && (
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-red-50 text-red-600 border border-red-100">
+                      Sold Out
+                    </span>
+                  )}
+                </div>
+
+                <h3 class="text-lg font-bold text-brand-navy group-hover:text-primary transition-colors leading-snug mb-2">
+                  {event.name.text}
+                </h3>
+
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mb-2">
+                  <span class="inline-flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {formatEventTime(event.start.local)} – {formatEventTime(event.end.local)}
+                  </span>
+                  {event.venue && (
+                    <span class="inline-flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {event.venue.name}{event.venue.address?.city ? `, ${event.venue.address.city}` : ''}
+                    </span>
+                  )}
+                  {!event.is_free && event.ticket_availability?.minimum_ticket_price && (
+                    <span class="inline-flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                      </svg>
+                      From {event.ticket_availability.minimum_ticket_price.display}
+                    </span>
+                  )}
+                </div>
+
+                {event.summary && (
+                  <p class="text-sm text-slate-600 line-clamp-2">{event.summary}</p>
+                )}
+              </div>
+
+              {/* Thumbnail */}
+              {event.logo && (
+                <div class="hidden md:block flex-shrink-0 w-40 rounded-lg overflow-hidden">
+                  <img
+                    src={event.logo.url}
+                    alt={event.name.text}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+
+              {/* Arrow */}
+              <div class="hidden sm:flex flex-shrink-0 items-center">
+                <svg class="w-5 h-5 text-slate-300 group-hover:text-primary group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {/* No API config or no events — show Eventbrite link */}
+      {events.length === 0 && (
+        <div class="text-center py-12">
+          {!hasApiConfig ? (
+            <div class="max-w-lg mx-auto">
+              <div class="w-16 h-16 rounded-2xl bg-primary/10 mx-auto mb-5 flex items-center justify-center">
+                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-brand-navy mb-3">Our Events</h2>
+              <p class="text-slate-600 mb-6 leading-relaxed">
+                We run summits, workshops, networking lunches, and immersive experiences for recruitment leaders throughout the year.
+              </p>
+              <a
+                href={EB_ORGANIZER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-primary inline-flex items-center gap-2"
+              >
+                View All Events on Eventbrite
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+              <p class="text-xs text-slate-400 mt-4">
+                Events are managed through Eventbrite and will appear here automatically once connected.
+              </p>
+            </div>
+          ) : (
+            <div class="max-w-lg mx-auto">
+              <div class="w-16 h-16 rounded-2xl bg-slate-100 mx-auto mb-5 flex items-center justify-center">
+                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold text-brand-navy mb-2">No Upcoming Events</h2>
+              <p class="text-slate-500 mb-6">We're planning our next event. Check back soon or browse our past events.</p>
+              <a
+                href={EB_ORGANIZER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-primary inline-flex items-center gap-2"
+              >
+                Browse on Eventbrite
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Always show Eventbrite link when events are present */}
+      {events.length > 0 && (
+        <div class="text-center mt-10 pt-8 border-t border-slate-100">
+          <a
+            href={EB_ORGANIZER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-primary transition-colors"
+          >
+            View all events on Eventbrite
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="relative overflow-hidden bg-[#0a0e17] py-16 md:py-20">
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22469%22%20y2%3D%2214%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22160%22%20y2%3D%2250%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22197%22%20y2%3D%22150%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22492%22%20y2%3D%22510%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22541%22%20y2%3D%2276%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22406%22%20y2%3D%2272%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22448%22%20y1%3D%22425%22%20x2%3D%22481%22%20y2%3D%22478%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22435%22%20y1%3D%22138%22%20x2%3D%22368%22%20y2%3D%2282%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22227%22%20y1%3D%22514%22%20x2%3D%22178%22%20y2%3D%22453%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%2282%22%20y1%3D%2266%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22368%22%20y2%3D%22164%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2271%22%20y1%3D%22180%22%20x2%3D%22137%22%20y2%3D%22216%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22492%22%20y1%3D%22510%22%20x2%3D%22431%22%20y2%3D%22462%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22188%22%20y1%3D%22178%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22218%22%20y1%3D%22553%22%20x2%3D%22221%22%20y2%3D%22547%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22221%22%20y1%3D%22547%22%20x2%3D%22292%22%20y2%3D%22588%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22444%22%20y1%3D%22407%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22694%22%20y1%3D%22193%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%22164%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22407%22%20y1%3D%2263%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22682%22%20y1%3D%2299%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22215%22%20y1%3D%22300%22%20x2%3D%22165%22%20y2%3D%22227%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22165%22%20y1%3D%22227%22%20x2%3D%22227%22%20y2%3D%22292%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22726%22%20y1%3D%22357%22%20x2%3D%22735%22%20y2%3D%22448%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2225%22%20y1%3D%22549%22%20x2%3D%22113%22%20y2%3D%22553%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22197%22%20y1%3D%22150%22%20x2%3D%22167%22%20y2%3D%22191%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%2260%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%22106%22%20x2%3D%22681%22%20y2%3D%2251%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22509%22%20cy%3D%2225%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22201%22%20cy%3D%2291%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22538%22%20cy%3D%22527%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22471%22%20cy%3D%2228%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22181%22%20cy%3D%22303%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22448%22%20cy%3D%22425%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22435%22%20cy%3D%22138%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22514%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22555%22%20cy%3D%22207%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22453%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2266%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22481%22%20cy%3D%22478%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%2282%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%22180%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22492%22%20cy%3D%22510%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%2250%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22188%22%20cy%3D%22178%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22677%22%20cy%3D%22513%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22379%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22137%22%20cy%3D%22216%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22218%22%20cy%3D%22553%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%22378%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22579%22%20cy%3D%22105%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22221%22%20cy%3D%22547%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22444%22%20cy%3D%22407%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22189%22%20cy%3D%2229%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22323%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22694%22%20cy%3D%22193%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22399%22%20cy%3D%22523%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%22164%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22591%22%20cy%3D%22323%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22466%22%20cy%3D%22531%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22292%22%20cy%3D%22588%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22407%22%20cy%3D%2263%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22682%22%20cy%3D%2299%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22628%22%20cy%3D%22255%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22356%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22423%22%20cy%3D%22573%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22541%22%20cy%3D%2276%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22596%22%20cy%3D%22456%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%22262%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%22429%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22215%22%20cy%3D%22300%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22406%22%20cy%3D%2272%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22243%22%20cy%3D%22381%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%22227%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22431%22%20cy%3D%22462%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22726%22%20cy%3D%22357%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%22549%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22197%22%20cy%3D%22150%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%2260%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22646%22%20cy%3D%22577%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22607%22%20cy%3D%2284%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%22106%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22690%22%20cy%3D%22255%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22735%22%20cy%3D%22448%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22167%22%20cy%3D%22191%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22517%22%20cy%3D%22264%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22362%22%20cy%3D%22154%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22274%22%20cy%3D%22351%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22469%22%20cy%3D%2214%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22502%22%20cy%3D%22143%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22681%22%20cy%3D%2251%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22292%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22113%22%20cy%3D%22553%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/6 rounded-full blur-[150px]"></div>
+    <div class="container-narrow text-center relative z-10">
+      <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
+        <span class="text-primary text-sm font-medium">Members get priority access</span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+        Don't Miss Out
+      </h2>
+      <p class="text-slate-400 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
+        RecConnect members get early access, discounted tickets, and exclusive invites to member-only events.
+      </p>
+      <a href="/join" class="btn-primary text-base px-8 py-3.5">
+        Join RecConnect
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

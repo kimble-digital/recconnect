@@ -1,0 +1,231 @@
+---
+// SupplierCard.astro — Reusable card for supplier directory grid
+// Ready for Contentful: swap props to use Entry<SupplierSkeleton> fields
+
+interface Props {
+  name: string;
+  slug: string;
+  shortDescription?: string;
+  description: string;
+  categories: string[];
+  website?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactName?: string;
+  logoUrl?: string;
+  featured?: boolean;
+  benefit1?: string;
+  benefit2?: string;
+  memberOffer?: string;
+  targetAudience?: string;
+  integrations?: string;
+}
+
+const {
+  name,
+  slug,
+  shortDescription,
+  description,
+  categories,
+  website,
+  contactEmail,
+  contactPhone,
+  contactName,
+  logoUrl,
+  featured,
+  benefit1,
+  benefit2,
+  memberOffer,
+  targetAudience,
+  integrations,
+} = Astro.props;
+
+// Generate initials for the fallback avatar
+const initials = name
+  .split(/[\s-]+/)
+  .filter(w => w.length > 0 && w[0] === w[0].toUpperCase())
+  .slice(0, 2)
+  .map(w => w[0])
+  .join('') || name.slice(0, 2).toUpperCase();
+
+// Deterministic hue from name
+const hues = [210, 160, 340, 25, 270, 190, 45, 300, 140, 15];
+const hash = name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+const hue = hues[hash % hues.length];
+
+// Use shortDescription if available, otherwise description
+const displayDesc = shortDescription || description;
+
+// Determine if we have a real logo URL (external or lovable-uploads)
+const hasLogo = logoUrl && (logoUrl.startsWith('http') || logoUrl.startsWith('/lovable-uploads'));
+
+// Clean member offer — skip generic "Join RecConnect to find out more"
+const showOffer = memberOffer
+  && !memberOffer.toLowerCase().includes('join recconnect')
+  && !memberOffer.toLowerCase().includes('join the club');
+
+const hasContact = contactEmail || contactPhone || website;
+---
+
+<article
+  class:list={[
+    'supplier-card group relative flex flex-col rounded-2xl border transition-all duration-300',
+    'hover:shadow-lg hover:-translate-y-0.5',
+    featured
+      ? 'border-primary/30 bg-gradient-to-b from-primary/[0.04] to-white ring-1 ring-primary/10'
+      : 'border-slate-200 bg-white hover:border-slate-300',
+  ]}
+  data-categories={JSON.stringify(categories)}
+  data-name={name.toLowerCase()}
+  data-description={displayDesc.toLowerCase()}
+  data-slug={slug}
+>
+  {/* Featured ribbon */}
+  {featured && (
+    <div class="absolute -top-3 right-4 z-10">
+      <span class="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white shadow-sm shadow-primary/20">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+        Featured Partner
+      </span>
+    </div>
+  )}
+
+  <div class="flex flex-col flex-1 p-5">
+    {/* Header: Logo + Name + Categories */}
+    <div class="flex items-start gap-3.5 mb-3">
+      {hasLogo ? (
+        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center p-1">
+          <img
+            src={logoUrl}
+            alt={`${name} logo`}
+            class="w-full h-full object-contain"
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <div
+          class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl text-sm font-bold text-white"
+          style={`background: hsl(${hue}, 55%, 48%);`}
+        >
+          {initials}
+        </div>
+      )}
+
+      <div class="min-w-0 flex-1">
+        <h3 class="font-semibold text-brand-navy text-[0.95rem] leading-tight">
+          <a href={`/suppliers/${slug}`} class="hover:text-primary transition-colors">
+            {name}
+          </a>
+        </h3>
+        <div class="flex flex-wrap gap-1.5 mt-1.5">
+          {categories.map(cat => (
+            <span class="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-[0.68rem] font-medium text-slate-600 leading-tight">
+              {cat}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* Description */}
+    <p class="text-slate-600 text-sm leading-relaxed mb-3 line-clamp-3">
+      {displayDesc}
+    </p>
+
+    {/* Key Benefits */}
+    {(benefit1 || benefit2) && (
+      <div class="space-y-2 mb-3">
+        {benefit1 && (
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{benefit1}</p>
+          </div>
+        )}
+        {benefit2 && (
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{benefit2}</p>
+          </div>
+        )}
+      </div>
+    )}
+
+    {/* Member offer badge */}
+    {showOffer && (
+      <div class="mb-3 rounded-lg bg-amber-50 border border-amber-200/60 px-3 py-2">
+        <p class="text-xs text-amber-800 leading-relaxed">
+          <span class="font-semibold">🎁 Member offer:</span> {memberOffer}
+        </p>
+      </div>
+    )}
+
+    {/* Actions footer */}
+    <div class="flex items-center gap-2 pt-3 border-t border-slate-100 mt-auto">
+      <a
+        href={`/suppliers/${slug}`}
+        class="inline-flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-dark transition-colors mr-auto"
+      >
+        View Profile
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+      {website && (
+          <a
+            href={website.startsWith('http') ? website : `https://${website}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-brand-navy px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-slate transition-colors"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            Website
+          </a>
+        )}
+        {contactEmail && (
+          <a
+            href={`mailto:${contactEmail}`}
+            class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-primary hover:bg-blue-50 transition-colors"
+            title={`Email ${contactName || name}`}
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </a>
+        )}
+        {contactPhone && (
+          <a
+            href={`tel:${contactPhone.replace(/[\s()]/g, '')}`}
+            class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+            title={`Call ${contactPhone}`}
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </a>
+        )}
+      </div>
+  </div>
+</article>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import '@/styles/global.css';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  /** Pass true on homepage to enable large logo + scroll-shrink header */
+  heroMode?: boolean;
+}
+
+const { 
+  title, 
+  description = 'Connect with the UK\'s leading recruitment professionals. From intimate networking lunches to comprehensive business summits.',
+  image = '/og-image.png',
+  heroMode = false,
+} = Astro.props;
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://recconnect.co';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- SEO -->
+    <title>{title} | RecConnect</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={`${title} | RecConnect`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${siteUrl}${image}`} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | RecConnect`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}${image}`} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Analytics placeholder -->
+    {import.meta.env.PUBLIC_GA_ID && (
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_GA_ID}`}></script>
+    )}
+  </head>
+  <body>
+    <Header heroMode={heroMode} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

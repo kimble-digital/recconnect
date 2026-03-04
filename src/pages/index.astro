@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroSection from '@/components/home/HeroSection.astro';
+import ContactBar from '@/components/home/ContactBar.astro';
+import MembershipValue from '@/components/home/MembershipValue.astro';
+import WhatYouGet from '@/components/home/WhatYouGet.astro';
+import Testimonials from '@/components/home/Testimonials.astro';
+import StatsSection from '@/components/home/StatsSection.astro';
+import CoreAreas from '@/components/home/CoreAreas.astro';
+import PricingSection from '@/components/home/PricingSection.astro';
+import FinalCTA from '@/components/home/FinalCTA.astro';
+---
+<BaseLayout title="Join the Club. Connect. Grow. Get Results." heroMode={true}>
+  <HeroSection />
+  <ContactBar />
+  <MembershipValue />
+  <WhatYouGet />
+  <Testimonials />
+  <StatsSection />
+  <CoreAreas />
+  <PricingSection />
+  <FinalCTA />
+</BaseLayout>

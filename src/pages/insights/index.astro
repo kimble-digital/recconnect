@@ -1,0 +1,326 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { articles, authors } from '@/data/articles';
+
+const allCount = articles.length;
+const saltCount = articles.filter(a => a.category === 'salt-report').length;
+const recCount = articles.filter(a => a.category === 'rec-matters').length;
+
+const featured = articles[0];
+const secondary = articles.slice(1, 4);
+const remaining = articles.slice(4);
+
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+function readTime(content: string) {
+  return Math.max(2, Math.ceil(content.split(/\s+/).length / 230));
+}
+
+function getCategoryLabel(cat: string) {
+  return cat === 'salt-report' ? 'Salt Report' : 'Rec Matters';
+}
+
+function getAuthorData(name: string) {
+  return authors[name as keyof typeof authors] || { name, slug: '', role: '', headshot: '' };
+}
+---
+
+<BaseLayout
+  title="Industry Insights"
+  description="Expert analysis, market intelligence, and strategic insights for recruitment professionals. The Salt Report and Rec Matters."
+>
+
+  <!-- ═══ MASTHEAD ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy pt-36 md:pt-44">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
+    <div class="container-wide relative z-10">
+      <div class="flex flex-col sm:flex-row items-center justify-between py-5 border-b border-white/10">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            Industry Insights
+          </h1>
+          <p class="text-sm text-slate-400 mt-0.5">Market analysis & leadership thinking for recruitment professionals</p>
+        </div>
+        <div class="flex items-center gap-2 mt-3 sm:mt-0" id="article-filters" role="tablist">
+          <button class="article-pill active" data-filter="all" role="tab" aria-selected="true">
+            All <span class="pill-count">{allCount}</span>
+          </button>
+          <button class="article-pill" data-filter="salt-report" role="tab" aria-selected="false">
+            Salt Report <span class="pill-count">{saltCount}</span>
+          </button>
+          <button class="article-pill" data-filter="rec-matters" role="tab" aria-selected="false">
+            Rec Matters <span class="pill-count">{recCount}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURED + SIDEBAR ═══ -->
+  <section class="bg-white border-b border-slate-200" id="featured-section">
+    <div class="container-wide py-8 md:py-10">
+      <div class="grid lg:grid-cols-5 gap-8 lg:gap-10">
+
+        {/* Lead story — 3 cols */}
+        <a href={`/insights/${featured.slug}`} class="lg:col-span-3 group" data-category={featured.category}>
+          <div class="relative aspect-[16/9] rounded-xl overflow-hidden mb-4">
+            {featured.image ? (
+              <img
+                src={featured.image}
+                alt={featured.title}
+                class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+              />
+            ) : (
+              <div class="w-full h-full bg-brand-navy flex items-center justify-center">
+                <span class="text-6xl font-bold text-white/10">{featured.category === 'salt-report' ? 'SR' : 'RM'}</span>
+              </div>
+            )}
+            <div class="absolute top-3 left-3">
+              <span class:list={[
+                'inline-flex items-center px-2.5 py-0.5 rounded text-[0.65rem] font-bold uppercase tracking-wider',
+                featured.category === 'salt-report'
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-brand-navy',
+              ]}>
+                {getCategoryLabel(featured.category)}
+              </span>
+            </div>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-bold text-brand-navy leading-tight group-hover:text-primary transition-colors mb-2">
+            {featured.title}
+          </h2>
+          <p class="text-slate-600 leading-relaxed mb-3 line-clamp-2">{featured.summary}</p>
+          <div class="flex items-center gap-3 text-sm text-slate-500">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-brand-slate overflow-hidden">
+                {getAuthorData(featured.author).headshot && (
+                  <img src={getAuthorData(featured.author).headshot} alt={featured.author} class="w-full h-full object-cover" />
+                )}
+              </div>
+              <span class="font-medium text-slate-700">{featured.author}</span>
+            </div>
+            <span class="text-slate-300">|</span>
+            <span>{formatDate(featured.date)}</span>
+            <span class="text-slate-300">|</span>
+            <span>{readTime(featured.content)} min read</span>
+          </div>
+        </a>
+
+        {/* Secondary stories — 2 cols sidebar */}
+        <div class="lg:col-span-2 flex flex-col divide-y divide-slate-200 lg:border-l lg:border-slate-200 lg:pl-8">
+          {secondary.map((article) => (
+            <a
+              href={`/insights/${article.slug}`}
+              class="article-secondary group flex gap-4 py-4 first:pt-0 last:pb-0"
+              data-category={article.category}
+            >
+              {article.image ? (
+                <div class="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div class="flex-shrink-0 w-24 h-24 rounded-lg bg-brand-navy flex items-center justify-center">
+                  <span class="text-xl font-bold text-white/10">{article.category === 'salt-report' ? 'SR' : 'RM'}</span>
+                </div>
+              )}
+              <div class="min-w-0 flex-1">
+                <span class:list={[
+                  'inline-block text-[0.6rem] font-bold uppercase tracking-wider mb-1',
+                  article.category === 'salt-report' ? 'text-primary' : 'text-brand-navy',
+                ]}>
+                  {getCategoryLabel(article.category)}
+                </span>
+                <h3 class="font-bold text-brand-navy text-sm leading-snug group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                  {article.title}
+                </h3>
+                <p class="text-xs text-slate-500">
+                  {article.author} · {formatDate(article.date)} · {readTime(article.content)} min
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ALL ARTICLES GRID ═══ -->
+  <section class="bg-slate-50 py-10 md:py-14" id="articles-section">
+    <div class="container-wide">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="articles-grid">
+        {remaining.map((article) => (
+          <a
+            href={`/insights/${article.slug}`}
+            class="article-card group flex flex-col bg-white rounded-lg overflow-hidden border border-slate-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            data-category={article.category}
+          >
+            <div class="relative aspect-[16/9] overflow-hidden bg-brand-navy">
+              {article.image ? (
+                <img
+                  src={article.image}
+                  alt={article.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="w-full h-full bg-brand-navy flex items-center justify-center">
+                  <span class="text-3xl font-bold text-white/10">{article.category === 'salt-report' ? 'SR' : 'RM'}</span>
+                </div>
+              )}
+              {article.trend && (
+                <div class="absolute top-2 right-2">
+                  <span class:list={[
+                    'inline-flex items-center w-6 h-6 justify-center rounded-full text-[0.6rem] font-bold bg-white/90 backdrop-blur',
+                    article.trend === 'up' ? 'text-emerald-700' : article.trend === 'down' ? 'text-red-600' : 'text-slate-600',
+                  ]}>
+                    {article.trend === 'up' ? '↑' : article.trend === 'down' ? '↓' : '→'}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div class="flex flex-col flex-1 p-4">
+              <div class="flex items-center gap-2 mb-2">
+                <span class:list={[
+                  'text-[0.6rem] font-bold uppercase tracking-wider',
+                  article.category === 'salt-report' ? 'text-primary' : 'text-brand-slate',
+                ]}>
+                  {getCategoryLabel(article.category)}
+                </span>
+                <span class="text-slate-300">·</span>
+                <span class="text-[0.65rem] text-slate-400">{formatDate(article.date)}</span>
+              </div>
+
+              <h3 class="font-bold text-brand-navy text-sm leading-snug mb-1.5 group-hover:text-primary transition-colors line-clamp-2">
+                {article.title}
+              </h3>
+
+              <p class="text-slate-500 text-xs leading-relaxed line-clamp-2 flex-1">
+                {article.summary}
+              </p>
+
+              <div class="flex items-center gap-2 pt-3 mt-auto text-xs text-slate-500">
+                <span class="font-medium text-slate-600">{article.author}</span>
+                <span class="text-slate-300">·</span>
+                <span>{readTime(article.content)} min</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="hidden text-center py-16" id="empty-state">
+        <h3 class="text-lg font-semibold text-brand-navy mb-1">No articles in this category yet</h3>
+        <p class="text-slate-500 text-sm">Check back soon for new insights.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SUBSCRIBE CTA ═══ -->
+  <section class="relative overflow-hidden bg-[#0a0e17] py-10">
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22469%22%20y2%3D%2214%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22160%22%20y2%3D%2250%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22197%22%20y2%3D%22150%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22492%22%20y2%3D%22510%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22541%22%20y2%3D%2276%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22406%22%20y2%3D%2272%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22448%22%20y1%3D%22425%22%20x2%3D%22481%22%20y2%3D%22478%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22435%22%20y1%3D%22138%22%20x2%3D%22368%22%20y2%3D%2282%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22227%22%20y1%3D%22514%22%20x2%3D%22178%22%20y2%3D%22453%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%2282%22%20y1%3D%2266%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22368%22%20y2%3D%22164%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2271%22%20y1%3D%22180%22%20x2%3D%22137%22%20y2%3D%22216%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22492%22%20y1%3D%22510%22%20x2%3D%22431%22%20y2%3D%22462%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22188%22%20y1%3D%22178%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22218%22%20y1%3D%22553%22%20x2%3D%22221%22%20y2%3D%22547%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22221%22%20y1%3D%22547%22%20x2%3D%22292%22%20y2%3D%22588%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22444%22%20y1%3D%22407%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22694%22%20y1%3D%22193%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%22164%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22407%22%20y1%3D%2263%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22682%22%20y1%3D%2299%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22215%22%20y1%3D%22300%22%20x2%3D%22165%22%20y2%3D%22227%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22165%22%20y1%3D%22227%22%20x2%3D%22227%22%20y2%3D%22292%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22726%22%20y1%3D%22357%22%20x2%3D%22735%22%20y2%3D%22448%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2225%22%20y1%3D%22549%22%20x2%3D%22113%22%20y2%3D%22553%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22197%22%20y1%3D%22150%22%20x2%3D%22167%22%20y2%3D%22191%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%2260%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%22106%22%20x2%3D%22681%22%20y2%3D%2251%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22509%22%20cy%3D%2225%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22201%22%20cy%3D%2291%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22538%22%20cy%3D%22527%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22471%22%20cy%3D%2228%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22181%22%20cy%3D%22303%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22448%22%20cy%3D%22425%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22435%22%20cy%3D%22138%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22514%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22555%22%20cy%3D%22207%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22453%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2266%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22481%22%20cy%3D%22478%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%2282%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%22180%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22492%22%20cy%3D%22510%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%2250%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22188%22%20cy%3D%22178%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22677%22%20cy%3D%22513%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22379%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22137%22%20cy%3D%22216%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22218%22%20cy%3D%22553%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%22378%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22579%22%20cy%3D%22105%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22221%22%20cy%3D%22547%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22444%22%20cy%3D%22407%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22189%22%20cy%3D%2229%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22323%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22694%22%20cy%3D%22193%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22399%22%20cy%3D%22523%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%22164%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22591%22%20cy%3D%22323%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22466%22%20cy%3D%22531%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22292%22%20cy%3D%22588%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22407%22%20cy%3D%2263%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22682%22%20cy%3D%2299%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22628%22%20cy%3D%22255%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22356%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22423%22%20cy%3D%22573%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22541%22%20cy%3D%2276%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22596%22%20cy%3D%22456%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%22262%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%22429%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22215%22%20cy%3D%22300%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22406%22%20cy%3D%2272%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22243%22%20cy%3D%22381%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%22227%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22431%22%20cy%3D%22462%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22726%22%20cy%3D%22357%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%22549%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22197%22%20cy%3D%22150%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%2260%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22646%22%20cy%3D%22577%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22607%22%20cy%3D%2284%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%22106%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22690%22%20cy%3D%22255%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22735%22%20cy%3D%22448%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22167%22%20cy%3D%22191%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22517%22%20cy%3D%22264%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22362%22%20cy%3D%22154%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22274%22%20cy%3D%22351%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22469%22%20cy%3D%2214%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22502%22%20cy%3D%22143%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22681%22%20cy%3D%2251%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22292%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22113%22%20cy%3D%22553%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/6 rounded-full blur-[150px]"></div>
+    <div class="container-wide relative z-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h2 class="text-xl font-bold text-white mb-1">Never miss an insight</h2>
+          <p class="text-slate-400 text-sm">Join RecConnect to get weekly analysis and exclusive content.</p>
+        </div>
+        <a href="/join" class="btn-primary whitespace-nowrap">
+          Join RecConnect
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .article-pill {
+    @apply inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium
+           transition-all duration-200 cursor-pointer
+           text-slate-400 hover:text-white;
+  }
+  .article-pill.active {
+    @apply bg-primary text-white;
+  }
+  .pill-count {
+    @apply text-[0.6rem] opacity-60;
+  }
+  .article-pill.active .pill-count {
+    @apply opacity-80;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .article-card {
+    animation: cardIn 0.25s ease-out both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const pills = document.querySelectorAll('.article-pill') as NodeListOf<HTMLButtonElement>;
+    const cards = document.querySelectorAll('.article-card') as NodeListOf<HTMLElement>;
+    const secondaryItems = document.querySelectorAll('.article-secondary') as NodeListOf<HTMLElement>;
+    const featuredSection = document.getElementById('featured-section') as HTMLElement;
+    const emptyState = document.getElementById('empty-state') as HTMLElement;
+    const grid = document.getElementById('articles-grid') as HTMLElement;
+
+    const featuredLink = featuredSection?.querySelector('a[data-category]') as HTMLElement | null;
+    const featuredCategory = featuredLink?.dataset.category;
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+        pill.classList.add('active');
+        pill.setAttribute('aria-selected', 'true');
+
+        const filter = pill.dataset.filter;
+        let visible = 0;
+
+        cards.forEach(card => {
+          const show = filter === 'all' || card.dataset.category === filter;
+          card.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+
+        secondaryItems.forEach(item => {
+          const show = filter === 'all' || item.dataset.category === filter;
+          item.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+
+        if (featuredSection) {
+          const showFeatured = filter === 'all' || featuredCategory === filter;
+          featuredSection.style.display = showFeatured ? '' : 'none';
+          if (showFeatured) visible++;
+        }
+
+        emptyState.classList.toggle('hidden', visible > 0);
+        grid.classList.toggle('hidden', visible === 0);
+      });
+    });
+  });
+</script>

@@ -1,0 +1,168 @@
+---
+interface Props {
+  /** Enable large logo + scroll-shrink sticky behaviour (homepage only) */
+  heroMode?: boolean;
+}
+
+const { heroMode = false } = Astro.props;
+
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Suppliers', href: '/suppliers' },
+  { label: 'Insights', href: '/insights' },
+  { label: 'Events', href: '/events' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+{/* Scroll-shrink styles only injected in heroMode */}
+{heroMode ? (
+  <style is:global>
+    #nav-logo {
+      height: 6rem;
+      transition: height 0.3s ease;
+    }
+    @media (min-width: 768px) {
+      #nav-logo {
+        height: 8rem;
+      }
+    }
+    .header-scrolled #nav-logo {
+      height: 2.5rem !important;
+    }
+    .header-scrolled {
+      background-color: rgb(15 23 42 / 0.97) !important;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+    }
+  </style>
+) : (
+  <style is:global>
+    #nav-logo {
+      height: 6rem;
+    }
+    @media (min-width: 768px) {
+      #nav-logo {
+        height: 8rem;
+      }
+    }
+  </style>
+)}
+
+<header
+  id="site-header"
+  class:list={[
+    'top-0 left-0 right-0 z-50 transition-all duration-300',
+    heroMode ? 'fixed' : 'absolute',
+  ]}
+  data-hero-mode={heroMode ? 'true' : 'false'}
+>
+  <nav class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="flex items-center justify-between py-4">
+      <!-- Logo -->
+      <a href="/" class="flex items-center">
+        <img
+          src="/images/recconnect-logo.png"
+          alt="RecConnect"
+          id="nav-logo"
+        />
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-8">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'text-sm font-medium transition-colors',
+              currentPath === item.href
+                ? 'text-primary'
+                : 'text-white/80 hover:text-white',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+
+      <!-- CTA Button -->
+      <div class="hidden md:block">
+        <a
+          href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white px-5 py-2 text-sm font-medium rounded-lg transition-colors"
+        >
+          Join Today
+          <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button
+        type="button"
+        class="md:hidden p-2 text-white"
+        aria-label="Toggle menu"
+        id="mobile-menu-toggle"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden md:hidden pb-4">
+      <div class="flex flex-col gap-3">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'text-sm font-medium transition-colors py-2',
+              currentPath === item.href
+                ? 'text-primary'
+                : 'text-white/80 hover:text-white',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+        <a
+          href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white px-5 py-2.5 text-sm font-medium rounded-lg transition-colors mt-2"
+        >
+          Join Today
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const menuToggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  // Only run scroll-shrink logic on heroMode pages
+  if (header?.dataset.heroMode === 'true') {
+    const onScroll = () => {
+      const threshold = window.innerHeight * 0.85;
+      if (window.scrollY > threshold) {
+        header.classList.add('header-scrolled');
+      } else {
+        header.classList.remove('header-scrolled');
+      }
+    };
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+  }
+
+  menuToggle?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>
