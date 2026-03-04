@@ -1,18 +1,44 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { suppliersData } from '@/data/suppliers';
-// Future: import { fetchEntry } from '@/lib/contentful';
+// SSR — renders on each request so Contentful changes go live instantly
+export const prerender = false;
 
-// ─── Static paths for build ─────────────────────────────────────────
-export function getStaticPaths() {
-  return suppliersData.map(s => ({
-    params: { slug: s.slug },
-    props: { supplier: s },
-  }));
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { fetchEntry, getSuppliers } from '@/lib/contentful';
+import type { SupplierSkeleton } from '@/lib/contentful/types';
+
+// ─── Fetch this supplier from Contentful by slug ────────────────────
+const { slug } = Astro.params;
+const entry = await fetchEntry<SupplierSkeleton>('supplier', slug!, false);
+
+if (!entry) {
+  return Astro.redirect('/suppliers');
 }
 
-const { supplier } = Astro.props;
-const s = supplier;
+// Map Contentful entry to flat shape
+const f = entry.fields as any;
+const s = {
+  name: f.name || '',
+  slug: f.slug || '',
+  shortDescription: f.shortDescription || '',
+  description: f.description || '',
+  categories: (f.categories || [])
+    .filter((c: any) => c?.fields?.name)
+    .map((c: any) => c.fields.name),
+  website: f.website || '',
+  contactEmail: f.contactEmail || '',
+  contactPhone: f.contactPhone || '',
+  contactName: f.contactName || '',
+  logoUrl: f.logo?.fields?.file?.url
+    ? `https:${f.logo.fields.file.url}`
+    : '',
+  featured: f.featured || false,
+  benefit1: f.benefit1 || '',
+  benefit2: f.benefit2 || '',
+  memberOffer: f.memberOffer || '',
+  targetAudience: f.targetAudience || '',
+  typicalUsers: f.typicalUsers || '',
+  integrations: f.integrations || '',
+};
 
 // Generate initials for fallback
 const initials = s.name
@@ -26,15 +52,37 @@ const hues = [210, 160, 340, 25, 270, 190, 45, 300, 140, 15];
 const hash = s.name.split('').reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
 const hue = hues[hash % hues.length];
 
-const hasLogo = s.logoUrl && (s.logoUrl.startsWith('http') || s.logoUrl.startsWith('/lovable-uploads'));
+const hasLogo = s.logoUrl && s.logoUrl.startsWith('http');
 const showOffer = s.memberOffer
   && !s.memberOffer.toLowerCase().includes('join recconnect')
   && !s.memberOffer.toLowerCase().includes('join the club');
 
 // Find related suppliers (same category, different supplier)
-const related = suppliersData
-  .filter(r => r.slug !== s.slug && r.categories.some((c: string) => s.categories.includes(c)))
-  .slice(0, 4);
+const allEntries = await getSuppliers({ include: 2 });
+const related = allEntries
+  .filter((e: any) => e.fields.slug !== s.slug)
+  .filter((e: any) => {
+    const cats = (e.fields.categories || [])
+      .filter((c: any) => c?.fields?.name)
+      .map((c: any) => c.fields.name);
+    return cats.some((c: string) => s.categories.includes(c));
+  })
+  .slice(0, 4)
+  .map((e: any) => {
+    const ef = e.fields;
+    return {
+      name: ef.name || '',
+      slug: ef.slug || '',
+      shortDescription: ef.shortDescription || '',
+      description: ef.description || '',
+      categories: (ef.categories || [])
+        .filter((c: any) => c?.fields?.name)
+        .map((c: any) => c.fields.name),
+      logoUrl: ef.logo?.fields?.file?.url
+        ? `https:${ef.logo.fields.file.url}`
+        : '',
+    };
+  });
 ---
 
 <BaseLayout

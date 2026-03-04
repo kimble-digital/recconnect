@@ -1,26 +1,71 @@
 ---
+// SSR — renders on each request so Contentful changes go live instantly
+export const prerender = false;
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SupplierCard from '@/components/SupplierCard.astro';
-import { suppliersData } from '@/data/suppliers';
-// Future Contentful swap:
-// import { getSuppliers, getCategories } from '@/lib/contentful';
-// const suppliers = await getSuppliers({ order: 'fields.name' });
+import { getSuppliers } from '@/lib/contentful';
+
+// ─── Fetch from Contentful ──────────────────────────────────────────
+const rawEntries = await getSuppliers({ order: 'fields.name', include: 2 });
+
+// Map Contentful entries to the flat shape our components expect
+interface SupplierData {
+  name: string;
+  slug: string;
+  shortDescription?: string;
+  description: string;
+  categories: string[];
+  website?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactName?: string;
+  logoUrl?: string;
+  featured?: boolean;
+  benefit1?: string;
+  benefit2?: string;
+  memberOffer?: string;
+  targetAudience?: string;
+  integrations?: string;
+}
+
+const suppliers: SupplierData[] = rawEntries.map((entry: any) => {
+  const f = entry.fields;
+  return {
+    name: f.name || '',
+    slug: f.slug || '',
+    shortDescription: f.shortDescription || '',
+    description: f.description || '',
+    categories: (f.categories || [])
+      .filter((c: any) => c?.fields?.name)
+      .map((c: any) => c.fields.name),
+    website: f.website || '',
+    contactEmail: f.contactEmail || '',
+    contactPhone: f.contactPhone || '',
+    contactName: f.contactName || '',
+    logoUrl: f.logo?.fields?.file?.url
+      ? `https:${f.logo.fields.file.url}`
+      : '',
+    featured: f.featured || false,
+    benefit1: f.benefit1 || '',
+    benefit2: f.benefit2 || '',
+    memberOffer: f.memberOffer || '',
+    targetAudience: f.targetAudience || '',
+    integrations: f.integrations || '',
+  };
+});
 
 // ─── Prepare data ────────────────────────────────────────────────────
-const suppliers = suppliersData;
-
-// Extract unique categories sorted alphabetically
 const allCategories = [...new Set(suppliers.flatMap(s => s.categories))].sort();
-
-// Separate featured from rest
 const featured = suppliers.filter(s => s.featured);
 const allSorted = [...suppliers].sort((a, b) => a.name.localeCompare(b.name));
 
-// Category counts
 const categoryCounts: Record<string, number> = {};
 for (const cat of allCategories) {
   categoryCounts[cat] = suppliers.filter(s => s.categories.includes(cat)).length;
 }
+
+const PER_PAGE = 12;
 ---
 
 <BaseLayout
@@ -141,10 +186,30 @@ for (const cat of allCategories) {
       </div>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" id="suppliers-grid">
-        {allSorted.map(s => (
-          <SupplierCard {...s} />
+        {allSorted.map((s, i) => (
+          <div class:list={['supplier-card-wrap', i >= PER_PAGE && 'hidden']} data-index={i}>
+            <SupplierCard {...s} />
+          </div>
         ))}
       </div>
+
+      {/* Pagination controls */}
+      {allSorted.length > PER_PAGE && (
+        <div class="flex items-center justify-center gap-4 mt-10" id="pagination-controls">
+          <p class="text-sm text-slate-500">
+            Showing <span id="showing-count">{Math.min(PER_PAGE, allSorted.length)}</span> of <span id="total-count">{allSorted.length}</span> suppliers
+          </p>
+          <button
+            id="load-more-btn"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-navy text-white text-sm font-medium rounded-lg hover:bg-brand-slate transition-colors"
+          >
+            Show More
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+      )}
 
       {/* Empty state */}
       <div class="hidden text-center py-16" id="empty-state">
@@ -221,7 +286,7 @@ for (const cat of allCategories) {
   .supplier-card:nth-child(8) { animation-delay: 210ms; }
 </style>
 
-<!-- ═══ CLIENT-SIDE FILTERING ═══ -->
+<!-- ═══ CLIENT-SIDE FILTERING + PAGINATION ═══ -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('supplier-search') as HTMLInputElement;
@@ -233,7 +298,15 @@ for (const cat of allCategories) {
     const resultsSection = document.getElementById('results-section') as HTMLElement;
     const clearFiltersBtn = document.getElementById('clear-filters') as HTMLElement;
     const pills = document.querySelectorAll('.category-pill') as NodeListOf<HTMLButtonElement>;
-    const cards = grid.querySelectorAll('.supplier-card') as NodeListOf<HTMLElement>;
+
+    // Pagination elements
+    const paginationControls = document.getElementById('pagination-controls') as HTMLElement | null;
+    const loadMoreBtn = document.getElementById('load-more-btn') as HTMLElement | null;
+    const showingCountEl = document.getElementById('showing-count') as HTMLElement | null;
+    const totalCountEl = document.getElementById('total-count') as HTMLElement | null;
+
+    // All card wrappers (each wraps a SupplierCard)
+    const allWraps = grid.querySelectorAll('.supplier-card-wrap') as NodeListOf<HTMLElement>;
 
     // Hero collapse elements
     const heroSection = document.getElementById('hero-section') as HTMLElement;
@@ -244,8 +317,9 @@ for (const cat of allCategories) {
 
     let activeCategory = 'all';
     let searchTerm = '';
+    const PER_PAGE = 12;
+    let currentPage = 1;
 
-    // Collapse/expand the hero intro based on search state
     function updateHeroState(isSearching: boolean) {
       if (isSearching) {
         heroIntro.style.maxHeight = '0px';
@@ -264,7 +338,6 @@ for (const cat of allCategories) {
       }
     }
 
-    // Gentle scroll to results
     function scrollToResults() {
       const rect = resultsSection.getBoundingClientRect();
       if (rect.top > 120) {
@@ -273,10 +346,15 @@ for (const cat of allCategories) {
       }
     }
 
-    function filterCards(shouldScroll = false) {
+    function filterAndPaginate() {
+      const isFiltering = !!searchTerm || activeCategory !== 'all';
       let visible = 0;
+      let matchingWraps: HTMLElement[] = [];
 
-      cards.forEach(card => {
+      // First pass: determine which cards match
+      allWraps.forEach(wrap => {
+        const card = wrap.querySelector('.supplier-card') as HTMLElement;
+        if (!card) return;
         const name = card.dataset.name || '';
         const desc = card.dataset.description || '';
         const cats: string[] = JSON.parse(card.dataset.categories || '[]');
@@ -287,87 +365,123 @@ for (const cat of allCategories) {
           desc.includes(searchTerm) ||
           cats.some(c => c.toLowerCase().includes(searchTerm));
 
-        const show = matchesCategory && matchesSearch;
-        card.style.display = show ? '' : 'none';
-        if (show) visible++;
+        if (matchesCategory && matchesSearch) {
+          matchingWraps.push(wrap);
+        }
+      });
+
+      // When filtering/searching, show ALL matches (no pagination)
+      // When browsing (no filter), paginate
+      const showAll = isFiltering;
+      const maxShow = showAll ? matchingWraps.length : currentPage * PER_PAGE;
+
+      allWraps.forEach(wrap => {
+        wrap.classList.add('hidden');
+      });
+
+      matchingWraps.forEach((wrap, i) => {
+        if (i < maxShow) {
+          wrap.classList.remove('hidden');
+          visible++;
+        }
       });
 
       // Update count text
-      if (searchTerm || activeCategory !== 'all') {
+      if (isFiltering) {
         const label = activeCategory !== 'all' ? ` in ${activeCategory}` : '';
-        resultsCount.textContent = `Showing ${visible} supplier${visible !== 1 ? 's' : ''}${label}`;
+        resultsCount.textContent = `Showing ${matchingWraps.length} supplier${matchingWraps.length !== 1 ? 's' : ''}${label}`;
       } else {
-        resultsCount.textContent = `Showing ${cards.length} suppliers across all categories`;
+        resultsCount.textContent = `Showing ${visible} of ${allWraps.length} suppliers`;
       }
 
-      // Update search hint count
-      searchCountEl.textContent = `${visible} result${visible !== 1 ? 's' : ''} found`;
+      // Search hint count
+      searchCountEl.textContent = `${matchingWraps.length} result${matchingWraps.length !== 1 ? 's' : ''} found`;
 
-      // Toggle empty state
-      emptyState.classList.toggle('hidden', visible > 0);
-      grid.classList.toggle('hidden', visible === 0);
+      // Empty state
+      emptyState.classList.toggle('hidden', matchingWraps.length > 0);
+      grid.classList.toggle('hidden', matchingWraps.length === 0);
 
-      // Hide featured section when filtering
+      // Featured section
       if (featuredSection) {
-        featuredSection.style.display = (activeCategory !== 'all' || searchTerm) ? 'none' : '';
+        featuredSection.style.display = isFiltering ? 'none' : '';
       }
 
-      // Show/hide search clear
+      // Search clear button
       searchClear.style.display = searchTerm ? '' : 'none';
 
-      // Scroll to results when clicking category pills
-      if (shouldScroll && (searchTerm || activeCategory !== 'all')) {
-        scrollToResults();
+      // Pagination controls
+      if (paginationControls) {
+        if (isFiltering || matchingWraps.length <= PER_PAGE) {
+          paginationControls.style.display = 'none';
+        } else {
+          paginationControls.style.display = '';
+          if (showingCountEl) showingCountEl.textContent = String(visible);
+          if (totalCountEl) totalCountEl.textContent = String(matchingWraps.length);
+          if (loadMoreBtn) {
+            loadMoreBtn.style.display = visible >= matchingWraps.length ? 'none' : '';
+          }
+        }
       }
     }
 
-    // Search: collapse hero, filter in place, no scroll
+    // Search
     searchInput.addEventListener('input', () => {
       searchTerm = searchInput.value.toLowerCase().trim();
       activeCategory = 'all';
+      currentPage = 1;
       pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
       pills[0]?.classList.add('active');
       pills[0]?.setAttribute('aria-selected', 'true');
       updateHeroState(!!searchTerm);
-      filterCards(false);
+      filterAndPaginate();
     });
 
-    // "View results" link in search hint
-    scrollToResultsBtn?.addEventListener('click', () => {
-      scrollToResults();
-    });
+    // View results link
+    scrollToResultsBtn?.addEventListener('click', () => scrollToResults());
 
+    // Clear search
     searchClear.querySelector('button')?.addEventListener('click', () => {
       searchInput.value = '';
       searchTerm = '';
+      currentPage = 1;
       updateHeroState(activeCategory !== 'all');
-      filterCards(false);
+      filterAndPaginate();
       if (activeCategory === 'all') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       searchInput.focus();
     });
 
+    // Category pills
     pills.forEach(pill => {
       pill.addEventListener('click', () => {
         pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
         pill.classList.add('active');
         pill.setAttribute('aria-selected', 'true');
         activeCategory = pill.dataset.category || 'all';
+        currentPage = 1;
         updateHeroState(activeCategory !== 'all' || !!searchTerm);
-        filterCards(false);
+        filterAndPaginate();
       });
     });
 
+    // Load more
+    loadMoreBtn?.addEventListener('click', () => {
+      currentPage++;
+      filterAndPaginate();
+    });
+
+    // Clear all filters
     clearFiltersBtn?.addEventListener('click', () => {
       searchInput.value = '';
       searchTerm = '';
       activeCategory = 'all';
+      currentPage = 1;
       updateHeroState(false);
       pills.forEach(p => { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
       pills[0]?.classList.add('active');
       pills[0]?.setAttribute('aria-selected', 'true');
-      filterCards(false);
+      filterAndPaginate();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });

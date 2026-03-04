@@ -26,7 +26,7 @@ export async function fetchEntries<T extends EntrySkeletonType>(
     const response = await getClient(preview).getEntries<T>({
       content_type: contentType,
       ...query,
-    });
+    } as any);
     return response.items;
   } catch (error) {
     console.error(`Error fetching ${contentType}:`, error);
@@ -44,7 +44,7 @@ export async function fetchEntry<T extends EntrySkeletonType>(
       content_type: contentType,
       'fields.slug': slug,
       limit: 1,
-    });
+    } as any);
     return response.items[0] || null;
   } catch (error) {
     console.error(`Error fetching ${contentType} with slug ${slug}:`, error);

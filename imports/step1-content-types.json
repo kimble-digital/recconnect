@@ -1,0 +1,357 @@
+{
+  "contentTypes": [
+    {
+      "sys": {
+        "id": "category",
+        "type": "ContentType"
+      },
+      "name": "Category",
+      "description": "Supplier categories",
+      "displayField": "name",
+      "fields": [
+        {
+          "id": "name",
+          "name": "Name",
+          "type": "Symbol",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "slug",
+          "name": "Slug",
+          "type": "Symbol",
+          "required": true,
+          "localized": false,
+          "validations": [
+            {
+              "unique": true
+            }
+          ]
+        },
+        {
+          "id": "description",
+          "name": "Description",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        }
+      ]
+    },
+    {
+      "sys": {
+        "id": "supplier",
+        "type": "ContentType"
+      },
+      "name": "Supplier",
+      "description": "Supplier directory entries",
+      "displayField": "name",
+      "fields": [
+        {
+          "id": "name",
+          "name": "Name",
+          "type": "Symbol",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "slug",
+          "name": "Slug",
+          "type": "Symbol",
+          "required": true,
+          "localized": false,
+          "validations": [
+            {
+              "unique": true
+            }
+          ]
+        },
+        {
+          "id": "shortDescription",
+          "name": "Short Description",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "description",
+          "name": "Description",
+          "type": "Text",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "logo",
+          "name": "Logo",
+          "type": "Link",
+          "required": false,
+          "localized": false,
+          "linkType": "Asset"
+        },
+        {
+          "id": "website",
+          "name": "Website",
+          "type": "Symbol",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "categories",
+          "name": "Categories",
+          "type": "Array",
+          "required": false,
+          "localized": false,
+          "items": {
+            "type": "Link",
+            "linkType": "Entry",
+            "validations": [
+              {
+                "linkContentType": [
+                  "category"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "benefit1",
+          "name": "Benefit 1",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "benefit2",
+          "name": "Benefit 2",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "targetAudience",
+          "name": "Target Audience",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "typicalUsers",
+          "name": "Typical Users",
+          "type": "Symbol",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "integrations",
+          "name": "Integrations",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "memberOffer",
+          "name": "Member Offer",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "featured",
+          "name": "Featured",
+          "type": "Boolean",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "tier",
+          "name": "Tier",
+          "type": "Symbol",
+          "required": false,
+          "localized": false,
+          "validations": [
+            {
+              "in": [
+                "standard",
+                "premium",
+                "partner"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "contactName",
+          "name": "Contact Name",
+          "type": "Symbol",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "contactEmail",
+          "name": "Contact Email",
+          "type": "Symbol",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "contactPhone",
+          "name": "Contact Phone",
+          "type": "Symbol",
+          "required": false,
+          "localized": false
+        }
+      ]
+    },
+    {
+      "sys": {
+        "id": "author",
+        "type": "ContentType"
+      },
+      "name": "Author",
+      "description": "Article authors",
+      "displayField": "name",
+      "fields": [
+        {
+          "id": "name",
+          "name": "Name",
+          "type": "Symbol",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "slug",
+          "name": "Slug",
+          "type": "Symbol",
+          "required": true,
+          "localized": false,
+          "validations": [
+            {
+              "unique": true
+            }
+          ]
+        },
+        {
+          "id": "role",
+          "name": "Role",
+          "type": "Symbol",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "bio",
+          "name": "Bio",
+          "type": "Text",
+          "required": false,
+          "localized": false
+        },
+        {
+          "id": "headshot",
+          "name": "Headshot",
+          "type": "Link",
+          "required": false,
+          "localized": false,
+          "linkType": "Asset"
+        }
+      ]
+    },
+    {
+      "sys": {
+        "id": "article",
+        "type": "ContentType"
+      },
+      "name": "Article",
+      "description": "Blog articles and insights",
+      "displayField": "title",
+      "fields": [
+        {
+          "id": "title",
+          "name": "Title",
+          "type": "Symbol",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "slug",
+          "name": "Slug",
+          "type": "Symbol",
+          "required": true,
+          "localized": false,
+          "validations": [
+            {
+              "unique": true
+            }
+          ]
+        },
+        {
+          "id": "publishDate",
+          "name": "Publish Date",
+          "type": "Date",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "author",
+          "name": "Author",
+          "type": "Link",
+          "required": false,
+          "localized": false,
+          "linkType": "Entry",
+          "validations": [
+            {
+              "linkContentType": [
+                "author"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "type",
+          "name": "Type",
+          "type": "Symbol",
+          "required": true,
+          "localized": false,
+          "validations": [
+            {
+              "in": [
+                "salt_report",
+                "rec_matters"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "shortDescription",
+          "name": "Short Description",
+          "type": "Text",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "content",
+          "name": "Content",
+          "type": "RichText",
+          "required": true,
+          "localized": false
+        },
+        {
+          "id": "featuredImage",
+          "name": "Featured Image",
+          "type": "Link",
+          "required": false,
+          "localized": false,
+          "linkType": "Asset"
+        },
+        {
+          "id": "tags",
+          "name": "Tags",
+          "type": "Array",
+          "required": false,
+          "localized": false,
+          "items": {
+            "type": "Symbol"
+          }
+        }
+      ]
+    }
+  ],
+  "entries": [],
+  "assets": []
+}
