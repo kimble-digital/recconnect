@@ -1,5 +1,7 @@
-import { createClient } from 'contentful';
+import contentful from 'contentful';
 import type { Entry, EntrySkeletonType } from 'contentful';
+
+const { createClient } = contentful;
 
 // Initialize Contentful client
 const client = createClient({
