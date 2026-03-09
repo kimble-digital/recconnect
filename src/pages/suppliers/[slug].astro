@@ -14,13 +14,37 @@ if (!entry) {
   return Astro.redirect('/suppliers');
 }
 
+// Helper: extract plain text from Contentful Rich Text document
+function richTextToPlain(doc: any): string {
+  if (!doc || typeof doc === 'string') return doc || '';
+  if (!doc.content) return '';
+  return doc.content
+    .map((node: any) => {
+      if (node.nodeType === 'paragraph' || node.nodeType?.startsWith('heading')) {
+        return (node.content || [])
+          .map((child: any) => child.value || '')
+          .join('');
+      }
+      if (node.nodeType === 'unordered-list' || node.nodeType === 'ordered-list') {
+        return (node.content || [])
+          .map((li: any) => (li.content || [])
+            .map((p: any) => (p.content || []).map((c: any) => c.value || '').join(''))
+            .join(''))
+          .join('\n');
+      }
+      return '';
+    })
+    .filter(Boolean)
+    .join('\n\n');
+}
+
 // Map Contentful entry to flat shape
 const f = entry.fields as any;
 const s = {
   name: f.name || '',
   slug: f.slug || '',
   shortDescription: f.shortDescription || '',
-  description: f.description || '',
+  description: richTextToPlain(f.description),
   categories: (f.categories || [])
     .filter((c: any) => c?.fields?.name)
     .map((c: any) => c.fields.name),
@@ -32,12 +56,12 @@ const s = {
     ? `https:${f.logo.fields.file.url}`
     : '',
   featured: f.featured || false,
-  benefit1: f.benefit1 || '',
-  benefit2: f.benefit2 || '',
-  memberOffer: f.memberOffer || '',
+  benefit1: richTextToPlain(f.benefit1),
+  benefit2: richTextToPlain(f.benefit2),
+  memberOffer: richTextToPlain(f.memberOffer),
   targetAudience: f.targetAudience || '',
   typicalUsers: f.typicalUsers || '',
-  integrations: f.integrations || '',
+  integrations: richTextToPlain(f.integrations),
 };
 
 // Generate initials for fallback
@@ -74,7 +98,7 @@ const related = allEntries
       name: ef.name || '',
       slug: ef.slug || '',
       shortDescription: ef.shortDescription || '',
-      description: ef.description || '',
+      description: richTextToPlain(ef.description),
       categories: (ef.categories || [])
         .filter((c: any) => c?.fields?.name)
         .map((c: any) => c.fields.name),
