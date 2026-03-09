@@ -75,7 +75,7 @@
         {
           "id": "description",
           "name": "Description",
-          "type": "Text",
+          "type": "RichText",
           "required": true,
           "localized": false
         },
@@ -115,14 +115,14 @@
         {
           "id": "benefit1",
           "name": "Benefit 1",
-          "type": "Text",
+          "type": "RichText",
           "required": false,
           "localized": false
         },
         {
           "id": "benefit2",
           "name": "Benefit 2",
-          "type": "Text",
+          "type": "RichText",
           "required": false,
           "localized": false
         },
@@ -143,14 +143,14 @@
         {
           "id": "integrations",
           "name": "Integrations",
-          "type": "Text",
+          "type": "RichText",
           "required": false,
           "localized": false
         },
         {
           "id": "memberOffer",
           "name": "Member Offer",
-          "type": "Text",
+          "type": "RichText",
           "required": false,
           "localized": false
         },
