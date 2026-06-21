@@ -9,6 +9,7 @@
 import { speakers } from '@/data/connected';
 import EventSponsor from '@/components/home/EventSponsor.astro';
 const EVENT_HREF = '/connected-2026';
+const ticker = ['Powerful stories', 'Impactful networking', 'Live music, DJ, magic', 'Lasting connections', 'Adios, PowerPoint'];
 ---
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" />
@@ -56,6 +57,15 @@ const EVENT_HREF = '/connected-2026';
     </div>
   </div>
 
+  <div class="es-marquee" aria-hidden="true">
+    <div class="es-mtrack">
+      {Array.from({ length: 2 }).map(() => (
+        <span class="es-mgroup">
+          {ticker.map((t) => (<><span>{t}</span><span class="es-star">✦</span></>))}
+        </span>
+      ))}
+    </div>
+  </div>
 </section>
 
 <style>
