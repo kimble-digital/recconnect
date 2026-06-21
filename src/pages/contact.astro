@@ -96,6 +96,77 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     </div>
   </section>
 
+  <!-- ═══ ENQUIRY FORM ═══ -->
+  <section class="bg-white border-t border-slate-200 py-14 md:py-20">
+    <div class="container-wide">
+      <div class="max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-brand-navy mb-3 tracking-tight">
+            Send us a message
+          </h2>
+          <p class="text-slate-500">
+            Prefer to write? Fill this in and we'll get back to you — usually within one working day.
+          </p>
+        </div>
+
+        <form id="contact-form" novalidate>
+          <!-- Honeypot: positioned off-screen; real users never see or fill it -->
+          <div class="absolute -left-[9999px]" aria-hidden="true">
+            <label>Company website
+              <input type="text" name="company_website" tabindex="-1" autocomplete="off" />
+            </label>
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="cf-name" class="mb-1.5 block text-sm font-medium text-brand-navy">
+                Name <span class="text-primary">*</span>
+              </label>
+              <input id="cf-name" name="name" type="text" required autocomplete="name"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            </div>
+            <div>
+              <label for="cf-email" class="mb-1.5 block text-sm font-medium text-brand-navy">
+                Email <span class="text-primary">*</span>
+              </label>
+              <input id="cf-email" name="email" type="email" required autocomplete="email"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            </div>
+            <div>
+              <label for="cf-phone" class="mb-1.5 block text-sm font-medium text-brand-navy">
+                Phone
+              </label>
+              <input id="cf-phone" name="phone" type="tel" autocomplete="tel"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            </div>
+            <div>
+              <label for="cf-company" class="mb-1.5 block text-sm font-medium text-brand-navy">
+                Company
+              </label>
+              <input id="cf-company" name="company" type="text" autocomplete="organization"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <label for="cf-message" class="mb-1.5 block text-sm font-medium text-brand-navy">
+              Message <span class="text-primary">*</span>
+            </label>
+            <textarea id="cf-message" name="message" rows="5" required
+              class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></textarea>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center gap-4">
+            <button type="submit" id="cf-submit" class="btn-primary px-6 py-2.5 text-sm">
+              Send message
+            </button>
+            <p id="cf-status" class="text-sm" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══ SIMON SECTION ═══ -->
   <section class="bg-slate-50 border-t border-slate-200 py-14 md:py-20">
     <div class="container-wide">
@@ -210,5 +281,60 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       </div>
     </div>
   </section>
+
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    if (form) {
+      const statusEl = document.getElementById('cf-status') as HTMLElement;
+      const btn = document.getElementById('cf-submit') as HTMLButtonElement;
+      const invalidClasses = ['border-red-400', 'ring-2', 'ring-red-100'];
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusEl.textContent = '';
+        statusEl.className = 'text-sm';
+        form.querySelectorAll('[data-invalid]').forEach((el) => {
+          el.classList.remove(...invalidClasses);
+          el.removeAttribute('data-invalid');
+        });
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        const original = btn.textContent || 'Send message';
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          const body = await res.json().catch(() => ({}));
+
+          if (res.ok && body.ok) {
+            form.reset();
+            statusEl.textContent = 'Thanks — your message is on its way' + (body.ref ? ` (ref ${body.ref}).` : '.');
+            statusEl.className = 'text-sm font-medium text-emerald-600';
+          } else {
+            (body.fields || []).forEach((name: string) => {
+              const el = form.querySelector(`[name="${name}"]`);
+              if (el) {
+                el.classList.add(...invalidClasses);
+                el.setAttribute('data-invalid', 'true');
+              }
+            });
+            statusEl.textContent = body.error || 'Something went wrong. Please try again.';
+            statusEl.className = 'text-sm font-medium text-red-600';
+          }
+        } catch {
+          statusEl.textContent = 'Network error — please try again, or email hello@recconnect.co.';
+          statusEl.className = 'text-sm font-medium text-red-600';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = original;
+        }
+      });
+    }
+  </script>
 
 </BaseLayout>

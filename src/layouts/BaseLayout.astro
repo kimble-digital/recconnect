@@ -44,6 +44,10 @@ const pageTitle = noSuffix || title.includes('RecConnect')
 
 // OG image: full https:// URLs used as-is; local paths get siteUrl prepended
 const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+
+// GA measurement ID: configurable via PUBLIC_GA_ID, falls back to the known
+// production ID so analytics never silently drops if the env var is unset.
+const gaId = import.meta.env.PUBLIC_GA_ID || 'G-SNYGXXJV0K';
 ---
 
 <!DOCTYPE html>
@@ -99,12 +103,12 @@ const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
     </style>
 
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SNYGXXJV0K"></script>
-    <script is:inline>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-SNYGXXJV0K');
+      gtag('config', gaId);
     </script>
   </head>
   <body class={eventBar ? 'eventbar-on' : undefined}>
