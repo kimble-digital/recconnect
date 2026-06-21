@@ -13,9 +13,15 @@ export default {
           blue: '#4299e1',
           'blue-light': '#63b3ed',
         },
-        primary: '#4299e1',
-        'primary-light': '#63b3ed',
-        'primary-dark': '#3182ce',
+        // Primary accent — mint
+        primary: '#2dd4bf',
+        'primary-light': '#5fe3d3',
+        'primary-dark': '#14b8a6',
+        // Supporting accents
+        coral: '#fb6b4b',
+        'coral-dark': '#e8542f',
+        gold: '#f2b33d',
+        'gold-dark': '#dca01f',
         secondary: '#2d3748',
         background: '#1a1f2e',
         surface: '#2d3748',

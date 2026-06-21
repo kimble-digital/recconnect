@@ -1,66 +1,74 @@
-<section class="relative bg-slate-900 overflow-hidden min-h-screen flex items-center">
-  <!-- Background Image -->
+<section class="relative bg-brand-navy overflow-hidden min-h-screen flex items-center">
+  <!-- Background image -->
   <div class="absolute inset-0 z-0">
-    <img 
-      src="/images/hero-bg.avif" 
-      alt="" 
-      class="w-full h-full object-cover opacity-30"
+    <img
+      src="/images/hero-bg.avif"
+      alt=""
+      class="w-full h-full object-cover opacity-20"
       loading="eager"
     />
-    <div class="absolute inset-0 bg-slate-900/70"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-navy/85 via-brand-navy/80 to-brand-navy"></div>
   </div>
 
-  <!-- Hero Content -->
-  <div class="relative z-10 max-w-6xl mx-auto px-6 pt-40 pb-16 text-center w-full">
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+  <!-- Mint glow -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[380px] bg-primary/10 rounded-full blur-[150px] z-0"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 container-wide pt-40 pb-20 text-center w-full">
+    <p class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-7">
+      <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+      For leaders of independent recruitment agencies
+    </p>
+
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight mb-6">
       <span class="text-white">Join the Club. Connect.</span>
       <br />
-      <span class="text-blue-400">Grow. Get Results.</span>
+      <span class="text-primary">Grow. Get Results.</span>
     </h1>
-    
-    <p class="text-xl lg:text-2xl text-slate-200 mb-6 max-w-4xl mx-auto leading-relaxed">
-      Whether you're flying solo or leading a team, our professional recruitment community has everything you need to achieve your goals.
+
+    <p class="text-xl lg:text-2xl text-slate-200 mb-5 max-w-3xl mx-auto leading-relaxed">
+      The community where established recruitment leaders meet, learn, and grow — events worth turning up for, peer groups that get it, and connections that move your business forward.
     </p>
-    
-    <p class="text-lg text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-      Through content, connections, and conversations, we help recruiters, ops and marketing teams improve efficiency, sell more, spend less, and enjoy what they do.
+
+    <p class="text-base md:text-lg text-slate-400 mb-9 max-w-2xl mx-auto leading-relaxed">
+      Curated rooms. Real conversations. The people who actually shape the industry — no noise, no hard sell.
     </p>
-    
-    <p class="text-xl text-blue-400 font-semibold mb-8">
-      Get involved today. Change your game.
-    </p>
-    
-    <!-- CTA Buttons -->
+
+    <!-- Primary CTAs -->
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a 
-        href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06" 
+      <a
+        href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06"
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg font-medium rounded-md transition-colors"
+        class="btn-primary text-base px-8 py-3.5"
       >
-        Join Now → £39/month
+        Join the Club — £39/month
       </a>
-      <a 
-        href="https://buy.stripe.com/28E3cxarg8Hk5EofsG0kE07" 
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-slate-900 px-8 py-3 text-lg font-medium rounded-md transition-colors"
-      >
-        Join as Supplier → £149/month
+      <a href="#pricing" class="btn-outline-light text-base px-8 py-3.5">
+        See what's included
       </a>
     </div>
-    
-    <!-- WhatsApp link -->
-    <p class="text-slate-400 mt-6 pb-4">
-      Just want to dip your toe in? 
-      <a 
-        href="https://chat.whatsapp.com/B9IcWZkj7fIEU806wCpsnZ" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        class="text-blue-400 hover:text-blue-300 underline"
+
+    <!-- Free tier funnel -->
+    <p class="text-sm md:text-base text-slate-400 mt-7">
+      Not ready to commit?
+      <a
+        href="https://chat.whatsapp.com/B9IcWZkj7fIEU806wCpsnZ"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-primary hover:text-primary-light underline underline-offset-4 decoration-primary/40"
       >
-        Join our free WhatsApp community
-      </a> to get started.
+        Join the free Core community
+      </a>
+      — member directory, insights, and event invites included.
+    </p>
+
+    <!-- Supplier signpost -->
+    <p class="text-xs md:text-sm text-slate-500 mt-3">
+      A supplier to the industry?
+      <a href="/suppliers" class="text-slate-300 hover:text-primary underline underline-offset-2 transition-colors">
+        Partner with RecConnect →
+      </a>
     </p>
   </div>
 </section>
