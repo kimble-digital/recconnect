@@ -16,7 +16,8 @@ import LogoWall from '@/components/LogoWall.astro';
   <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[380px] bg-primary/10 rounded-full blur-[150px] z-0"></div>
 
   <!-- Content -->
-  <div class="relative z-10 container-wide pt-40 pb-20 text-center w-full">
+  <div class="relative z-10 container-wide pt-40 pb-20 w-full">
+    <div class="max-w-4xl">
     <p class="kicker inline-flex items-center gap-2.5 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-[0.78rem] text-primary mb-7">
       <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
       For leaders of independent recruitment agencies
@@ -34,16 +35,16 @@ import LogoWall from '@/components/LogoWall.astro';
         ><path d="M6 13 Q 90 4 165 9 Q 250 14 314 6 Q 250 22 165 17 Q 90 12 6 19 Z" fill="#2dd4bf" /></svg></span>
     </h1>
 
-    <p class="text-xl lg:text-2xl text-slate-200 mb-5 max-w-3xl mx-auto leading-relaxed">
+    <p class="text-xl lg:text-2xl text-slate-200 mb-5 max-w-2xl leading-relaxed">
       The community where established recruitment leaders meet, learn, and grow. Events worth turning up for, peer groups that get it, and connections that move your business forward.
     </p>
 
-    <p class="text-base md:text-lg text-slate-400 mb-9 max-w-2xl mx-auto leading-relaxed">
+    <p class="text-base md:text-lg text-slate-400 mb-9 max-w-xl leading-relaxed">
       Curated rooms. Real conversations. The people who actually shape the industry. No noise, no hard sell.
     </p>
 
     <!-- Primary CTAs -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+    <div class="flex flex-col sm:flex-row gap-4 justify-start">
       <a
         href="https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06"
         target="_blank"
@@ -78,5 +79,6 @@ import LogoWall from '@/components/LogoWall.astro';
         Partner with RecConnect →
       </a>
     </p>
+    </div>
   </div>
 </section>

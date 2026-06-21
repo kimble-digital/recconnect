@@ -1,0 +1,100 @@
+---
+/**
+ * Marquee — full-bleed scrolling strip of condensed caps.
+ * Bold colour-block device borrowed from the CONNECTED look.
+ */
+interface Props {
+  items?: string[];
+  variant?: 'mint' | 'navy';
+}
+const {
+  items = [
+    'Curated events',
+    'Peer groups that get it',
+    'Senior agency leaders',
+    'A supplier directory worth using',
+    'Real connections, not contacts',
+    'No noise, no hard sell',
+  ],
+  variant = 'mint',
+} = Astro.props;
+---
+
+<div class={`mq mq-${variant}`} aria-hidden="true">
+  <div class="mq-track">
+    <div class="mq-group">
+      {items.map((t) => (
+        <>
+          <span class="mq-item">{t}</span>
+          <span class="mq-star">✦</span>
+        </>
+      ))}
+    </div>
+    <div class="mq-group">
+      {items.map((t) => (
+        <>
+          <span class="mq-item">{t}</span>
+          <span class="mq-star">✦</span>
+        </>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .mq {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .mq-mint {
+    background: #2dd4bf;
+  }
+  .mq-navy {
+    background: #1a1f2e;
+    border-top: 1px solid rgba(45, 212, 191, 0.3);
+    border-bottom: 1px solid rgba(45, 212, 191, 0.3);
+  }
+  .mq-track {
+    display: inline-flex;
+    animation: mq-scroll 34s linear infinite;
+  }
+  .mq-group {
+    display: inline-flex;
+    align-items: center;
+  }
+  .mq-item {
+    font-family: 'Anton', 'Arial Narrow', sans-serif;
+    text-transform: uppercase;
+    font-size: 1.45rem;
+    letter-spacing: 0.04em;
+    padding: 0.7rem 1.4rem;
+  }
+  .mq-mint .mq-item {
+    color: #0c2e2a;
+  }
+  .mq-navy .mq-item {
+    color: #2dd4bf;
+  }
+  .mq-star {
+    font-size: 0.8rem;
+  }
+  .mq-mint .mq-star {
+    color: rgba(12, 46, 42, 0.4);
+  }
+  .mq-navy .mq-star {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  @keyframes mq-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mq-track {
+      animation: none;
+    }
+  }
+</style>
