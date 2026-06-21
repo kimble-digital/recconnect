@@ -1,13 +1,15 @@
+---
+import LogoWall from '@/components/LogoWall.astro';
+---
+
 <section class="relative bg-brand-navy overflow-hidden min-h-screen flex items-center">
-  <!-- Background image -->
+  <!-- Repeating-logo wallpaper + dark radial gradient -->
   <div class="absolute inset-0 z-0">
-    <img
-      src="/images/hero-bg.avif"
-      alt=""
-      class="w-full h-full object-cover opacity-20"
-      loading="eager"
-    />
-    <div class="absolute inset-0 bg-gradient-to-b from-brand-navy/85 via-brand-navy/80 to-brand-navy"></div>
+    <LogoWall color="#2dd4bf" opacity={0.1} size={130} class="absolute inset-0 w-full h-full" />
+    <div
+      class="absolute inset-0"
+      style="background: radial-gradient(ellipse at 50% 42%, rgba(26,31,46,0.55), rgba(26,31,46,0.97) 72%);"
+    ></div>
   </div>
 
   <!-- Mint glow -->
