@@ -1,0 +1,144 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const updated = '21 June 2026';
+---
+
+<BaseLayout
+  title="Terms of Service"
+  description="The terms governing your use of the RecConnect website."
+  eventBar={false}
+>
+  <!-- Header -->
+  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-14 md:pt-44 md:pb-20 border-b border-white/10">
+    <div class="absolute -top-16 -right-16 w-72 h-[26rem] bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="max-w-3xl mx-auto px-6 relative z-10">
+      <p class="kicker text-primary text-[0.8rem] mb-4">Legal</p>
+      <h1 class="font-display uppercase text-white text-4xl md:text-6xl leading-[0.95] mb-4">Terms of Service</h1>
+      <p class="text-slate-400">Last updated: {updated}</p>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <section class="bg-white py-14 md:py-20">
+    <div class="max-w-3xl mx-auto px-6 legal">
+      <p class="lead">
+        These terms govern your use of the RecConnect website. By accessing or using this site, you
+        agree to these terms. If you do not agree, please do not use the site.
+      </p>
+
+      <h2>About us</h2>
+      <p>
+        This website is operated by RecConnect, Briar Cottage, School Lane, Sevenoaks, Kent, TN15 0BE.
+        References to "we", "us", and "our" mean RecConnect. References to "you" and "your" mean the
+        person accessing the website.
+      </p>
+
+      <h2>Using the website</h2>
+      <p>
+        You may use this website for lawful purposes only. You agree not to use the site in any way
+        that breaches any applicable law, is fraudulent or harmful, or that interferes with the proper
+        functioning, security, or availability of the site. We may suspend, withdraw, or restrict
+        access to all or part of the website at any time without notice.
+      </p>
+
+      <h2>Membership, events, and purchases</h2>
+      <p>
+        Some areas of the site link to third-party platforms — for example Stripe for membership
+        payments, Eventbrite for event tickets, and WhatsApp for community access. Any purchase,
+        subscription, or registration made through those platforms is subject to that provider's own
+        terms and conditions in addition to these terms. We are not responsible for the operation of
+        third-party platforms.
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        Unless otherwise stated, we own or are licensed to use all content on this website, including
+        text, graphics, logos, the RecConnect name and brand, and the overall design. You may view and
+        print pages for your own personal, non-commercial use. You may not copy, reproduce, republish,
+        or distribute any part of the site for commercial purposes without our prior written
+        permission.
+      </p>
+
+      <h2>Accuracy of information</h2>
+      <p>
+        We take care to keep the information on this website accurate and up to date, but we make no
+        guarantees that it is complete, current, or error-free. Content is provided for general
+        information only and does not constitute professional, legal, financial, or business advice.
+        You should not rely on it as the sole basis for any decision.
+      </p>
+
+      <h2>External links</h2>
+      <p>
+        Where the website links to other sites and resources provided by third parties, those links
+        are provided for your information only. We have no control over the contents of those sites and
+        accept no responsibility for them or for any loss or damage that may arise from your use of
+        them.
+      </p>
+
+      <h2>Limitation of liability</h2>
+      <p>
+        To the fullest extent permitted by law, we exclude all implied warranties and conditions
+        relating to the website. We will not be liable for any loss or damage, whether in contract,
+        tort (including negligence), or otherwise, arising out of or in connection with the use of, or
+        inability to use, this website. Nothing in these terms excludes or limits our liability for
+        death or personal injury caused by negligence, for fraud, or for any other liability that
+        cannot be excluded or limited under English law.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        Your use of the website is also governed by our
+        <a href="/privacy">Privacy Policy</a>, which explains how we handle your personal data.
+      </p>
+
+      <h2>Changes to these terms</h2>
+      <p>
+        We may revise these terms at any time by updating this page. Please check this page from time
+        to time to take notice of any changes, as they are binding on you.
+      </p>
+
+      <h2>Governing law</h2>
+      <p>
+        These terms are governed by the laws of England and Wales, and any disputes will be subject to
+        the exclusive jurisdiction of the courts of England and Wales.
+      </p>
+
+      <h2>How to contact us</h2>
+      <p>
+        RecConnect<br />
+        Briar Cottage, School Lane<br />
+        Sevenoaks, Kent, TN15 0BE<br />
+        Email: <a href="mailto:hello@recconnect.co">hello@recconnect.co</a>
+      </p>
+
+      <p class="disclaimer">
+        These terms are provided as a general template and do not constitute legal advice. We
+        recommend having them reviewed by a qualified legal professional before relying on them.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal { color: #334155; }
+  .legal .lead { font-size: 1.15rem; line-height: 1.7; color: #1e293b; margin-bottom: 2rem; }
+  .legal h2 {
+    font-family: 'Anton', sans-serif !important;
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: #0a0b0f;
+    font-size: 1.6rem;
+    margin: 2.5rem 0 0.9rem;
+  }
+  .legal p { line-height: 1.75; margin-bottom: 1.1rem; }
+  .legal ul { list-style: disc; padding-left: 1.4rem; margin: 0 0 1.1rem; }
+  .legal li { line-height: 1.7; margin-bottom: 0.5rem; }
+  .legal a { color: #14b8a6; text-decoration: underline; text-underline-offset: 2px; }
+  .legal a:hover { color: #0f766e; }
+  .legal strong { color: #0a0b0f; font-weight: 600; }
+  .legal .disclaimer {
+    margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;
+    font-size: 0.9rem; color: #64748b; font-style: italic;
+  }
+</style>
