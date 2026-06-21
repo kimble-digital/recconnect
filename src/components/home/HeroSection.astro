@@ -1,8 +1,9 @@
 ---
 import LogoWall from '@/components/LogoWall.astro';
+import Marquee from '@/components/home/Marquee.astro';
 ---
 
-<section class="relative bg-brand-navy overflow-hidden min-h-screen flex items-center">
+<section class="relative bg-brand-navy overflow-hidden min-h-screen flex flex-col">
   <!-- Repeating-logo wallpaper + dark radial gradient -->
   <div class="absolute inset-0 z-0">
     <LogoWall color="#2dd4bf" opacity={0.1} size={130} class="absolute inset-0 w-full h-full" />
@@ -16,26 +17,21 @@ import LogoWall from '@/components/LogoWall.astro';
   <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[380px] bg-primary/10 rounded-full blur-[150px] z-0"></div>
 
   <!-- Content -->
-  <div class="relative z-10 container-wide pt-40 pb-20 w-full">
+  <div class="relative z-10 flex-1 flex items-center w-full">
+    <div class="container-wide pt-40 pb-12 w-full">
     <div class="max-w-4xl">
     <p class="kicker inline-flex items-center gap-2.5 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-[0.78rem] text-primary mb-7">
       <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
       For leaders of independent recruitment agencies
     </p>
 
-    <h1 class="font-display uppercase text-white leading-[0.9] mb-7 text-5xl sm:text-6xl lg:text-7xl">
-      Join the Club. Connect.
+    <h1 class="font-display uppercase text-white leading-[0.92] mb-7 text-6xl sm:text-7xl lg:text-8xl">
+      Connect. Grow.
       <br />
-      Grow.
-      <span class="relative inline-block">Get Results.<svg
-          class="absolute left-[-1%] -bottom-2 md:-bottom-3 w-[102%] h-3 md:h-4"
-          viewBox="0 0 320 22"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        ><path d="M6 13 Q 90 4 165 9 Q 250 14 314 6 Q 250 22 165 17 Q 90 12 6 19 Z" fill="#2dd4bf" /></svg></span>
+      <span class="font-script normal-case text-primary">Get Results.</span>
     </h1>
 
-    <p class="text-xl lg:text-2xl text-slate-200 mb-5 max-w-2xl leading-relaxed">
+    <p class="text-lg lg:text-xl text-slate-200 mb-5 max-w-2xl leading-relaxed">
       The community where established recruitment leaders meet, learn, and grow. Events worth turning up for, peer groups that get it, and connections that move your business forward.
     </p>
 
@@ -80,5 +76,11 @@ import LogoWall from '@/components/LogoWall.astro';
       </a>
     </p>
     </div>
+    </div>
+  </div>
+
+  <!-- Ticker pinned to the bottom of the hero, above the fold -->
+  <div class="relative z-10">
+    <Marquee />
   </div>
 </section>
