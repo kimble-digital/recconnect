@@ -7,9 +7,9 @@ export default {
     extend: {
       colors: {
         brand: {
-          navy: '#1a1f2e',
+          navy: '#0a0b0f',
           slate: '#2d3748',
-          dark: '#0f1218',
+          dark: '#050507',
           blue: '#4299e1',
           'blue-light': '#63b3ed',
         },
@@ -23,7 +23,7 @@ export default {
         gold: '#f2b33d',
         'gold-dark': '#dca01f',
         secondary: '#2d3748',
-        background: '#1a1f2e',
+        background: '#0a0b0f',
         surface: '#2d3748',
         muted: '#718096',
       },
