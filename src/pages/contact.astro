@@ -1,5 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Enquiry form is hidden until Resend is configured in Vercel
+// (RESEND_API_KEY, CONTACT_TO, CONTACT_FROM). Set to true to re-enable.
+const showEnquiryForm = false;
 ---
 
 <BaseLayout
@@ -96,7 +100,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- ═══ ENQUIRY FORM ═══ -->
+  <!-- ═══ ENQUIRY FORM (hidden until Resend is configured) ═══ -->
+  {showEnquiryForm && (
   <section class="bg-white border-t border-slate-200 py-14 md:py-20">
     <div class="container-wide">
       <div class="max-w-2xl mx-auto">
@@ -166,6 +171,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       </div>
     </div>
   </section>
+  )}
 
   <!-- ═══ SIMON SECTION ═══ -->
   <section class="bg-slate-50 border-t border-slate-200 py-14 md:py-20">
