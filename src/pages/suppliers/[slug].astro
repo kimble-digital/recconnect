@@ -355,7 +355,7 @@ const jsonLd = {
           {/* About — full description */}
           {s.descriptionHtml && s.description !== s.shortDescription && (
             <div>
-              <h2 class="text-lg font-bold text-brand-navy mb-4">About {s.name}</h2>
+              <h2 class="font-display uppercase leading-[0.95] text-2xl text-brand-navy mb-4">About {s.name}</h2>
               <div class="rich-text" set:html={s.descriptionHtml} />
             </div>
           )}
@@ -363,7 +363,7 @@ const jsonLd = {
           {/* Key Benefits */}
           {(s.benefit1 || s.benefit2) && (
             <div>
-              <h2 class="text-lg font-bold text-brand-navy mb-4">Key Benefits</h2>
+              <h2 class="font-display uppercase leading-[0.95] text-2xl text-brand-navy mb-4">Key Benefits</h2>
               <div class="space-y-4">
                 {s.benefit1 && (
                   <div class="flex items-start gap-3 p-4 rounded-xl border" style={`background: ${accentColorLight}; border-color: ${accentColorBorder};`}>
@@ -392,11 +392,11 @@ const jsonLd = {
           {/* Integrations */}
           {s.integrations && (
             <div>
-              <h2 class="text-lg font-bold text-brand-navy mb-4">Integrations</h2>
+              <h2 class="font-display uppercase leading-[0.95] text-2xl text-brand-navy mb-4">Integrations</h2>
               <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
                 <div class="flex items-start gap-3">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mt-0.5">
-                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <div class="flex-shrink-0 w-8 h-8 bg-primary icon-shard flex items-center justify-center mt-0.5">
+                    <svg class="w-4 h-4 text-brand-navy" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                     </svg>
                   </div>
@@ -409,7 +409,7 @@ const jsonLd = {
           {/* Member Offer */}
           {showOffer && (
             <div>
-              <h2 class="text-lg font-bold text-brand-navy mb-4">RecConnect Member Offer</h2>
+              <h2 class="font-display uppercase leading-[0.95] text-2xl text-brand-navy mb-4">RecConnect Member Offer</h2>
               <div class="p-5 rounded-xl bg-amber-50 border border-amber-200/60">
                 <div class="flex items-start gap-3">
                   <span class="text-2xl flex-shrink-0">🎁</span>
@@ -551,7 +551,7 @@ const jsonLd = {
   {related.length > 0 && (
     <section class="bg-slate-50 py-12 md:py-16 border-t border-slate-200">
       <div class="container-wide">
-        <h2 class="text-xl font-bold text-brand-navy mb-6">Related Suppliers</h2>
+        <h2 class="font-display uppercase leading-[0.95] text-2xl md:text-3xl text-brand-navy mb-6">Related Suppliers</h2>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {related.map((r: any) => {
             const rHasLogo = !!(r.logoUrl && r.logoUrl.startsWith('http'));
@@ -591,8 +591,11 @@ const jsonLd = {
   )}
 
   <!-- ═══ BACK TO DIRECTORY ═══ -->
-  <section class="relative overflow-hidden bg-[#0a0e17] py-12">
-    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+  <section class="relative overflow-hidden bg-brand-navy py-12">
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%220.3%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+    {/* Faint decorative shards */}
+    <div class="absolute top-6 right-[12%] w-40 h-40 bg-primary/[0.06] pointer-events-none" style="clip-path: polygon(0 0, 100% 25%, 75% 100%, 20% 80%);"></div>
+    <div class="absolute -bottom-8 left-[8%] w-28 h-28 bg-primary/[0.06] pointer-events-none" style="clip-path: polygon(15% 0, 100% 40%, 80% 100%, 0 65%);"></div>
     <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/6 rounded-full blur-[150px]"></div>
     <div class="container-narrow text-center relative z-10">
       <p class="text-slate-400 mb-4">Looking for something else?</p>
@@ -620,7 +623,7 @@ const jsonLd = {
   .rich-text :global(ol)            { list-style: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #374151; }
   .rich-text :global(li)            { margin-bottom: 0.4rem; line-height: 1.7; }
   .rich-text :global(li p)          { margin-bottom: 0.25rem; }
-  .rich-text :global(a)             { color: #2563eb; text-decoration: underline; }
+  .rich-text :global(a)             { color: #14b8a6; text-decoration: underline; }
   .rich-text :global(a:hover)       { text-decoration: none; }
   .rich-text :global(blockquote)    { border-left: 4px solid #e2e8f0; padding-left: 1rem; color: #64748b; font-style: italic; margin: 1rem 0; }
   .rich-text :global(h1), .rich-text :global(h2),
