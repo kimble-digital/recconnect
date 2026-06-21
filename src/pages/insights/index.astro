@@ -3,6 +3,7 @@
 export const prerender = false;
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
 import { getArticles } from '@/lib/contentful';
 
 // ─── Fetch from Contentful ──────────────────────────────────────────
@@ -125,34 +126,24 @@ function getCategoryLabel(cat: string) {
 >
 
   <!-- ═══ MASTHEAD ═══ -->
-  <section class="relative overflow-hidden bg-brand-navy pt-36 md:pt-44">
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
-    <div class="absolute -top-16 -right-16 w-72 h-[26rem] bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
-    <div class="absolute -bottom-24 -left-10 w-56 h-[20rem] bg-primary/[0.04] -rotate-6 pointer-events-none" style="clip-path: polygon(0 0, 80% 0, 100% 100%, 20% 100%);"></div>
-    <div class="container-wide relative z-10">
-      <div class="flex flex-col sm:flex-row items-center justify-between py-5 border-b border-white/10">
-        <div>
-          <p class="kicker text-primary text-[0.8rem] mb-4">Industry Insights</p>
-          <h1 class="font-display uppercase leading-[0.95] text-3xl md:text-4xl text-white">
-            Industry insights
-          </h1>
-          <p class="text-sm text-slate-400 mt-2">Market analysis and leadership thinking for recruitment professionals</p>
-        </div>
-        <div class="flex items-center gap-2 mt-3 sm:mt-0" id="article-filters" role="tablist">
-          <button class="article-pill active" data-filter="all" role="tab" aria-selected="true">
-            All <span class="pill-count">{allCount}</span>
-          </button>
-          <button class="article-pill" data-filter="salt-report" role="tab" aria-selected="false">
-            Salt Report <span class="pill-count">{saltCount}</span>
-          </button>
-          <button class="article-pill" data-filter="rec-matters" role="tab" aria-selected="false">
-            Rec Matters <span class="pill-count">{recCount}</span>
-          </button>
-        </div>
-      </div>
+  <PageHero
+    kicker="Industry insights"
+    title="Industry"
+    accent="insights."
+    subtitle="Market analysis and leadership thinking for recruitment professionals."
+  >
+    <div class="flex flex-wrap items-center gap-2 mt-8" id="article-filters" role="tablist">
+      <button class="article-pill active" data-filter="all" role="tab" aria-selected="true">
+        All <span class="pill-count">{allCount}</span>
+      </button>
+      <button class="article-pill" data-filter="salt-report" role="tab" aria-selected="false">
+        Salt Report <span class="pill-count">{saltCount}</span>
+      </button>
+      <button class="article-pill" data-filter="rec-matters" role="tab" aria-selected="false">
+        Rec Matters <span class="pill-count">{recCount}</span>
+      </button>
     </div>
-  </section>
+  </PageHero>
 
   <!-- ═══ FEATURED + SIDEBAR ═══ -->
   <section class="bg-white border-b border-slate-200" id="featured-section">

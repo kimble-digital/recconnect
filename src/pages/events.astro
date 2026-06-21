@@ -6,6 +6,7 @@
 export const prerender = false;
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
 
 // ─── Eventbrite config ──────────────────────────────────────────────
 const EB_TOKEN = import.meta.env.EVENTBRITE_TOKEN || '';
@@ -135,24 +136,14 @@ function getPriceDisplay(event: EBEvent): string {
 >
 
   <!-- ═══ HERO ═══ -->
-  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-12 md:pt-44 md:pb-16">
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
-    <div class="container-wide relative z-10 text-center">
-      <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
-        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-        <span class="text-primary text-sm font-medium">
-          {upcomingEvents.length > 0 ? `${upcomingEvents.length} upcoming event${upcomingEvents.length !== 1 ? 's' : ''}` : 'Events for recruitment leaders'}
-        </span>
-      </div>
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-        RecConnect <span class="text-primary">Events</span>
-      </h1>
-      <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-        Summits, workshops, networking, and immersive experiences — in-person and online. Where recruitment leaders connect, learn, and grow.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    kicker={upcomingEvents.length > 0
+      ? `${upcomingEvents.length} upcoming event${upcomingEvents.length !== 1 ? 's' : ''}`
+      : 'Events for recruitment leaders'}
+    title="RecConnect"
+    accent="events."
+    subtitle="Summits, workshops, networking, and immersive experiences, in-person and online. Where recruitment leaders connect, learn, and grow."
+  />
 
   <!-- ═══ EVENTS GRID ═══ -->
   <section class="bg-slate-50 py-12 md:py-16">
@@ -338,8 +329,9 @@ function getPriceDisplay(event: EBEvent): string {
       {/* ── No upcoming / only past state ── */}
       {upcomingEvents.length === 0 && pastEvents.length > 0 && (
         <div class="text-center py-10 mb-10 border-b border-slate-200">
-          <h2 class="text-xl font-bold text-brand-navy mb-2">No Upcoming Events</h2>
-          <p class="text-slate-500">We're planning our next event — check back soon. In the meantime, here's what we've been up to.</p>
+          <p class="kicker text-primary-dark text-[0.8rem] mb-2">Past events</p>
+          <h2 class="font-display uppercase leading-[0.95] text-2xl md:text-3xl text-brand-navy mb-2">No upcoming events</h2>
+          <p class="text-slate-500">We're planning our next event, check back soon. In the meantime, here's what we've been up to.</p>
         </div>
       )}
 
@@ -447,7 +439,7 @@ function getPriceDisplay(event: EBEvent): string {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                 </svg>
               </div>
-              <h2 class="text-2xl font-bold text-brand-navy mb-3">Our Events</h2>
+              <h2 class="font-display uppercase leading-[0.95] text-2xl md:text-3xl text-brand-navy mb-3">Our events</h2>
               <p class="text-slate-600 mb-6 leading-relaxed">We run summits, workshops, networking lunches, and immersive experiences for recruitment leaders throughout the year.</p>
               <a href={EB_ORGANIZER_URL} target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-2">
                 View All Events on Eventbrite
@@ -463,7 +455,7 @@ function getPriceDisplay(event: EBEvent): string {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                 </svg>
               </div>
-              <h2 class="text-xl font-bold text-brand-navy mb-2">No Upcoming Events</h2>
+              <h2 class="font-display uppercase leading-[0.95] text-xl md:text-2xl text-brand-navy mb-2">No upcoming events</h2>
               <p class="text-slate-500 mb-6">We're planning our next event. Check back soon or browse our past events.</p>
               <a href={EB_ORGANIZER_URL} target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-2">
                 Browse on Eventbrite
@@ -551,14 +543,15 @@ function getPriceDisplay(event: EBEvent): string {
   </div>
 
   <!-- ═══ CTA ═══ -->
-  <section class="relative overflow-hidden bg-[#0a0e17] py-16 md:py-20">
-    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+  <section class="relative overflow-hidden bg-brand-navy py-16 md:py-20">
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%232dd4bf%22%20stroke-width%3D%220.3%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
     <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/6 rounded-full blur-[150px]"></div>
     <div class="container-narrow text-center relative z-10">
       <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
         <span class="text-primary text-sm font-medium">Members get priority access</span>
       </div>
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">Don't Miss Out</h2>
+      <p class="kicker text-primary text-[0.8rem] mb-4">Don't miss out</p>
+      <h2 class="font-display uppercase leading-[0.95] text-3xl md:text-5xl text-white mb-4">Be in the room</h2>
       <p class="text-slate-400 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
         RecConnect members get early access, discounted tickets, and exclusive invites to member-only events.
       </p>
@@ -601,8 +594,8 @@ function getPriceDisplay(event: EBEvent): string {
     color: #1a1f2e; /* brand-navy */
   }
   .tab-btn.is-active .tab-count {
-    background: rgba(66, 153, 225, 0.12); /* primary/10ish */
-    color: #4299e1; /* primary */
+    background: rgba(45, 212, 191, 0.12); /* primary/10ish */
+    color: #14b8a6; /* primary-dark */
   }
   .tab-btn.is-active .tab-indicator {
     transform: scaleX(1);

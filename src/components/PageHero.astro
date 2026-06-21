@@ -1,0 +1,38 @@
+---
+/**
+ * PageHero — consistent hero for all secondary pages.
+ * Left-aligned, near-black, kicker + condensed title + brush-script accent word,
+ * optional subtitle, decorative shards. Page-specific controls go in the default slot.
+ *
+ * Props:
+ *   kicker    small label above the title
+ *   title     main heading words (condensed Anton caps)
+ *   accent    brush-script accent word (Reissue) — the per-page signature
+ *   subtitle  optional supporting line
+ */
+interface Props {
+  kicker?: string;
+  title: string;
+  accent?: string;
+  subtitle?: string;
+}
+const { kicker, title, accent, subtitle } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-brand-navy pt-36 pb-14 md:pt-44 md:pb-20 border-b border-white/10">
+  <div class="absolute -top-16 -right-20 w-80 h-[30rem] bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+  <div class="absolute -bottom-24 -left-16 w-44 h-96 bg-coral/[0.05] -rotate-[18deg] pointer-events-none" style="clip-path: polygon(55% 0, 100% 0, 45% 100%, 0 100%);"></div>
+
+  <div class="container-wide relative z-10">
+    <div class="max-w-4xl">
+      {kicker && <p class="kicker text-primary text-[0.8rem] mb-4">{kicker}</p>}
+      <h1 class="font-display uppercase text-white text-5xl md:text-7xl leading-[0.9]">
+        {title}{accent && (
+          <span class="font-script normal-case text-primary inline-block align-[-0.08em] leading-none text-6xl md:text-8xl ml-2">{accent}</span>
+        )}
+      </h1>
+      {subtitle && <p class="mt-5 text-lg text-slate-400 max-w-2xl leading-relaxed">{subtitle}</p>}
+    </div>
+    <slot />
+  </div>
+</section>
