@@ -1,6 +1,7 @@
 ---
 import LogoWall from '@/components/LogoWall.astro';
 import Marquee from '@/components/home/Marquee.astro';
+const BOOK_URL = 'https://www.amazon.co.uk/dp/B0H4NF36K8?ref=cm_sw_r_ffobk_cp_ud_dp_8QP171CNN3TK5E1GSWHF&bestFormat=true';
 ---
 
 <section class="relative bg-brand-navy overflow-hidden min-h-screen flex flex-col">
@@ -19,7 +20,8 @@ import Marquee from '@/components/home/Marquee.astro';
   <!-- Content -->
   <div class="relative z-10 flex-1 flex items-center w-full">
     <div class="container-wide pt-40 pb-12 w-full">
-    <div class="max-w-4xl">
+    <div class="flex items-center gap-10 xl:gap-16">
+      <div class="max-w-2xl flex-1">
     <p class="kicker inline-flex items-center gap-2.5 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-[0.78rem] text-primary mb-7">
       <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
       For leaders of independent recruitment agencies
@@ -74,7 +76,20 @@ import Marquee from '@/components/home/Marquee.astro';
         Partner with RecConnect →
       </a>
     </p>
-    </div>
+      </div>
+
+      <aside class="hidden lg:block flex-shrink-0 w-[19rem]">
+        <div class="rounded-xl border border-white/10 bg-white/[0.04] p-5">
+          <p class="kicker text-primary text-[0.7rem] mb-3">New book</p>
+          <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" class="block mb-4">
+            <img src="/images/simon-book.jpg" alt="The Agile Recruiter by Simon Lewis" class="w-full rounded-lg" loading="lazy" />
+          </a>
+          <h3 class="text-white font-bold text-base mb-1">The Agile Recruiter</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Simon Lewis's guide to running a modern, AI-era SME recruitment business.</p>
+          <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" class="btn-primary w-full text-sm py-2.5">Get the book</a>
+        </div>
+      </aside>
+      </div>
     </div>
   </div>
 
