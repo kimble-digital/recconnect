@@ -47,6 +47,15 @@
   font-display: swap;
 }
 
+/* Reissue — self-hosted dry-brush display script (hero accent) */
+@font-face {
+  font-family: 'Reissue';
+  src: url('/fonts/reissue.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -106,7 +115,7 @@ a {
   letter-spacing: 0.012em;
 }
 .font-script {
-  font-family: 'Kaushan Script', cursive !important;
+  font-family: 'Reissue', 'Nanum Brush Script', cursive !important;
   font-weight: 400 !important;
 }
 .kicker {
