@@ -97,3 +97,21 @@ a {
     @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
   }
 }
+
+/* ── Display / edgy type helpers (outside @layer so !important wins over
+   the global heading rule). Used across the bolder homepage. ── */
+.font-display {
+  font-family: 'Anton', 'Arial Narrow', Impact, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.012em;
+}
+.font-script {
+  font-family: 'Permanent Marker', cursive !important;
+  font-weight: 400 !important;
+}
+.kicker {
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  line-height: 1;
+}
