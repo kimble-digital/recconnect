@@ -30,3 +30,6 @@ coverage/
 .cache/
 *.tgz
 .vercel
+
+# Contentful import error logs
+contentful-import-error-log-*.json

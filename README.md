@@ -4,7 +4,7 @@ Professional recruitment community platform built with Astro and Contentful.
 
 ## Tech Stack
 
-- **Framework**: [Astro](https://astro.build) v4
+- **Framework**: [Astro](https://astro.build) v5
 - **CMS**: [Contentful](https://contentful.com)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com)
 - **Components**: [React](https://react.dev) (for interactive components)
