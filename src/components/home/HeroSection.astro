@@ -78,15 +78,20 @@ const BOOK_URL = 'https://www.amazon.co.uk/dp/B0H4NF36K8?ref=cm_sw_r_ffobk_cp_ud
     </p>
       </div>
 
-      <aside class="hidden lg:block flex-shrink-0 w-[19rem]">
-        <div class="rounded-xl border border-white/10 bg-white/[0.04] p-5">
-          <p class="kicker text-primary text-[0.7rem] mb-3">New book</p>
-          <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" class="block mb-4">
-            <img src="/images/simon-book.jpg" alt="The Agile Recruiter by Simon Lewis" class="w-full rounded-lg" loading="lazy" />
-          </a>
-          <h3 class="text-white font-bold text-base mb-1">The Agile Recruiter</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Simon Lewis's guide to running a modern, AI-era SME recruitment business.</p>
-          <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" class="btn-primary w-full text-sm py-2.5">Get the book</a>
+      <aside class="hidden lg:block flex-shrink-0 w-[20rem] relative">
+        <div class="absolute -inset-5 bg-primary/10 blur-[55px] rounded-full pointer-events-none"></div>
+        <div class="relative rounded-2xl border border-white/10 bg-white/[0.05] p-6">
+          <p class="kicker text-primary text-[0.7rem] mb-4">From our founder</p>
+          <div class="relative mb-5">
+            <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-coral/20 -rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+            <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" class="relative block -rotate-2 transition-transform duration-300 hover:rotate-0 hover:-translate-y-1">
+              <img src="/images/simon-book.jpg" alt="The Agile Recruiter by Simon Lewis" class="w-full rounded-lg shadow-2xl ring-1 ring-white/10" loading="lazy" />
+            </a>
+            <span class="absolute -top-3 -left-3 rotate-[-8deg] bg-coral text-brand-navy text-[0.62rem] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-lg">New</span>
+          </div>
+          <h3 class="text-white font-bold text-lg mb-1.5">The Agile Recruiter</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-5">A leader's guide to running a modern, AI-era SME recruitment business.</p>
+          <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" class="btn-primary w-full text-sm py-2.5">Get the book →</a>
         </div>
       </aside>
       </div>
