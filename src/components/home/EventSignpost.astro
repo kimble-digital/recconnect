@@ -1,0 +1,165 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// CONNECTED 2026 signpost - dedicated band for the home page.
+// Place after <HeroSection /> in index.astro. Self-contained.
+// Black + orange to stand apart from the blue home page.
+// Left: messaging + countdown + CTAs + headline sponsor.
+// Right: the speaker line-up.
+// ───────────────────────────────────────────────────────────────────
+import { speakers } from '@/data/connected';
+import EventSponsor from '@/components/home/EventSponsor.astro';
+const EVENT_HREF = '/connected-2026';
+const ticker = ['Powerful stories', 'Impactful networking', 'Live music, DJ, magic', 'Lasting connections', 'Adios, PowerPoint'];
+---
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" />
+
+<section class="es" aria-label="CONNECTED 2026">
+  <div class="es-photo" style="background-image:url('/images/box/Box2.webp')"></div>
+  <div class="es-veil"></div>
+  <div class="es-glow"></div>
+
+  <div class="es-inner">
+    <div class="es-main">
+      <p class="es-kicker">✦ Our flagship event returns</p>
+      <h2 class="es-title">Connected <span class="es-yr es-flicker">2026</span></h2>
+      <p class="es-sub">
+        The iconic immersive experience for recruitment professionals. One unmissable day in the heart of London where the lights go down and the standard conference gets torn up.
+      </p>
+      <p class="es-meta">Thursday 12 November 2026 &nbsp;·&nbsp; BOX Piccadilly, London &nbsp;·&nbsp; 09:30-17:00</p>
+
+      <div class="es-count" aria-hidden="true">
+        <div class="es-c"><span class="es-cn" data-d>--</span><span class="es-cl">Days</span></div>
+        <div class="es-c"><span class="es-cn" data-h>--</span><span class="es-cl">Hrs</span></div>
+        <div class="es-c"><span class="es-cn" data-m>--</span><span class="es-cl">Mins</span></div>
+      </div>
+
+      <div class="es-cta">
+        <a href={EVENT_HREF} class="es-btn">Get tickets <span aria-hidden="true">→</span></a>
+        <a href={EVENT_HREF} class="es-link">Explore the day</a>
+      </div>
+
+      <div class="es-sponsor">
+        <EventSponsor variant="inline" />
+      </div>
+    </div>
+
+    <div class="es-speakers">
+      <p class="es-sp-lead">On the bill</p>
+      <div class="es-sp-grid">
+        {speakers.map((s) => (
+          <a href={EVENT_HREF} class="es-sp">
+            <span class="es-sp-img"><img src={s.img} alt={s.name} loading="lazy" /></span>
+            <span class="es-sp-name">{s.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="es-marquee" aria-hidden="true">
+    <div class="es-mtrack">
+      {Array.from({ length: 2 }).map(() => (
+        <span class="es-mgroup">
+          {ticker.map((t) => (<><span>{t}</span><span class="es-star">✦</span></>))}
+        </span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .es { position: relative; overflow: hidden; background: #080808; color: #fff; }
+  .es-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.28; filter: grayscale(0.35) contrast(1.05); }
+  .es-veil {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, #080808 18%, rgba(8,8,8,0.62) 100%),
+      linear-gradient(0deg, rgba(8,8,8,0.95), rgba(8,8,8,0.5));
+  }
+  .es-glow { position: absolute; right: -8%; top: -45%; width: 640px; height: 460px; background: rgba(255,106,19,0.22); filter: blur(150px); border-radius: 50%; }
+
+  .es-inner { position: relative; z-index: 2; max-width: 80rem; margin: 0 auto; padding: 3.5rem 1.5rem 4.25rem; display: flex; align-items: center; gap: 3.5rem; }
+  .es-main { flex: 1 1 34rem; min-width: 0; }
+
+  .es-kicker { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.28em; color: #ff6a13; font-size: 1rem; margin-bottom: 0.9rem; }
+  .es-title { font-family: 'Bebas Neue', Impact, sans-serif !important; font-weight: 400 !important; text-transform: uppercase; line-height: 0.85; font-size: clamp(3rem, 7vw, 5.5rem); color: #fff; margin: 0 0 1rem; }
+  .es-yr { color: #ff6a13; text-shadow: 0 0 24px rgba(255,106,19,0.5), 0 0 60px rgba(255,106,19,0.25); }
+  .es-flicker { animation: es-flicker 7s linear infinite; }
+  @keyframes es-flicker {
+    0%, 18%, 22%, 55%, 100% { opacity: 1; }
+    19%, 21% { opacity: 0.4; }
+    20% { opacity: 0.85; }
+    56%, 58% { opacity: 0.65; }
+    57% { opacity: 1; }
+  }
+  .es-sub { max-width: 40rem; color: rgba(255,255,255,0.72); font-size: 1.05rem; line-height: 1.65; font-weight: 300; margin-bottom: 1.1rem; }
+  .es-meta { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.55); font-size: 0.9rem; }
+
+  .es-count { display: flex; gap: 1.5rem; margin-top: 1.6rem; }
+  .es-c { text-align: center; }
+  .es-cn { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; line-height: 1; color: #ff6a13; text-shadow: 0 0 18px rgba(255,106,19,0.4); }
+  .es-cl { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+  .es-cta { display: flex; align-items: center; gap: 1.75rem; margin-top: 1.9rem; flex-wrap: wrap; }
+  .es-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.35rem;
+    background: #ff6a13; color: #0a0a0a; padding: 1rem 2.2rem; border-radius: 0.4rem;
+    box-shadow: 0 12px 34px -10px rgba(255,106,19,0.8); transition: transform 0.18s ease, background 0.2s ease;
+  }
+  .es-btn:hover { transform: translateY(-2px); background: #ff7a1f; }
+  .es-link { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.18em; font-size: 1rem; color: rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; transition: color 0.2s ease, border-color 0.2s ease; }
+  .es-link:hover { color: #fff; border-color: #ff6a13; }
+
+  .es-sponsor { margin-top: 1.9rem; }
+
+  /* ── Speakers (right side) ── */
+  .es-speakers { flex: 0 0 auto; width: min(44%, 30rem); }
+  .es-sp-lead { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.24em; color: rgba(255,255,255,0.55); font-size: 0.85rem; margin-bottom: 1rem; text-align: right; }
+  .es-sp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+  .es-sp { display: block; text-decoration: none; }
+  .es-sp-img { display: block; aspect-ratio: 1 / 1; border-radius: 0.4rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #141414; }
+  .es-sp-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; filter: grayscale(1) contrast(1.03) brightness(0.9); transition: transform 0.45s ease, filter 0.4s ease; }
+  .es-sp:hover .es-sp-img img { transform: scale(1.06); filter: grayscale(0.1) contrast(1.05); }
+  .es-sp-name { display: block; font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; color: rgba(255,255,255,0.75); margin-top: 0.45rem; }
+
+  /* ── Marquee strip ── */
+  .es-marquee { position: relative; z-index: 2; overflow: hidden; white-space: nowrap; border-top: 1px solid rgba(255,106,19,0.3); background: rgba(0,0,0,0.35); padding: 0.65rem 0; }
+  .es-mtrack { display: inline-flex; animation: es-mq 26s linear infinite; }
+  .es-mgroup { display: inline-flex; align-items: center; }
+  .es-mgroup span { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.14em; font-size: 1.1rem; color: #ff6a13; padding: 0 1.25rem; }
+  .es-mgroup .es-star { color: rgba(255,255,255,0.3); font-size: 0.8rem; padding: 0 0.2rem; }
+  @keyframes es-mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  @media (max-width: 900px) {
+    .es-inner { flex-direction: column; align-items: flex-start; gap: 2.5rem; }
+    .es-speakers { width: 100%; }
+    .es-sp-lead { text-align: left; }
+    .es-sp-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .es-sp-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .es-flicker, .es-mtrack { animation: none !important; }
+  }
+</style>
+
+<script>
+  const target = new Date('2026-11-12T09:30:00Z').getTime();
+  const wrap = document.querySelector('.es-count');
+  const dEl = wrap?.querySelector('[data-d]') as HTMLElement | null;
+  const hEl = wrap?.querySelector('[data-h]') as HTMLElement | null;
+  const mEl = wrap?.querySelector('[data-m]') as HTMLElement | null;
+  if (dEl && hEl && mEl) {
+    const tick = () => {
+      const mins = Math.max(0, Math.floor((target - Date.now()) / 60000));
+      dEl.textContent = String(Math.floor(mins / 1440));
+      hEl.textContent = String(Math.floor((mins % 1440) / 60));
+      mEl.textContent = String(mins % 60);
+    };
+    tick();
+    setInterval(tick, 30000);
+  }
+</script>

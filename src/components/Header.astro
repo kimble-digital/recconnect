@@ -1,11 +1,4 @@
 ---
-interface Props {
-  /** Enable large logo + scroll-shrink sticky behaviour (homepage only) */
-  heroMode?: boolean;
-}
-
-const { heroMode = false } = Astro.props;
-
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Suppliers', href: '/suppliers' },
@@ -17,46 +10,20 @@ const navItems = [
 const currentPath = Astro.url.pathname;
 ---
 
-{/* Scroll-shrink styles only injected in heroMode */}
-{heroMode ? (
-  <style is:global>
+<style is:global>
+  #nav-logo {
+    height: 6rem;
+  }
+  @media (min-width: 768px) {
     #nav-logo {
-      height: 6rem;
-      transition: height 0.3s ease;
+      height: 8rem;
     }
-    @media (min-width: 768px) {
-      #nav-logo {
-        height: 8rem;
-      }
-    }
-    .header-scrolled #nav-logo {
-      height: 2.5rem !important;
-    }
-    .header-scrolled {
-      background-color: rgb(15 23 42 / 0.97) !important;
-      box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
-    }
-  </style>
-) : (
-  <style is:global>
-    #nav-logo {
-      height: 6rem;
-    }
-    @media (min-width: 768px) {
-      #nav-logo {
-        height: 8rem;
-      }
-    }
-  </style>
-)}
+  }
+</style>
 
 <header
   id="site-header"
-  class:list={[
-    'top-0 left-0 right-0 z-50 transition-all duration-300',
-    heroMode ? 'fixed' : 'absolute',
-  ]}
-  data-hero-mode={heroMode ? 'true' : 'false'}
+  class="absolute top-0 left-0 right-0 z-50"
 >
   <nav class="max-w-7xl mx-auto px-6 relative z-10">
     <div class="flex items-center justify-between py-4">
@@ -144,23 +111,8 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <script>
-  const header = document.getElementById('site-header');
   const menuToggle = document.getElementById('mobile-menu-toggle');
   const menu = document.getElementById('mobile-menu');
-
-  // Only run scroll-shrink logic on heroMode pages
-  if (header?.dataset.heroMode === 'true') {
-    const onScroll = () => {
-      const threshold = window.innerHeight * 0.85;
-      if (window.scrollY > threshold) {
-        header.classList.add('header-scrolled');
-      } else {
-        header.classList.remove('header-scrolled');
-      }
-    };
-    window.addEventListener('scroll', onScroll);
-    onScroll();
-  }
 
   menuToggle?.addEventListener('click', () => {
     menu?.classList.toggle('hidden');

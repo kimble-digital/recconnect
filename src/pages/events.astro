@@ -1,13 +1,16 @@
 ---
+// ─── On-demand rendering ────────────────────────────────────────────
+// This page is rendered on each request (as a Vercel serverless fn)
+// and CDN-cached for 5 minutes. Eventbrite changes propagate within
+// 5 mins automatically — no redeploy needed.
+export const prerender = false;
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 // ─── Eventbrite config ──────────────────────────────────────────────
-// To enable: add EVENTBRITE_TOKEN to .env
-// Get your token: Eventbrite → Account Settings → Developer Links → API Keys
-// Org ID: found via GET /v3/users/me/organizations/ with your token
 const EB_TOKEN = import.meta.env.EVENTBRITE_TOKEN || '';
-const EB_ORG_ID = import.meta.env.EVENTBRITE_ORG_ID || '';
-const EB_ORGANIZER_URL = 'https://www.eventbrite.co.uk/o/recconnect-events-18388567194';
+const EB_ORG_ID = '286061868485'; // verified via GET /v3/users/me/organizations/
+const EB_ORGANIZER_URL = 'https://www.eventbrite.co.uk/cc/recruitment-events-experiences-92999';
 
 interface EBEvent {
   id: string;
@@ -33,58 +36,96 @@ interface EBEvent {
     is_sold_out: boolean;
     minimum_ticket_price?: { display: string };
     maximum_ticket_price?: { display: string };
+    waitlist_available?: boolean;
   };
 }
 
-let events: EBEvent[] = [];
-let fetchError = false;
+let upcomingEvents: EBEvent[] = [];
+let pastEvents: EBEvent[] = [];
+let fetchSucceeded = true;
 
-if (EB_TOKEN && EB_ORG_ID) {
-  try {
-    const res = await fetch(
-      `https://www.eventbriteapi.com/v3/organizations/${EB_ORG_ID}/events/?status=live,started&expand=venue,ticket_availability&order_by=start_asc`,
-      { headers: { Authorization: `Bearer ${EB_TOKEN}` } }
-    );
-    if (res.ok) {
+if (EB_TOKEN) {
+  const baseUrl = `https://www.eventbriteapi.com/v3/organizations/${EB_ORG_ID}/events/`;
+  const authHeaders = { Authorization: `Bearer ${EB_TOKEN}` };
+
+  async function fetchEvents(query: string, label: string): Promise<EBEvent[]> {
+    try {
+      const res = await fetch(`${baseUrl}?${query}`, { headers: authHeaders });
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error(`[Eventbrite] ${label} API error ${res.status}:`, errText);
+        fetchSucceeded = false;
+        return [];
+      }
       const data = await res.json();
-      events = data.events || [];
-    } else {
-      console.error(`Eventbrite API error: ${res.status}`);
-      fetchError = true;
+      console.log(`[Eventbrite] ${label} found:`, data.events?.length ?? 0);
+      return data.events || [];
+    } catch (e) {
+      console.error(`[Eventbrite] ${label} fetch failed:`, e);
+      fetchSucceeded = false;
+      return [];
     }
-  } catch (e) {
-    console.error('Eventbrite fetch failed:', e);
-    fetchError = true;
   }
+
+  // Two parallel calls — Eventbrite's status filter is exclusive,
+  // so we need separate calls for upcoming vs past.
+  const [upcomingRaw, pastRaw] = await Promise.all([
+    fetchEvents(
+      'expand=venue,ticket_availability&order_by=start_asc&status=live,started',
+      'upcoming'
+    ),
+    fetchEvents(
+      'expand=venue,ticket_availability&order_by=start_desc&status=ended,completed&page_size=12',
+      'past'
+    ),
+  ]);
+
+  const now = new Date();
+  // Belt & braces: Eventbrite sometimes lags before flipping status to ended,
+  // so filter out anything that's actually finished from the upcoming list.
+  upcomingEvents = upcomingRaw.filter(e => new Date(e.end.utc) > now);
+  pastEvents = pastRaw;
 }
 
-const hasApiConfig = !!(EB_TOKEN && EB_ORG_ID);
-
-// Past events could be fetched separately if wanted
-// For now we just show upcoming/live events
-
-function formatEventDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+// ─── Cache headers ──────────────────────────────────────────────────
+// On success: 5 min fresh on Vercel's edge, then up to 1 hour serving
+// stale while revalidating in background. On failure: don't cache, so
+// the next request retries immediately.
+if (fetchSucceeded && (upcomingEvents.length > 0 || pastEvents.length > 0)) {
+  Astro.response.headers.set(
+    'Cache-Control',
+    'public, s-maxage=300, stale-while-revalidate=3600'
+  );
+} else {
+  Astro.response.headers.set('Cache-Control', 'no-store');
 }
+
+const hasApiConfig = !!EB_TOKEN;
+const hasAnyEvents = upcomingEvents.length > 0 || pastEvents.length > 0;
+const hasBothTabs = upcomingEvents.length > 0 && pastEvents.length > 0;
+
+// Default active tab: upcoming if any, otherwise past
+const defaultTab: 'upcoming' | 'past' = upcomingEvents.length > 0 ? 'upcoming' : 'past';
 
 function formatEventTime(dateStr: string) {
-  return new Date(dateStr).toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return new Date(dateStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
-
 function getEventMonth(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-GB', { month: 'short' }).toUpperCase();
 }
-
 function getEventDay(dateStr: string) {
   return new Date(dateStr).getDate().toString();
+}
+function getEventDayOfWeek(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-GB', { weekday: 'short' });
+}
+function getPriceDisplay(event: EBEvent): string {
+  if (event.is_free) return 'Free';
+  const min = event.ticket_availability?.minimum_ticket_price?.display;
+  const max = event.ticket_availability?.maximum_ticket_price?.display;
+  if (!min) return '';
+  if (max && max !== min) return `${min} – ${max}`;
+  return `From ${min}`;
 }
 ---
 
@@ -97,13 +138,13 @@ function getEventDay(dateStr: string) {
   <section class="relative overflow-hidden bg-brand-navy pt-36 pb-12 md:pt-44 md:pb-16">
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
-
     <div class="container-wide relative z-10 text-center">
       <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
         <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-        <span class="text-primary text-sm font-medium">{events.length > 0 ? `${events.length} upcoming event${events.length !== 1 ? 's' : ''}` : 'Events for recruitment leaders'}</span>
+        <span class="text-primary text-sm font-medium">
+          {upcomingEvents.length > 0 ? `${upcomingEvents.length} upcoming event${upcomingEvents.length !== 1 ? 's' : ''}` : 'Events for recruitment leaders'}
+        </span>
       </div>
-
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
         RecConnect <span class="text-primary">Events</span>
       </h1>
@@ -113,113 +154,292 @@ function getEventDay(dateStr: string) {
     </div>
   </section>
 
-  <!-- ═══ EVENTS LIST ═══ -->
-  <section class="bg-white py-12 md:py-16">
-    <div class="container-wide max-w-4xl">
+  <!-- ═══ EVENTS GRID ═══ -->
+  <section class="bg-slate-50 py-12 md:py-16">
+    <div class="container-wide">
 
-      {/* API connected — show live events */}
-      {events.length > 0 && (
-        <div class="space-y-6">
-          {events.map((event) => (
-            <a
-              href={event.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group flex flex-col sm:flex-row gap-5 p-5 md:p-6 rounded-xl border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+      {/* ── Tabs nav (only when both upcoming + past exist) ── */}
+      {hasBothTabs && (
+        <div class="mb-8 border-b border-slate-200">
+          <div class="flex items-center gap-1" role="tablist" aria-label="Events">
+            <button
+              type="button"
+              class={`tab-btn relative px-4 py-3 text-sm font-semibold transition-colors ${defaultTab === 'upcoming' ? 'is-active' : ''}`}
+              data-tab="upcoming"
+              role="tab"
+              aria-selected={defaultTab === 'upcoming'}
+              aria-controls="panel-upcoming"
             >
-              {/* Date badge */}
-              <div class="flex-shrink-0 flex sm:flex-col items-center sm:items-center gap-2 sm:gap-0 sm:w-20 sm:pt-1">
-                <span class="text-xs font-bold text-primary tracking-wider">{getEventMonth(event.start.local)}</span>
-                <span class="text-3xl sm:text-4xl font-bold text-brand-navy leading-none">{getEventDay(event.start.local)}</span>
-              </div>
-
-              {/* Event details */}
-              <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-center gap-2 mb-2">
-                  {event.online_event && (
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                      Online
-                    </span>
-                  )}
-                  {!event.online_event && (
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-primary/5 text-primary border border-primary/10">
-                      In Person
-                    </span>
-                  )}
-                  {event.is_free && (
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
-                      Free
-                    </span>
-                  )}
-                  {event.ticket_availability?.is_sold_out && (
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-semibold bg-red-50 text-red-600 border border-red-100">
-                      Sold Out
-                    </span>
-                  )}
-                </div>
-
-                <h3 class="text-lg font-bold text-brand-navy group-hover:text-primary transition-colors leading-snug mb-2">
-                  {event.name.text}
-                </h3>
-
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mb-2">
-                  <span class="inline-flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {formatEventTime(event.start.local)} – {formatEventTime(event.end.local)}
-                  </span>
-                  {event.venue && (
-                    <span class="inline-flex items-center gap-1.5">
-                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {event.venue.name}{event.venue.address?.city ? `, ${event.venue.address.city}` : ''}
-                    </span>
-                  )}
-                  {!event.is_free && event.ticket_availability?.minimum_ticket_price && (
-                    <span class="inline-flex items-center gap-1.5">
-                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                      </svg>
-                      From {event.ticket_availability.minimum_ticket_price.display}
-                    </span>
-                  )}
-                </div>
-
-                {event.summary && (
-                  <p class="text-sm text-slate-600 line-clamp-2">{event.summary}</p>
-                )}
-              </div>
-
-              {/* Thumbnail */}
-              {event.logo && (
-                <div class="hidden md:block flex-shrink-0 w-40 rounded-lg overflow-hidden">
-                  <img
-                    src={event.logo.url}
-                    alt={event.name.text}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </div>
-              )}
-
-              {/* Arrow */}
-              <div class="hidden sm:flex flex-shrink-0 items-center">
-                <svg class="w-5 h-5 text-slate-300 group-hover:text-primary group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </a>
-          ))}
+              <span class="relative z-10">Upcoming</span>
+              <span class="ml-1.5 inline-flex items-center justify-center min-w-[1.25rem] px-1.5 py-0.5 rounded-full text-[0.7rem] font-bold tab-count">
+                {upcomingEvents.length}
+              </span>
+              <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary tab-indicator"></span>
+            </button>
+            <button
+              type="button"
+              class={`tab-btn relative px-4 py-3 text-sm font-semibold transition-colors ${defaultTab === 'past' ? 'is-active' : ''}`}
+              data-tab="past"
+              role="tab"
+              aria-selected={defaultTab === 'past'}
+              aria-controls="panel-past"
+            >
+              <span class="relative z-10">Past</span>
+              <span class="ml-1.5 inline-flex items-center justify-center min-w-[1.25rem] px-1.5 py-0.5 rounded-full text-[0.7rem] font-bold tab-count">
+                {pastEvents.length}
+              </span>
+              <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary tab-indicator"></span>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* No API config or no events — show Eventbrite link */}
-      {events.length === 0 && (
-        <div class="text-center py-12">
+      {/* ── Upcoming panel ── */}
+      {upcomingEvents.length > 0 && (
+        <div
+          id="panel-upcoming"
+          role="tabpanel"
+          aria-labelledby="tab-upcoming"
+          class={`tab-panel ${hasBothTabs && defaultTab !== 'upcoming' ? 'hidden' : ''}`}
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {upcomingEvents.map((event) => {
+              const price = getPriceDisplay(event);
+              const soldOut = event.ticket_availability?.is_sold_out;
+              const imageUrl = event.logo?.original?.url || event.logo?.url || null;
+              return (
+                <div
+                  class="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                  data-event-url={event.url}
+                >
+                  {/* Image */}
+                  <div class="relative aspect-video bg-slate-100 overflow-hidden">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={event.name.text}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-brand-navy/20">
+                        <svg class="w-12 h-12 text-primary/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                        </svg>
+                      </div>
+                    )}
+
+                    {/* Date badge */}
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-2 text-center shadow-sm min-w-[52px]">
+                      <div class="text-[0.6rem] font-bold text-primary tracking-widest leading-none mb-0.5">{getEventMonth(event.start.local)}</div>
+                      <div class="text-2xl font-bold text-brand-navy leading-none">{getEventDay(event.start.local)}</div>
+                      <div class="text-[0.6rem] text-slate-400 uppercase tracking-wide leading-none mt-0.5">{getEventDayOfWeek(event.start.local)}</div>
+                    </div>
+
+                    {/* Status badges */}
+                    <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+                      {soldOut && (
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500 text-white shadow-sm">Sold Out</span>
+                      )}
+                      {event.ticket_availability?.waitlist_available && !soldOut && (
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500 text-white shadow-sm">Waitlist</span>
+                      )}
+                      {!soldOut && event.is_free && (
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow-sm">Free</span>
+                      )}
+                      {event.online_event && (
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-navy/80 text-white backdrop-blur-sm shadow-sm">Online</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div class="p-5 flex flex-col flex-1">
+                    {/* Meta */}
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 mb-3">
+                      <span class="inline-flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {formatEventTime(event.start.local)} – {formatEventTime(event.end.local)}
+                      </span>
+                      {event.venue && (
+                        <span class="inline-flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          {event.venue.name}{event.venue.address?.city ? `, ${event.venue.address.city}` : ''}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Title */}
+                    <h3 class="text-base font-bold text-brand-navy group-hover:text-primary transition-colors leading-snug mb-2">
+                      {event.name.text}
+                    </h3>
+
+                    {/* Description */}
+                    {(event.summary || event.description?.text) && (
+                      <p class="text-sm text-slate-500 leading-relaxed line-clamp-3 flex-1 mb-4">
+                        {event.summary || event.description?.text}
+                      </p>
+                    )}
+
+                    {/* Footer */}
+                    <div class="flex items-center justify-between gap-3 mt-auto pt-4 border-t border-slate-100">
+                      {price && (
+                        <span class="text-sm font-semibold text-brand-navy">{price}</span>
+                      )}
+                      <div class="flex items-center gap-2 ml-auto">
+                        <a
+                          href={event.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          Details ↗
+                        </a>
+                        {soldOut ? (
+                          <button disabled class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-100 text-slate-400 cursor-not-allowed">
+                            Sold Out
+                          </button>
+                        ) : (
+                          <button
+                            class="ticket-btn px-4 py-2 rounded-lg text-xs font-semibold bg-primary text-white hover:bg-primary/90 transition-colors"
+                            data-event-id={event.id}
+                            data-event-title={event.name.text}
+                            data-event-url={event.url}
+                            data-event-image={event.logo?.original?.url || event.logo?.url || ''}
+                            data-event-month={getEventMonth(event.start.local)}
+                            data-event-day={getEventDay(event.start.local)}
+                            data-event-dow={getEventDayOfWeek(event.start.local)}
+                            data-event-time={`${formatEventTime(event.start.local)} – ${formatEventTime(event.end.local)}`}
+                            data-event-venue={event.venue ? `${event.venue.name}${event.venue.address?.localized_address_display ? ', ' + event.venue.address.localized_address_display : event.venue.address?.city ? ', ' + event.venue.address.city : ''}` : ''}
+                            data-event-price={getPriceDisplay(event)}
+                            data-event-description={event.summary || event.description?.text || ''}
+                            data-event-free={event.is_free}
+                            data-event-soldout={event.ticket_availability?.is_sold_out}
+                            data-event-online={event.online_event}
+                          >
+                            {event.is_free ? 'Register Free' : 'Get Tickets'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── No upcoming / only past state ── */}
+      {upcomingEvents.length === 0 && pastEvents.length > 0 && (
+        <div class="text-center py-10 mb-10 border-b border-slate-200">
+          <h2 class="text-xl font-bold text-brand-navy mb-2">No Upcoming Events</h2>
+          <p class="text-slate-500">We're planning our next event — check back soon. In the meantime, here's what we've been up to.</p>
+        </div>
+      )}
+
+      {/* ── Past panel ── */}
+      {pastEvents.length > 0 && (
+        <div
+          id="panel-past"
+          role="tabpanel"
+          aria-labelledby="tab-past"
+          class={`tab-panel ${hasBothTabs && defaultTab !== 'past' ? 'hidden' : ''}`}
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {pastEvents.map((event) => {
+              const price = getPriceDisplay(event);
+              const imageUrl = event.logo?.original?.url || event.logo?.url || null;
+              return (
+                <div
+                  class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col opacity-70"
+                  data-event-url={event.url}
+                >
+                  {/* Image */}
+                  <div class="relative aspect-video bg-slate-100 overflow-hidden">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={event.name.text}
+                        class="w-full h-full object-cover grayscale"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                        <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                        </svg>
+                      </div>
+                    )}
+                    {/* Date badge */}
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-2 text-center shadow-sm min-w-[52px]">
+                      <div class="text-[0.6rem] font-bold text-slate-400 tracking-widest leading-none mb-0.5">{getEventMonth(event.start.local)}</div>
+                      <div class="text-2xl font-bold text-slate-500 leading-none">{getEventDay(event.start.local)}</div>
+                      <div class="text-[0.6rem] text-slate-400 uppercase tracking-wide leading-none mt-0.5">{getEventDayOfWeek(event.start.local)}</div>
+                    </div>
+                    {/* Past badge */}
+                    <div class="absolute top-3 right-3">
+                      <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-500 text-white shadow-sm">Past Event</span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div class="p-5 flex flex-col flex-1">
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 mb-3">
+                      <span class="inline-flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {formatEventTime(event.start.local)} – {formatEventTime(event.end.local)}
+                      </span>
+                      {event.venue && (
+                        <span class="inline-flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          {event.venue.name}{event.venue.address?.city ? `, ${event.venue.address.city}` : ''}
+                        </span>
+                      )}
+                    </div>
+                    <h3 class="text-base font-bold text-slate-500 leading-snug mb-2">{event.name.text}</h3>
+                    {(event.summary || event.description?.text) && (
+                      <p class="text-sm text-slate-400 leading-relaxed line-clamp-3 flex-1 mb-4">
+                        {event.summary || event.description?.text}
+                      </p>
+                    )}
+                    <div class="flex items-center justify-between gap-3 mt-auto pt-4 border-t border-slate-100">
+                      {price && <span class="text-sm font-semibold text-slate-400">{price}</span>}
+                      <div class="flex items-center gap-2 ml-auto">
+                        <a
+                          href={event.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          Details ↗
+                        </a>
+                        <button disabled class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-100 text-slate-400 cursor-not-allowed">
+                          Event Ended
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Empty states — only when API returned nothing at all */}
+      {!hasAnyEvents && (
+        <div class="text-center py-16">
           {!hasApiConfig ? (
             <div class="max-w-lg mx-auto">
               <div class="w-16 h-16 rounded-2xl bg-primary/10 mx-auto mb-5 flex items-center justify-center">
@@ -228,23 +448,13 @@ function getEventDay(dateStr: string) {
                 </svg>
               </div>
               <h2 class="text-2xl font-bold text-brand-navy mb-3">Our Events</h2>
-              <p class="text-slate-600 mb-6 leading-relaxed">
-                We run summits, workshops, networking lunches, and immersive experiences for recruitment leaders throughout the year.
-              </p>
-              <a
-                href={EB_ORGANIZER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-primary inline-flex items-center gap-2"
-              >
+              <p class="text-slate-600 mb-6 leading-relaxed">We run summits, workshops, networking lunches, and immersive experiences for recruitment leaders throughout the year.</p>
+              <a href={EB_ORGANIZER_URL} target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-2">
                 View All Events on Eventbrite
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>
-              <p class="text-xs text-slate-400 mt-4">
-                Events are managed through Eventbrite and will appear here automatically once connected.
-              </p>
             </div>
           ) : (
             <div class="max-w-lg mx-auto">
@@ -255,12 +465,7 @@ function getEventDay(dateStr: string) {
               </div>
               <h2 class="text-xl font-bold text-brand-navy mb-2">No Upcoming Events</h2>
               <p class="text-slate-500 mb-6">We're planning our next event. Check back soon or browse our past events.</p>
-              <a
-                href={EB_ORGANIZER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-primary inline-flex items-center gap-2"
-              >
+              <a href={EB_ORGANIZER_URL} target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-2">
                 Browse on Eventbrite
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -271,15 +476,10 @@ function getEventDay(dateStr: string) {
         </div>
       )}
 
-      {/* Always show Eventbrite link when events are present */}
-      {events.length > 0 && (
-        <div class="text-center mt-10 pt-8 border-t border-slate-100">
-          <a
-            href={EB_ORGANIZER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-primary transition-colors"
-          >
+      {/* View all link */}
+      {hasAnyEvents && (
+        <div class="text-center mt-10 pt-8 border-t border-slate-200">
+          <a href={EB_ORGANIZER_URL} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-primary transition-colors">
             View all events on Eventbrite
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -290,33 +490,279 @@ function getEventDay(dateStr: string) {
     </div>
   </section>
 
+  <!-- ═══ EVENT DETAIL DRAWER ═══ -->
+  <div id="ticket-drawer" class="fixed inset-0 z-50 flex justify-end pointer-events-none" aria-hidden="true">
+    <div id="drawer-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 cursor-pointer"></div>
+
+    <div id="drawer-panel" class="relative w-full max-w-xl bg-white h-full flex flex-col shadow-2xl translate-x-full transition-transform duration-300 ease-out">
+
+      {/* Close — floats over image */}
+      <button id="drawer-close" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-colors flex items-center justify-center" aria-label="Close">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      {/* Scrollable body */}
+      <div class="flex-1 overflow-y-auto">
+
+        {/* Hero image */}
+        <div class="relative aspect-video bg-slate-900 overflow-hidden shrink-0">
+          <img id="drawer-image" src="" alt="" class="w-full h-full object-cover opacity-0 transition-opacity duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <div id="drawer-date-badge" class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-2 text-center shadow-md hidden">
+            <div id="drawer-month" class="text-[0.6rem] font-bold text-primary tracking-widest leading-none mb-0.5"></div>
+            <div id="drawer-day" class="text-2xl font-bold text-brand-navy leading-none"></div>
+            <div id="drawer-dow" class="text-[0.6rem] text-slate-400 uppercase tracking-wide leading-none mt-0.5"></div>
+          </div>
+          <div id="drawer-status-badges" class="absolute bottom-4 right-4 flex flex-col gap-1.5 items-end"></div>
+        </div>
+
+        {/* Content */}
+        <div class="px-6 pt-5 pb-4 space-y-5">
+
+          <h2 id="drawer-title" class="text-xl font-bold text-brand-navy leading-snug"></h2>
+
+          {/* Key details */}
+          <div id="drawer-meta" class="space-y-2.5"></div>
+
+          {/* Description */}
+          <div id="drawer-desc-wrap" class="hidden">
+            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">About this event</h4>
+            <p id="drawer-description" class="text-sm text-slate-600 leading-relaxed"></p>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Sticky CTA */}
+      <div class="shrink-0 px-6 py-4 bg-white border-t border-slate-100">
+        <a id="drawer-cta" href="#" target="_blank" rel="noopener noreferrer"
+          class="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 active:scale-[0.98] transition-all">
+          <span id="drawer-cta-label">Get Tickets on Eventbrite</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+        <p class="text-center text-xs text-slate-400 mt-2">You'll complete checkout securely on Eventbrite</p>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ═══ CTA ═══ -->
   <section class="relative overflow-hidden bg-[#0a0e17] py-16 md:py-20">
-    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22469%22%20y2%3D%2214%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22160%22%20y2%3D%2250%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22197%22%20y2%3D%22150%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22492%22%20y2%3D%22510%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22538%22%20y1%3D%22527%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22541%22%20y2%3D%2276%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22406%22%20y2%3D%2272%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%2228%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22181%22%20y1%3D%22303%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22448%22%20y1%3D%22425%22%20x2%3D%22481%22%20y2%3D%22478%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22435%22%20y1%3D%22138%22%20x2%3D%22368%22%20y2%3D%2282%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22227%22%20y1%3D%22514%22%20x2%3D%22178%22%20y2%3D%22453%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22607%22%20y2%3D%2284%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22555%22%20y1%3D%22207%22%20x2%3D%22502%22%20y2%3D%22143%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%2282%22%20y1%3D%2266%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22323%22%20y2%3D%2248%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%2282%22%20x2%3D%22368%22%20y2%3D%22164%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2271%22%20y1%3D%22180%22%20x2%3D%22137%22%20y2%3D%22216%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22492%22%20y1%3D%22510%22%20x2%3D%22431%22%20y2%3D%22462%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22188%22%20y1%3D%22178%22%20x2%3D%2297%22%20y2%3D%22262%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22218%22%20y1%3D%22553%22%20x2%3D%22221%22%20y2%3D%22547%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22221%22%20y1%3D%22547%22%20x2%3D%22292%22%20y2%3D%22588%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22444%22%20y1%3D%22407%22%20x2%3D%22466%22%20y2%3D%22531%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22694%22%20y1%3D%22193%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22368%22%20y1%3D%22164%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22407%22%20y1%3D%2263%22%20x2%3D%22362%22%20y2%3D%22154%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22682%22%20y1%3D%2299%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22215%22%20y1%3D%22300%22%20x2%3D%22165%22%20y2%3D%22227%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Cline%20x1%3D%22165%22%20y1%3D%22227%22%20x2%3D%22227%22%20y2%3D%22292%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22726%22%20y1%3D%22357%22%20x2%3D%22735%22%20y2%3D%22448%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%2225%22%20y1%3D%22549%22%20x2%3D%22113%22%20y2%3D%22553%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.2%22%2F%3E%3Cline%20x1%3D%22197%22%20y1%3D%22150%22%20x2%3D%22167%22%20y2%3D%22191%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%2260%22%20x2%3D%22749%22%20y2%3D%22106%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.5%22%2F%3E%3Cline%20x1%3D%22749%22%20y1%3D%22106%22%20x2%3D%22681%22%20y2%3D%2251%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22509%22%20cy%3D%2225%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22201%22%20cy%3D%2291%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22538%22%20cy%3D%22527%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22471%22%20cy%3D%2228%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22181%22%20cy%3D%22303%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22448%22%20cy%3D%22425%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22435%22%20cy%3D%22138%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22514%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22555%22%20cy%3D%22207%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22453%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2266%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22481%22%20cy%3D%22478%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%2282%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2271%22%20cy%3D%22180%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22492%22%20cy%3D%22510%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%2250%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22188%22%20cy%3D%22178%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22677%22%20cy%3D%22513%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22379%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22137%22%20cy%3D%22216%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22218%22%20cy%3D%22553%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2266%22%20cy%3D%22378%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22579%22%20cy%3D%22105%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22221%22%20cy%3D%22547%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22444%22%20cy%3D%22407%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22189%22%20cy%3D%2229%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22323%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22694%22%20cy%3D%22193%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22399%22%20cy%3D%22523%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22368%22%20cy%3D%22164%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22591%22%20cy%3D%22323%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22466%22%20cy%3D%22531%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22292%22%20cy%3D%22588%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22407%22%20cy%3D%2263%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22682%22%20cy%3D%2299%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22628%22%20cy%3D%22255%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22310%22%20cy%3D%22356%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22423%22%20cy%3D%22573%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22541%22%20cy%3D%2276%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22596%22%20cy%3D%22456%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2297%22%20cy%3D%22262%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%22429%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22215%22%20cy%3D%22300%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22406%22%20cy%3D%2272%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22243%22%20cy%3D%22381%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%22227%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22431%22%20cy%3D%22462%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22726%22%20cy%3D%22357%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%22549%22%20r%3D%221.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22197%22%20cy%3D%22150%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%2260%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22646%22%20cy%3D%22577%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22607%22%20cy%3D%2284%22%20r%3D%221.8%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22749%22%20cy%3D%22106%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22690%22%20cy%3D%22255%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22735%22%20cy%3D%22448%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22167%22%20cy%3D%22191%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22517%22%20cy%3D%22264%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22362%22%20cy%3D%22154%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22274%22%20cy%3D%22351%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22469%22%20cy%3D%2214%22%20r%3D%222.5%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22502%22%20cy%3D%22143%22%20r%3D%221%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22681%22%20cy%3D%2251%22%20r%3D%221.2%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22227%22%20cy%3D%22292%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3Ccircle%20cx%3D%22113%22%20cy%3D%22553%22%20r%3D%222%22%20fill%3D%22%234299e1%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
+    <div class="absolute inset-0 opacity-[0.15]" style="background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22600%22%3E%3Cline%20x1%3D%22509%22%20y1%3D%2225%22%20x2%3D%22407%22%20y2%3D%2263%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.4%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2291%22%20x2%3D%22188%22%20y2%3D%22178%22%20stroke%3D%22%234299e1%22%20stroke-width%3D%220.3%22%2F%3E%3C%2Fsvg%3E'); background-size: 800px 600px;"></div>
     <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/6 rounded-full blur-[150px]"></div>
     <div class="container-narrow text-center relative z-10">
       <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 mb-6">
         <span class="text-primary text-sm font-medium">Members get priority access</span>
       </div>
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
-        Don't Miss Out
-      </h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">Don't Miss Out</h2>
       <p class="text-slate-400 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
         RecConnect members get early access, discounted tickets, and exclusive invites to member-only events.
       </p>
-      <a href="/join" class="btn-primary text-base px-8 py-3.5">
-        Join RecConnect
-      </a>
+      <a href="/join" class="btn-primary text-base px-8 py-3.5">Join RecConnect</a>
     </div>
   </section>
 
 </BaseLayout>
 
 <style>
-  .line-clamp-2 {
+  .line-clamp-3 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  #ticket-drawer.is-open { pointer-events: auto; }
+  #ticket-drawer.is-open #drawer-backdrop { opacity: 1; }
+  #ticket-drawer.is-open #drawer-panel { transform: translateX(0); }
+
+  /* ─── Tabs ─────────────────────────────────────────────── */
+  .tab-btn {
+    color: #64748b; /* slate-500 */
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover {
+    color: #1a1f2e; /* brand-navy */
+  }
+  .tab-btn .tab-count {
+    background: #f1f5f9; /* slate-100 */
+    color: #64748b;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .tab-btn .tab-indicator {
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+  }
+  .tab-btn.is-active {
+    color: #1a1f2e; /* brand-navy */
+  }
+  .tab-btn.is-active .tab-count {
+    background: rgba(66, 153, 225, 0.12); /* primary/10ish */
+    color: #4299e1; /* primary */
+  }
+  .tab-btn.is-active .tab-indicator {
+    transform: scaleX(1);
+  }
 </style>
+
+<script>
+  // ─── Tabs ─────────────────────────────────────────────────────
+  const tabButtons = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+  const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+
+  function activateTab(name: string) {
+    tabButtons.forEach(btn => {
+      const active = btn.dataset.tab === name;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', String(active));
+    });
+    panels.forEach(panel => {
+      const isTarget = panel.id === `panel-${name}`;
+      panel.classList.toggle('hidden', !isTarget);
+    });
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      if (tab) activateTab(tab);
+    });
+  });
+
+  // ─── Ticket drawer ────────────────────────────────────────────
+  interface EventData {
+    id: string;
+    title: string;
+    url: string;
+    image: string;
+    month: string;
+    day: string;
+    dow: string;
+    timeRange: string;
+    venue: string;
+    price: string;
+    description: string;
+    isFree: boolean;
+    isSoldOut: boolean;
+    isOnline: boolean;
+  }
+
+  const drawer = document.getElementById('ticket-drawer')!;
+  const backdrop = document.getElementById('drawer-backdrop')!;
+  const closeBtn = document.getElementById('drawer-close')!;
+  const titleEl = document.getElementById('drawer-title')!;
+  const imageEl = document.getElementById('drawer-image') as HTMLImageElement;
+  const dateBadge = document.getElementById('drawer-date-badge')!;
+  const monthEl = document.getElementById('drawer-month')!;
+  const dayEl = document.getElementById('drawer-day')!;
+  const dowEl = document.getElementById('drawer-dow')!;
+  const statusBadges = document.getElementById('drawer-status-badges')!;
+  const metaEl = document.getElementById('drawer-meta')!;
+  const descWrap = document.getElementById('drawer-desc-wrap')!;
+  const descEl = document.getElementById('drawer-description')!;
+  const ctaEl = document.getElementById('drawer-cta') as HTMLAnchorElement;
+  const ctaLabel = document.getElementById('drawer-cta-label')!;
+
+  function metaRow(icon: string, text: string) {
+    return `<div class="flex items-start gap-2.5 text-sm text-slate-600">
+      <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${icon}</svg>
+      <span>${text}</span>
+    </div>`;
+  }
+
+  function openDrawer(data: EventData) {
+    // Title
+    titleEl.textContent = data.title;
+
+    // Image
+    if (data.image) {
+      imageEl.src = data.image;
+      imageEl.alt = data.title;
+      imageEl.classList.remove('opacity-100');
+      imageEl.onload = () => imageEl.classList.add('opacity-100');
+    }
+
+    // Date badge
+    if (data.month && data.day) {
+      monthEl.textContent = data.month;
+      dayEl.textContent = data.day;
+      dowEl.textContent = data.dow;
+      dateBadge.classList.remove('hidden');
+    }
+
+    // Status badges
+    statusBadges.innerHTML = '';
+    if (data.isSoldOut) {
+      statusBadges.innerHTML += '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500 text-white shadow-sm">Sold Out</span>';
+    } else if (data.isFree) {
+      statusBadges.innerHTML += '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow-sm">Free</span>';
+    }
+    if (data.isOnline) {
+      statusBadges.innerHTML += '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-navy/80 text-white shadow-sm">Online</span>';
+    }
+
+    // Meta rows
+    const calIcon = '<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5"/>';
+    const pinIcon = '<path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>';
+    const ticketIcon = '<path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>';
+
+    let metaHTML = '';
+    if (data.timeRange) metaHTML += metaRow(calIcon, data.timeRange);
+    if (data.venue) metaHTML += metaRow(pinIcon, data.venue);
+    if (data.price) metaHTML += metaRow(ticketIcon, `<span class="font-semibold text-brand-navy">${data.price}</span>`);
+    metaEl.innerHTML = metaHTML;
+
+    // Description
+    if (data.description) {
+      descEl.textContent = data.description;
+      descWrap.classList.remove('hidden');
+    } else {
+      descWrap.classList.add('hidden');
+    }
+
+    // CTA
+    ctaEl.href = data.url;
+    ctaLabel.textContent = data.isFree ? 'Register Free on Eventbrite' : 'Get Tickets on Eventbrite';
+
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.ticket-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openDrawer({
+        id: btn.dataset.eventId!,
+        title: btn.dataset.eventTitle!,
+        url: btn.dataset.eventUrl!,
+        image: btn.dataset.eventImage || '',
+        month: btn.dataset.eventMonth || '',
+        day: btn.dataset.eventDay || '',
+        dow: btn.dataset.eventDow || '',
+        timeRange: btn.dataset.eventTime || '',
+        venue: btn.dataset.eventVenue || '',
+        price: btn.dataset.eventPrice || '',
+        description: btn.dataset.eventDescription || '',
+        isFree: btn.dataset.eventFree === 'true',
+        isSoldOut: btn.dataset.eventSoldout === 'true',
+        isOnline: btn.dataset.eventOnline === 'true',
+      });
+    });
+  });
+
+  backdrop.addEventListener('click', closeDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+  });
+</script>

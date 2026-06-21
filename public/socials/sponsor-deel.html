@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CONNECTED 2026 · Deel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     EDIT PER SPONSOR
+       - tier label + colour (.tier / --tier-color)
+       - sponsor logo (the <img class="sponsor">)
+       White/mono logos (e.g. Keybridge) sit straight on the black.
+       For a COLOUR logo, add class "on-chip" to the <img> so it gets
+       a white background panel: <img class="sponsor on-chip" ...>
+     ============================================================ */
+  :root{ --orange:#ff6a13; --tier-color:#e6b450; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#0a0a0a;height:100%;overflow:hidden;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',system-ui,sans-serif;}
+  #stage{transform-origin:center center;}
+
+  .card{width:1280px;height:1280px;position:relative;overflow:hidden;background:#0a0a0a;color:#fff;
+        display:flex;flex-direction:column;justify-content:space-between;padding:92px;}
+  .glow{position:absolute;left:50%;transform:translateX(-50%);bottom:-18%;width:880px;height:600px;border-radius:50%;background:rgba(255,106,19,.36);filter:blur(180px);}
+  .glow2{position:absolute;right:-12%;top:-12%;width:520px;height:440px;border-radius:50%;background:rgba(66,153,225,.14);filter:blur(150px);}
+  .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,transparent 32%,rgba(0,0,0,.6) 100%);}
+  .grain{position:absolute;inset:0;opacity:.08;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .row{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;}
+  .lockup{display:flex;align-items:center;gap:18px;}
+  .boxlogo{height:44px;width:auto;display:block;}
+  .lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.26em;font-size:26px;color:rgba(255,255,255,0.62);}
+
+  .inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .wordmark{font-family:'Bebas Neue';text-transform:uppercase;line-height:0.84;letter-spacing:0.01em;}
+  .wordmark .w1{display:block;font-size:150px;color:#fff;}
+  .wordmark .w2{display:block;font-size:150px;color:var(--orange);text-shadow:0 0 50px rgba(255,106,19,.45),0 0 120px rgba(255,106,19,.25);}
+  .rule{width:90px;height:4px;border-radius:3px;background:var(--orange);box-shadow:0 0 18px rgba(255,106,19,.7);margin:48px 0 40px;}
+  .tier{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.3em;font-size:34px;color:var(--tier-color);margin-bottom:38px;}
+  .sponsor{display:block;height:120px;width:auto;max-width:620px;object-fit:contain;}
+  .sponsor.on-chip{background:#fff;border-radius:16px;padding:34px 52px;box-shadow:0 30px 80px -30px rgba(255,106,19,.5);height:188px;}
+
+  .foot{position:relative;z-index:2;text-align:center;}
+  .meta{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.18em;font-size:28px;color:rgba(255,255,255,0.85);}
+  .url{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.2em;font-size:22px;color:var(--orange);margin-top:12px;}
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="card" id="card">
+      <div class="glow"></div>
+      <div class="glow2"></div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <div class="row">
+        <div class="lockup">
+          <img class="boxlogo" src="/images/thebox.png" alt="BOX" />
+          <span class="lbl">× RecConnect</span>
+        </div>
+        <span class="lbl">12.11.26</span>
+      </div>
+
+      <div class="inner">
+        <h1 class="wordmark"><span class="w1">Connected</span><span class="w2">2026</span></h1>
+        <div class="rule"></div>
+        <!-- EDIT: tier label + logo -->
+        <p class="tier">Gold Sponsor</p>
+        <img class="sponsor on-chip" src="https://images.ctfassets.net/ufi217awi1jo/5WtosWR0YlfxiKInTpDaaF/22b55c2fc476900147c8e781ba4d02f0/astutepayroll_bydeel_small.png" alt="Deel" crossorigin="anonymous" />
+      </div>
+
+      <div class="foot">
+        <p class="meta">Thu 12 Nov 2026 · BOX Piccadilly, London</p>
+        <p class="url">recconnect.co/connected-2026</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportbar">
+    <button data-scale="1">⬇ PNG 1280</button>
+    <button data-scale="2">⬇ PNG 2×</button>
+  </div>
+  <style>
+    #exportbar{position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px;font-family:'Inter',system-ui,sans-serif;}
+    #exportbar button{background:#ff6a13;color:#0a0a0a;border:0;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+    #exportbar button:hover{background:#ff7a1f;}
+    #exportbar button:disabled{opacity:.6;cursor:default;}
+    @media print{#exportbar{display:none;}}
+  </style>
+  <script type="module">
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    const embed = new URLSearchParams(location.search).has('embed');
+    const stage = document.getElementById('stage');
+    const bar = document.getElementById('exportbar');
+    if(embed && bar) bar.style.display='none';
+    function fit(){ if(!stage) return; const s = embed ? 1 : Math.min(1,(innerHeight-48)/1280,(innerWidth-48)/1280); stage.style.transform='scale('+s+')'; }
+    addEventListener('resize', fit); fit();
+    const fname = (location.pathname.split('/').pop()||'card').replace(/\.html?$/,'')||'card';
+    async function exportPng(scale){ const card=document.getElementById('card'); if(stage) stage.style.transform='none'; await document.fonts.ready; const result=await snapdom(card,{scale,embedFonts:true}); fit(); await result.download({format:'png',filename:fname}); }
+    document.querySelectorAll('#exportbar button').forEach(b=>{ b.addEventListener('click', async ()=>{ const o=b.textContent;b.disabled=true;b.textContent='Rendering…'; try{await exportPng(+b.dataset.scale);}catch(e){alert('Export failed: '+e.message);} b.disabled=false;b.textContent=o; }); });
+    const dl=new URLSearchParams(location.search).get('dl'); if(dl){ addEventListener('load',()=>setTimeout(()=>exportPng(+dl||2),600)); }
+  </script>
+</body>
+</html>

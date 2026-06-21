@@ -1,15 +1,83 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { articles, authors } from '@/data/articles';
+// SSR — renders on each request so Contentful changes go live instantly
+export const prerender = false;
 
-export function getStaticPaths() {
-  return articles.map(a => ({
-    params: { slug: a.slug },
-    props: { article: a },
-  }));
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { fetchEntry, getArticles } from '@/lib/contentful';
+import type { ArticleSkeleton } from '@/lib/contentful/types';
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
+import { BLOCKS, INLINES } from '@contentful/rich-text-types';
+
+// ─── Fetch this article from Contentful by slug ─────────────────────
+const { slug } = Astro.params;
+const entry = await fetchEntry<ArticleSkeleton>('article', slug!, false);
+
+if (!entry) {
+  return Astro.redirect('/insights');
 }
 
-const { article } = Astro.props;
+// Helper: extract plain text from Rich Text
+function richTextToPlain(doc: any): string {
+  if (!doc || typeof doc === 'string') return doc || '';
+  if (!doc.content) return '';
+  return doc.content
+    .map((node: any) => {
+      if (node.nodeType === 'paragraph' || node.nodeType?.startsWith('heading')) {
+        return (node.content || []).map((c: any) => c.value || '').join('');
+      }
+      if (node.nodeType === 'unordered-list' || node.nodeType === 'ordered-list') {
+        return (node.content || []).map((li: any) => (li.content || []).map((p: any) => (p.content || []).map((c: any) => c.value || '').join('')).join('')).join('\n');
+      }
+      return '';
+    }).filter(Boolean).join('\n\n');
+}
+
+// Map to flat shape
+const f = entry.fields as any;
+const authorEntry = f.author;
+const article = {
+  title: f.title || '',
+  slug: f.slug || '',
+  date: f.publishDate || '',
+  author: authorEntry?.fields?.name || '',
+  authorHeadshot: authorEntry?.fields?.headshot?.fields?.file?.url
+    ? `https:${authorEntry.fields.headshot.fields.file.url}`
+    : '',
+  authorRole: authorEntry?.fields?.role || '',
+  authorLinkedin: authorEntry?.fields?.linkedIn || '',
+  category: f.type === 'salt_report' ? 'salt-report' : 'rec-matters',
+  summary: f.shortDescription || '',
+  contentPlain: richTextToPlain(f.content),
+  image: f.featuredImage?.fields?.file?.url
+    ? `https:${f.featuredImage.fields.file.url}`
+    : '',
+  trend: '',
+};
+
+// Render Rich Text to HTML
+const renderOptions = {
+  renderNode: {
+    [BLOCKS.PARAGRAPH]: (node: any, next: any) => `<p class="mb-4 text-slate-600 leading-relaxed">${next(node.content)}</p>`,
+    [BLOCKS.HEADING_2]: (node: any, next: any) => `<h2 class="text-xl font-bold text-brand-navy mt-10 mb-4">${next(node.content)}</h2>`,
+    [BLOCKS.HEADING_3]: (node: any, next: any) => `<h3 class="text-lg font-bold text-brand-navy mt-8 mb-3">${next(node.content)}</h3>`,
+    [BLOCKS.UL_LIST]: (node: any, next: any) => `<ul>${next(node.content)}</ul>`,
+    [BLOCKS.OL_LIST]: (node: any, next: any) => `<ol>${next(node.content)}</ol>`,
+    [BLOCKS.LIST_ITEM]: (node: any, next: any) => {
+      // Strip wrapping <p> tags rendered by the paragraph handler inside list items
+      const inner = next(node.content).replace(/<p[^>]*>([\s\S]*?)<\/p>/g, '$1');
+      return `<li class="mb-1.5 leading-relaxed">${inner}</li>`;
+    },
+    [BLOCKS.QUOTE]: (node: any, next: any) => `<blockquote class="border-l-4 border-primary pl-5 italic text-slate-500 my-6">${next(node.content)}</blockquote>`,
+    [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
+      const url = node.data?.target?.fields?.file?.url;
+      const alt = node.data?.target?.fields?.title || '';
+      return url ? `<img src="https:${url}" alt="${alt}" class="rounded-xl my-6 w-full" />` : '';
+    },
+    [INLINES.HYPERLINK]: (node: any, next: any) => `<a href="${node.data.uri}" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">${next(node.content)}</a>`,
+  },
+};
+
+const articleHtml = f.content ? documentToHtmlString(f.content, renderOptions) : '';
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('en-GB', {
@@ -27,53 +95,25 @@ function getCategoryLabel(cat: string) {
   return cat === 'salt-report' ? 'Salt Report' : 'Rec Matters';
 }
 
-const authorData = authors[article.author as keyof typeof authors] || {
-  name: article.author,
-  slug: '',
-  role: '',
-  headshot: '',
-  linkedin: '',
-};
-
-// Related articles — same category, excluding current, max 3
-const related = articles
-  .filter(a => a.slug !== article.slug && a.category === article.category)
-  .slice(0, 3);
-
-// Simple markdown-ish to HTML (handles bold, links, headers, lists)
-function renderContent(md: string): string {
-  let html = md
-    // Headers
-    .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-brand-navy mt-8 mb-3">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-brand-navy mt-10 mb-4">$1</h2>')
-    // Bold
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    // Italic
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">$1</a>')
-    // Bullet lists (• and - style)
-    .replace(/^[•\-]\s+(.+)$/gm, '<li class="ml-4 mb-1.5">$1</li>')
-    // Emoji bullets (✔️ ✨ etc)
-    .replace(/^([✔️🔍🤖📊🔄💰🎯✨⚙️💻🏢🚀])\s*(.+)$/gm, '<li class="ml-4 mb-1.5">$1 $2</li>')
-    // Wrap consecutive <li> in <ul>
-    .replace(/(<li[^>]*>.*?<\/li>\n?)+/g, (match) => `<ul class="list-disc list-outside pl-4 my-4 space-y-1 text-slate-600">${match}</ul>`)
-    // Paragraphs (double newline)
-    .replace(/\n\n+/g, '</p><p class="mb-4 text-slate-600 leading-relaxed">')
-    // Single newlines within paragraphs
-    .replace(/\n/g, '<br/>');
-
-  // Wrap in paragraph
-  html = `<p class="mb-4 text-slate-600 leading-relaxed">${html}</p>`;
-
-  // Clean up empty paragraphs
-  html = html.replace(/<p[^>]*>\s*<\/p>/g, '');
-  // Fix nested p inside headings
-  html = html.replace(/<p[^>]*>\s*(<h[23])/g, '$1');
-  html = html.replace(/(<\/h[23]>)\s*<\/p>/g, '$1');
-
-  return html;
-}
+// Related articles — same type, excluding current, max 3
+const allEntries = await getArticles({ include: 2 });
+const related = allEntries
+  .filter((e: any) => e.fields.slug !== article.slug && e.fields.type === f.type)
+  .slice(0, 3)
+  .map((e: any) => {
+    const ef = e.fields as any;
+    return {
+      title: ef.title || '',
+      slug: ef.slug || '',
+      date: ef.publishDate || '',
+      author: ef.author?.fields?.name || '',
+      category: ef.type === 'salt_report' ? 'salt-report' : 'rec-matters',
+      content: richTextToPlain(ef.content),
+      image: ef.featuredImage?.fields?.file?.url
+        ? `https:${ef.featuredImage.fields.file.url}`
+        : '',
+    };
+  });
 ---
 
 <BaseLayout
@@ -82,37 +122,42 @@ function renderContent(md: string): string {
 >
 
   <!-- ═══ ARTICLE HEADER ═══ -->
-  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-10 md:pt-44 md:pb-14">
+  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-16 md:pt-44 md:pb-20">
+    {/* Subtle grid texture */}
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;40&quot; height=&quot;40&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M0 0h40v40H0z&quot; fill=&quot;none&quot; stroke=&quot;%23fff&quot; stroke-width=&quot;.5&quot;/%3E%3C/svg%3E');"></div>
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/10 rounded-full blur-[120px]"></div>
+    {/* Glow — offset left to complement left-aligned text */}
+    <div class="absolute top-0 left-0 w-[700px] h-[400px] bg-primary/8 rounded-full blur-[140px] -translate-x-1/4 -translate-y-1/4"></div>
+
     <div class="container-wide relative z-10">
       {/* Back link */}
-      <a href="/insights" class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors mb-8">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <a href="/insights" class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors mb-10 group">
+        <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
         Back to Insights
       </a>
 
       <div class="max-w-3xl">
-        {/* Category & meta */}
-        <div class="flex flex-wrap items-center gap-3 mb-4">
+
+        {/* Category pill + meta — compact top row */}
+        <div class="flex flex-wrap items-center gap-2.5 mb-5">
           <span class:list={[
-            'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold',
+            'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase',
             article.category === 'salt-report'
               ? 'bg-primary text-white'
-              : 'bg-white/10 text-white',
+              : 'bg-white/[0.08] text-slate-300 border border-white/10',
           ]}>
             {getCategoryLabel(article.category)}
           </span>
-          <span class="text-slate-500 text-sm">{formatDate(article.date)}</span>
-          <span class="text-slate-600">·</span>
-          <span class="text-slate-500 text-sm">{readTime(article.content)} min read</span>
+          <span class="text-slate-500 text-xs">·</span>
+          <span class="text-slate-400 text-sm">{formatDate(article.date)}</span>
+          <span class="text-slate-500 text-xs">·</span>
+          <span class="text-slate-400 text-sm">{readTime(article.contentPlain)} min read</span>
           {article.trend && (
             <>
-              <span class="text-slate-600">·</span>
+              <span class="text-slate-500 text-xs">·</span>
               <span class:list={[
-                'text-sm',
+                'text-sm font-medium',
                 article.trend === 'up' ? 'text-emerald-400' : article.trend === 'down' ? 'text-red-400' : 'text-slate-400',
               ]}>
                 {article.trend === 'up' ? '↑ Market Rising' : article.trend === 'down' ? '↓ Market Cooling' : '→ Market Steady'}
@@ -121,28 +166,32 @@ function renderContent(md: string): string {
           )}
         </div>
 
-        {/* Title */}
-        <h1 class="text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-white leading-tight mb-6">
+        {/* Title — bigger, more presence */}
+        <h1 class="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-[1.1] tracking-tight mb-8">
           {article.title}
         </h1>
 
+        {/* Primary accent rule */}
+        <div class="w-10 h-[3px] bg-primary rounded-full mb-8"></div>
+
         {/* Author */}
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-full bg-brand-slate overflow-hidden">
-            {authorData.headshot && (
-              <img src={authorData.headshot} alt={article.author} class="w-full h-full object-cover" />
-            )}
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-brand-slate overflow-hidden ring-2 ring-white/10 flex-shrink-0">
+            {article.authorHeadshot
+              ? <img src={article.authorHeadshot} alt={article.author} class="w-full h-full object-cover" />
+              : <div class="w-full h-full flex items-center justify-center text-white/40 text-base font-bold">{article.author.charAt(0)}</div>
+            }
           </div>
           <div>
-            <p class="text-white font-medium text-sm">{article.author}</p>
-            <p class="text-slate-500 text-xs">{authorData.role}</p>
+            <p class="text-white font-semibold text-sm leading-tight">{article.author}</p>
+            {article.authorRole && <p class="text-slate-400 text-xs mt-0.5">{article.authorRole}</p>}
           </div>
-          {authorData.linkedin && (
+          {article.authorLinkedin && (
             <a
-              href={authorData.linkedin}
+              href={article.authorLinkedin}
               target="_blank"
               rel="noopener noreferrer"
-              class="ml-2 text-slate-500 hover:text-primary transition-colors"
+              class="ml-1 text-slate-500 hover:text-primary transition-colors"
               title={`${article.author} on LinkedIn`}
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -151,16 +200,18 @@ function renderContent(md: string): string {
             </a>
           )}
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ═══ FEATURED IMAGE ═══ -->
+  <!-- ═══ FEATURED IMAGE (overlaps hero → content) ═══ -->
   {article.image && (
-    <section class="bg-white">
-      <div class="container-wide -mt-0">
-        <div class="max-w-4xl mx-auto -mt-2">
-          <div class="aspect-[2/1] rounded-xl overflow-hidden shadow-lg border border-slate-100">
+    <section class="relative bg-white">
+      <div class="absolute inset-x-0 top-0 h-1/2 bg-brand-navy"></div>
+      <div class="container-wide relative z-10">
+        <div class="max-w-3xl mx-auto">
+          <div class="aspect-[16/9] rounded-xl overflow-hidden shadow-[0_20px_60px_-10px_rgba(0,0,0,0.35)]">
             <img
               src={article.image}
               alt={article.title}
@@ -182,7 +233,7 @@ function renderContent(md: string): string {
         </p>
 
         {/* Main content */}
-        <div class="article-content" set:html={renderContent(article.content)} />
+        <div class="article-content" set:html={articleHtml} />
 
         {/* Share / Back */}
         <div class="flex items-center justify-between pt-8 mt-10 border-t border-slate-200">
@@ -284,10 +335,13 @@ function renderContent(md: string): string {
     @apply text-primary hover:underline;
   }
   .article-content :global(ul) {
-    @apply my-4 space-y-1.5 text-slate-600;
+    @apply list-disc list-outside pl-6 my-4 space-y-1.5 text-slate-600;
+  }
+  .article-content :global(ol) {
+    @apply list-decimal list-outside pl-6 my-4 space-y-1.5 text-slate-600;
   }
   .article-content :global(li) {
-    @apply ml-4 pl-1;
+    @apply pl-1 leading-relaxed;
   }
   .article-content :global(blockquote) {
     @apply border-l-4 border-primary pl-5 italic text-slate-500 my-6;

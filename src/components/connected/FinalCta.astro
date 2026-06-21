@@ -1,0 +1,25 @@
+---
+import { EVENTBRITE_URL } from '@/data/connected';
+---
+
+<section class="relative overflow-hidden bg-black py-24 md:py-32">
+  <div class="absolute inset-0 z-0">
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image:url('/images/box/Box5.webp');"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/80"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-[#ff6a13]/25 blur-[160px]"></div>
+  </div>
+  <div class="container-narrow relative z-10 text-center">
+    <img src="/images/box/Box-Logo-transparant-orange.webp" alt="BOX" class="h-12 w-auto mx-auto mb-8 opacity-90" />
+    <h2 class="c-display uppercase text-6xl md:text-8xl text-white leading-[0.9] mb-6">
+      Adios, PowerPoint.<br /><span class="c-title-grad">Hello, CONNECTED.</span>
+    </h2>
+    <p class="text-lg md:text-xl text-white/75 font-light max-w-xl mx-auto mb-10">
+      One day. One unforgettable room. The kind of event that changes how you see events forever.
+    </p>
+    <a href={EVENTBRITE_URL} data-eb-checkout target="_blank" rel="noopener noreferrer" class="c-btn-orange c-btn-lg" style="display:inline-flex;">
+      Get your tickets
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+    </a>
+    <p class="text-white/40 text-sm mt-6">Thursday 12 November 2026 · BOX Piccadilly, London</p>
+  </div>
+</section>

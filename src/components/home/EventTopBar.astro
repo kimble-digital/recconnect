@@ -1,0 +1,56 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// Slim site-wide announcement strip for CONNECTED 2026.
+// Place at the very top of <body> in BaseLayout.astro, before <Header />.
+// It is position:fixed, so BaseLayout offsets the header + content down
+// by its height (see the body.eventbar-on rule there) - it never overlays.
+// The whole bar is one link; inner text is pointer-events:none so a click
+// anywhere lands on the anchor. If clicking 404s, your routes use trailing
+// slashes - change EVENT_HREF to '/connected-2026/'.
+// ───────────────────────────────────────────────────────────────────
+const EVENT_HREF = '/connected-2026';
+---
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" />
+
+<a href={EVENT_HREF} class="etb" aria-label="CONNECTED 2026 at BOX London - get tickets">
+  <span class="etb-tag">Connected 2026</span>
+  <span class="etb-msg">The immersive recruitment experience &nbsp;·&nbsp; BOX Piccadilly, London &nbsp;·&nbsp; Thu 12 Nov</span>
+  <span class="etb-cta">Get tickets <span aria-hidden="true">→</span></span>
+</a>
+
+<style>
+  .etb {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 60;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    background: #080808; color: #fff;
+    padding: 0.6rem 1.25rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,106,19,0.35);
+    transition: background 0.2s ease;
+  }
+  .etb:hover { background: #111; }
+  /* every child ignores clicks so the anchor itself always receives them */
+  .etb > * { pointer-events: none; }
+  .etb-tag {
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase;
+    letter-spacing: 0.1em; font-size: 1.1rem;
+    background: #ff6a13; color: #0a0a0a;
+    padding: 0.1rem 0.6rem; border-radius: 0.25rem; flex-shrink: 0;
+  }
+  .etb-msg {
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase;
+    letter-spacing: 0.1em; font-size: 0.95rem; color: rgba(255,255,255,0.7);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .etb-cta {
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase;
+    letter-spacing: 0.1em; font-size: 1rem; color: #ff6a13;
+    flex-shrink: 0; transition: color 0.2s ease;
+  }
+  .etb:hover .etb-cta { color: #ff7a1f; }
+  @media (max-width: 680px) { .etb-msg { display: none; } }
+</style>

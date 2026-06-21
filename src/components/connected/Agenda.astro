@@ -1,0 +1,28 @@
+---
+import { agenda } from '@/data/connected';
+---
+
+<section id="agenda" class="relative bg-[#0a0a0a] py-20 md:py-28 overflow-hidden">
+  <div class="absolute top-0 left-1/3 w-[500px] h-[500px] rounded-full bg-[#ff6a13]/8 blur-[160px]"></div>
+  <div class="container-wide relative z-10">
+    <div class="max-w-2xl mb-14 reveal">
+      <p class="c-kicker">The run of play</p>
+      <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95]">Seven and a half hours, zero dull moments.</h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto">
+      <div class="c-timeline">
+        {agenda.map((item) => (
+          <div class="c-tl-row reveal">
+            <div class="c-tl-time">{item.time}</div>
+            <div class="c-tl-marker"><span></span></div>
+            <div class="c-tl-body">
+              <h3 class="text-xl md:text-2xl font-bold text-white mb-1">{item.label}</h3>
+              <p class="text-white/60 font-light">{item.note}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

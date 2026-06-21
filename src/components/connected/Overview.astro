@@ -1,0 +1,72 @@
+---
+---
+
+<section id="overview" class="relative bg-[#0a0a0a] py-20 md:py-28 overflow-hidden">
+  <div class="absolute top-1/4 -left-40 w-[500px] h-[500px] rounded-full bg-[#ff6a13]/8 blur-[150px]"></div>
+  <div class="container-wide relative z-10">
+    <div class="o-row">
+
+      <div class="o-copy reveal">
+        <p class="c-kicker">The overview</p>
+        <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95] mb-8">
+          The standard conference is <span class="c-strike">dead</span>. <span class="c-title-grad">This is what replaced it.</span>
+        </h2>
+        <div class="space-y-5 text-lg text-white/75 font-light leading-relaxed">
+          <p>
+            Forget theatre-style seating and people talking at you for hours. We have thrown a grenade into the tired old event format and built something that will genuinely change the way you think about industry days.
+          </p>
+          <p>
+            Produced by RecConnect, the acclaimed recruitment and leadership event organisers, CONNECTED fuses insight, innovation, connection and entertainment into one immersive experience designed to inspire and to set recruiter pulses racing.
+          </p>
+          <p>
+            Held at BOX, a genuinely iconic London venue, the day will energise, inspire and unite. It rewards curiosity, fuels conversation and brings the power of creative thinking to life, pushing you well beyond what you thought possible.
+          </p>
+          <p class="text-white/90 font-normal">
+            You will not have attended a recruitment event like this before. Unless, of course, you were with us in 2025.
+          </p>
+        </div>
+      </div>
+
+      <div class="o-media reveal" style="--d:120ms">
+        <img src="/images/box/Simon-Lewis-on-stage.jpg" alt="Simon Lewis on stage at CONNECTED" loading="lazy" />
+        <div class="o-media-grade"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .o-row { display: flex; align-items: stretch; gap: 3.5rem; }
+  /* Unequal columns: copy is the wider column, image narrower. */
+  .o-copy { flex: 3 1 0%; min-width: 0; max-width: 48rem; }
+  .o-media {
+    flex: 2 1 0%;
+    position: relative;
+    align-self: stretch;
+    min-height: 480px;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 40px 90px -45px rgba(255,106,19,0.45);
+  }
+  .o-media img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 25%;
+    filter: grayscale(1) contrast(1.05) brightness(0.82);
+  }
+  .o-media-grade {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.05) 42%),
+      linear-gradient(to top, rgba(10,10,10,0.88) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 92%, rgba(255,106,19,0.2), transparent 62%);
+  }
+
+  @media (max-width: 1024px) {
+    .o-row { flex-direction: column; }
+    .o-copy { max-width: 100%; }
+    .o-media { width: 100%; min-height: 320px; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// Headline sponsor lockup - Keybridge IT.
+// variant="band"   → full-width strip (use on the event page)
+// variant="inline" → compact label + logo (use in hero / signpost)
+//
+// The logo is a 1-colour SVG, so it's forced to a white silhouette with
+// a CSS filter to guarantee it reads on the dark background regardless
+// of the file's own colour. Tip: rename the asset to remove the spaces
+// (e.g. /images/box/keybridge-logo.svg) and update SPONSOR_LOGO below.
+// ───────────────────────────────────────────────────────────────────
+interface Props { variant?: 'band' | 'inline'; }
+const { variant = 'band' } = Astro.props;
+const SPONSOR_LOGO = '/images/box/keybridge%20logo%20-%20sub%20brands%20-%201%20colour.svg';
+const SPONSOR_NAME = 'Keybridge IT';
+const SPONSOR_URL = 'https://www.keybridgeit.com/';
+---
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" />
+
+{variant === 'band' ? (
+  <section class="spon-band" aria-label={`Headline sponsor ${SPONSOR_NAME}`}>
+    <a href={SPONSOR_URL} target="_blank" rel="noopener noreferrer" class="spon-inner spon-link">
+      <span class="spon-eyebrow">Headline Sponsor</span>
+      <img src={SPONSOR_LOGO} alt={SPONSOR_NAME} class="spon-logo spon-logo-lg" />
+    </a>
+  </section>
+) : (
+  <a href={SPONSOR_URL} target="_blank" rel="noopener noreferrer" class="spon-inline spon-link" aria-label={`Headline sponsor ${SPONSOR_NAME}`}>
+    <span class="spon-eyebrow">Headline Sponsor</span>
+    <img src={SPONSOR_LOGO} alt={SPONSOR_NAME} class="spon-logo" />
+  </a>
+)}
+
+<style>
+  .spon-link { text-decoration: none; transition: opacity 0.2s ease; }
+  .spon-link:hover .spon-logo { opacity: 1; }
+
+  .spon-band {
+    position: relative; z-index: 2;
+    background: #070707;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 2.5rem 1.5rem;
+  }
+  .spon-inner { max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
+  .spon-eyebrow {
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase;
+    letter-spacing: 0.3em; font-size: 0.85rem; color: #ff6a13;
+  }
+  .spon-logo { filter: brightness(0) invert(1); opacity: 0.9; height: 2.2rem; width: auto; transition: opacity 0.2s ease; }
+  .spon-logo-lg { height: 3.1rem; opacity: 0.95; }
+
+  .spon-inline { display: inline-flex; align-items: center; gap: 1rem; }
+  .spon-inline .spon-eyebrow { color: rgba(255,255,255,0.5); font-size: 0.75rem; letter-spacing: 0.22em; }
+  .spon-inline .spon-logo { height: 1.7rem; }
+
+  @media (max-width: 560px) {
+    .spon-inline { gap: 0.7rem; }
+    .spon-inline .spon-logo { height: 1.5rem; }
+  }
+</style>

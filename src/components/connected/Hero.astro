@@ -1,0 +1,138 @@
+---
+import { heroShots, EVENTBRITE_URL } from '@/data/connected';
+import EventSponsor from '@/components/home/EventSponsor.astro';
+---
+
+<section class="c-hero relative min-h-[100svh] flex flex-col overflow-hidden bg-[#070707]">
+
+  <!-- Rotating background images (bar shots + people shots, Ken Burns crossfade) -->
+  <div class="absolute inset-0 z-0">
+    {heroShots.map((src, i) => (
+      <div class="c-slide absolute inset-0 bg-cover bg-center" data-slide={i} style={`background-image:url('${src}');`} />
+    ))}
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/85"></div>
+    <div class="absolute inset-0 c-hero-grade"></div>
+    <div class="absolute inset-0 c-hero-vignette"></div>
+    <div class="absolute -bottom-44 left-1/4 w-[900px] h-[520px] rounded-full bg-[#ff6a13]/25 blur-[170px]"></div>
+    <div class="absolute -top-32 -right-24 w-[560px] h-[400px] rounded-full bg-[#4299e1]/12 blur-[150px]"></div>
+  </div>
+
+  <!-- Vertical edge label (sits in the left gutter; content is inset on md+ so it never overlaps) -->
+  <span class="c-vlabel hidden md:block">Immersive · Recruitment · After Dark</span>
+
+  <!-- Top hairline: both names + place/date -->
+  <div class="relative z-20 container-wide md:pl-20 pt-28 md:pt-32">
+    <div class="flex items-center justify-between border-b border-white/10 pb-5 c-fade-down">
+      <div class="flex items-center gap-3.5">
+        <img src="/images/box/boxlondon-logo.png" alt="BOX London" class="h-7 md:h-8 w-auto" />
+        <span class="text-white/20">/</span>
+        <span class="c-label-xs">RecConnect</span>
+      </div>
+      <span class="c-label-xs hidden sm:block">London &nbsp;·&nbsp; 12.11.26</span>
+    </div>
+  </div>
+
+  <!-- Title block + countdown -->
+  <div class="relative z-20 flex-1 flex items-center">
+    <div class="container-wide md:pl-20 w-full py-12">
+      <div class="c-hero-row">
+        <div class="c-hero-stack">
+
+          <h1 class="c-hero-title c-fade-up text-white mb-2" style="font-size:clamp(2.8rem,12vw,11rem);">
+            <span class="block">CONNECTED</span>
+            <span class="block c-glow c-flicker">2026</span>
+          </h1>
+
+          <p class="c-fade-up max-w-xl text-lg md:text-xl text-white/70 font-light leading-relaxed mt-7 mb-7">
+            The iconic immersive experience for recruitment professionals. One day in the heart of London where the lights go down and the work gets done differently.
+          </p>
+
+          <p class="c-fade-up c-label-xs mb-10" style="color:rgba(255,255,255,0.62)">
+            Thu 12 Nov 2026 &nbsp;·&nbsp; 09:30-17:00 &nbsp;·&nbsp; BOX Piccadilly
+          </p>
+
+          <div class="c-fade-up flex flex-wrap items-center gap-7">
+            <a href={EVENTBRITE_URL} data-eb-checkout target="_blank" rel="noopener noreferrer" class="c-btn-orange group">
+              Get your tickets
+              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="#agenda" class="c-hero-link">See the day unfold</a>
+          </div>
+
+          <div class="c-fade-up" style="margin-top:2.25rem">
+            <EventSponsor variant="inline" />
+          </div>
+
+        </div>
+
+        <div class="c-hero-count c-fade-up" aria-hidden="true">
+          <p class="c-count-lead">Doors open in</p>
+          <div class="c-count-grid">
+            <div class="c-count-cell"><span class="c-count-n" data-d>--</span><span class="c-count-l">Days</span></div>
+            <div class="c-count-cell"><span class="c-count-n" data-h>--</span><span class="c-count-l">Hrs</span></div>
+            <div class="c-count-cell"><span class="c-count-n" data-m>--</span><span class="c-count-l">Mins</span></div>
+            <div class="c-count-cell"><span class="c-count-n" data-s>--</span><span class="c-count-l">Secs</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom: scroll cue + slide ticks -->
+  <div class="relative z-20 container-wide md:pl-20 pb-8 flex items-center justify-between">
+    <a href="#overview" class="c-label-xs hidden md:inline-flex items-center gap-2.5 hover:text-white transition-colors">
+      <span class="c-scroll-dot"></span> Scroll
+    </a>
+    <div class="flex items-center gap-2.5" id="hero-dots">
+      {heroShots.map((_, i) => (
+        <button class="c-dot" data-dot={i} aria-label={`Show image ${i + 1}`}></button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('.c-slide'));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.c-dot'));
+  let current = 0;
+  let heroTimer: number | undefined;
+
+  function showSlide(n: number) {
+    current = (n + slides.length) % slides.length;
+    slides.forEach((s, i) => s.classList.toggle('is-active', i === current));
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+  }
+  function startHero() { heroTimer = window.setInterval(() => showSlide(current + 1), 4400); }
+  function restartHero() { if (heroTimer) clearInterval(heroTimer); startHero(); }
+
+  if (slides.length) {
+    showSlide(0);
+    startHero();
+    dots.forEach((d, i) => d.addEventListener('click', () => { showSlide(i); restartHero(); }));
+  }
+
+  // ─── Countdown to doors (Thu 12 Nov 2026, 09:30 London/GMT) ───
+  const cdTarget = new Date('2026-11-12T09:30:00Z').getTime();
+  const cd = document.querySelector('.c-hero-count');
+  if (cd) {
+    const dEl = cd.querySelector('[data-d]') as HTMLElement;
+    const hEl = cd.querySelector('[data-h]') as HTMLElement;
+    const mEl = cd.querySelector('[data-m]') as HTMLElement;
+    const sEl = cd.querySelector('[data-s]') as HTMLElement;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const tickCd = () => {
+      let diff = Math.max(0, cdTarget - Date.now());
+      const days = Math.floor(diff / 86400000); diff -= days * 86400000;
+      const hrs = Math.floor(diff / 3600000); diff -= hrs * 3600000;
+      const mins = Math.floor(diff / 60000); diff -= mins * 60000;
+      const secs = Math.floor(diff / 1000);
+      dEl.textContent = String(days);
+      hEl.textContent = pad(hrs);
+      mEl.textContent = pad(mins);
+      sEl.textContent = pad(secs);
+    };
+    tickCd();
+    setInterval(tickCd, 1000);
+  }
+</script>

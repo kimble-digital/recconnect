@@ -1,0 +1,20 @@
+---
+const items = [
+  'Powerful stories', 'Impactful networking', 'Unique insights',
+  'Live music, DJ, magic', 'Lasting connections', 'Adios, PowerPoint',
+];
+---
+
+<div class="c-marquee py-4 select-none">
+  <div class="c-marquee-track">
+    {Array.from({ length: 2 }).map(() => (
+      <div class="c-marquee-group">
+        {items.map((t) => (
+          <>
+            <span>{t}</span><span class="c-star">✦</span>
+          </>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>

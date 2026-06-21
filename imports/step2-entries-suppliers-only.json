@@ -1,0 +1,2270 @@
+{
+  "contentTypes": [],
+  "assets": [],
+  "entries": [
+    {
+      "sys": {
+        "id": "sup-360ai",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "360AI"
+        },
+        "slug": {
+          "en-US": "360ai"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "360AI is your global AI headhunter partner, helping you reach the talent others can't. With AI sourcing, CV screening, multi-channel outreach, and ATS/CRM integrations all in one platform, 360AI empowers recruiters to build stronger pipelines and make placements faster.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-sourcing"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-automation"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "AI Headhunter with Global Reach."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment firms with 1–50 employees and in-house recruiters for SMBs."
+        },
+        "website": {
+          "en-US": "https://360ai.io"
+        },
+        "contactName": {
+          "en-US": "Sam Aria"
+        },
+        "contactEmail": {
+          "en-US": "sam.aria@360ai.io"
+        },
+        "contactPhone": {
+          "en-US": "+44 (0) 7463 632 869"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Agency and In-house Recruiters"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "AI Sourcing with real-time, multi-channel data. AI Screening for bulk CVs with intelligent data enrichment.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Multi-channel Outreach via email, WhatsApp, and social platforms.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Seamless integration with 200+ ATS and CRM systems, including Bullhorn, Vincere, Ashby, and more. Also email, WhatsApp, and social channel integration for outreach.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "360AI offers an exclusive 20% discount to RecConnect Members.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-azukiaccountsltd",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Azuki Accounts Ltd"
+        },
+        "slug": {
+          "en-US": "azuki-accounts-ltd"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We take on the burden of all your accounting and financial needs so that you can concentrate on the things that make your business grow.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We offer a pick 'n' mix system of services so that you can have exactly the service you want, which is flexible and scalable.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We have developed a comprehensive Board pack which doesn't just include a profit and loss and balance sheet but a full analysis on your company.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We also have qualified finance directors who have worked within recruitment for a number of years and have vast experience of growing and exiting a business. The FDs attend monthly board meetings and offer further executive support.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Azuki is a full end to end finance solution. We do everything from pay and bill, bookkeeping, credit control, producing board packs, FD attendance as well as completing your statutory accounts, tax returns and all other reporting requirements.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-backofficesupport"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-funding"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "We provide a full outsourced finance function for recruiters."
+        },
+        "targetAudience": {
+          "en-US": "SME recruitment businesses"
+        },
+        "website": {
+          "en-US": "https://www.azukiaccounts.com"
+        },
+        "contactName": {
+          "en-US": "Poonam Mawani"
+        },
+        "contactEmail": {
+          "en-US": "poonam@azukiaccounts.com"
+        },
+        "contactPhone": {
+          "en-US": "07740 190661"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Business Owners"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Xero partners with award-winning board packs — comprehensive financial reporting tailored for recruitment businesses.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Can use multiple pay and bill systems — flexible finance infrastructure that works with your existing recruitment tech stack.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-blueskypr",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "BlueSky PR"
+        },
+        "slug": {
+          "en-US": "bluesky-pr"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "BlueSky PR delivers strategic PR and content marketing exclusively for recruitment agencies, RPOs, talent tech firms, and trade associations. With nearly two decades of specialist experience, we understand what journalists want and what marketing content drives recruitment business results.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Our services include media relations, expert content creation that converts readers into leads, crisis communications when reputation is at stake, strategic communications planning that aligns with business goals, and training/mentoring for consultants and marketing teams.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We've helped clients secure coverage in publications from Sky News, Forbes, the BBC, and City AM through to vertical press. Our approach combines deep sector knowledge, established journalist relationships, and data-driven strategy to position recruitment firms as credible industry experts. Clients typically see 12-47% increases in share of voice within their first year, with measurable impact on lead generation and revenue.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-marketing"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "Specialists in communications, marketing and PR, delivering measurable business results for recruitment firms. Almost 20 years delivering content and media coverage, alongside training and strategic support, that converts into revenue, not just reach."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment agencies, RPOs, in-house talent acquisition teams, recruitment technology vendors, HR consultancies, trade associations"
+        },
+        "website": {
+          "en-US": "https://www.bluesky-pr.com"
+        },
+        "contactName": {
+          "en-US": "Steph King"
+        },
+        "contactEmail": {
+          "en-US": "stephanie@bluesky-pr.com"
+        },
+        "contactPhone": {
+          "en-US": "01582 790 700"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Marketing Directors, CEOs/MDs of recruitment firms, Heads of Marketing, Business Development Directors, Communications Managers in talent acquisition teams."
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Proven ROI: Clients have achieved £100K+ revenue from a single article.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We understand your market, your challenges, and what journalists covering your industry actually want.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Works with all major recruitment CRMs and ATS platforms. We also work with standard marketing platforms including HubSpot, Salesforce, Google Analytics, Mailchimp, and LinkedIn for campaign delivery, tracking, and ROI measurement.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Join RecConnect to find out more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-coralstarfish",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Coral Starfish"
+        },
+        "slug": {
+          "en-US": "coral-starfish"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Coral Starfish makes candidate sourcing and business development easier than ever by integrating websites, such as LinkedIn, XING and BoardEx, with Bullhorn products including Bullhorn platform, Bullhorn Recruitment Cloud and Invenias.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Use Coral Starfish to create, manage and update records efficiently, directly within supported websites such as LinkedIn, giving you instant access to your CRM to: identify duplicate records, create new candidates/clients, shortlist candidates for roles, create new client opportunities, add notes and follow up tasks, and add candidates/clients to lists (triggering automations).",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "User experience is at the heart of everything we do at Coral Starfish — you shouldn't need to be trained up or waste time getting things to work, everything should just make sense. When things make sense, your business becomes more efficient, making it easier to keep your CRM systems up-to-date, meaning less time spent on data entry and more time on higher value tasks, such as working with prospects.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Get started today with a FREE TRIAL — simply go to the free trial page on our website.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-sourcing"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "Coral Starfish makes candidate sourcing and business development easier than ever by integrating websites, such as LinkedIn, with Bullhorn products including Bullhorn platform, Bullhorn Recruitment Cloud and Invenias."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment businesses using either the Bullhorn platform, Bullhorn Recruitment Cloud or Invenias."
+        },
+        "website": {
+          "en-US": "https://www.coralstarfish.com/"
+        },
+        "contactName": {
+          "en-US": "Elliott Lack"
+        },
+        "contactEmail": {
+          "en-US": "elliott@coralstarfish.com"
+        },
+        "contactPhone": {
+          "en-US": "020 4572 8350"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Researchers and consultants who spend a lot of time on LinkedIn"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Identify existing records already in your CRM (e.g. Bullhorn) whilst using external websites (e.g. LinkedIn) — eliminate duplicate records and stay in sync without leaving your browser.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Update your CRM (e.g. Bullhorn) directly from external websites (e.g. LinkedIn) — create and manage candidates, clients, opportunities, notes, and tasks without switching platforms.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Bullhorn, Invenias, Salesforce, LinkedIn, XING, BoardEx",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "First 3 months half price after the initial free trial period.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-donnakennedyhrltd",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Donna Kennedy HR Ltd"
+        },
+        "slug": {
+          "en-US": "donna-kennedy-hr-ltd"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "My approach helps recruitment founders build businesses that are easier to run, more profitable, and worth more when it's time to sell - without the cost of a full-time HR Director.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "The HR expertise your business needs, without the full-time overhead. I bring board-level HR leadership shaped by deep insight into the recruitment sector - including what's keeping founders up at night right now. I'll strengthen your management team, reduce the drag of people issues, and help you build a business that runs better and attracts serious buyers.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Build toward exit without taking your eye off the day job. End-to-end M&A support and exit preparation - from culture and leadership bench strength to the people-side due diligence that protects your valuation. Plus full integration support if you're acquiring.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Turn your managers into leaders who actually deliver. EMCC-accredited 1:1 and team coaching that builds the capability, confidence, and accountability buyers want to see — and that makes your business easier to scale right now.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Stay ahead of employment law before it becomes a costly problem. From the new six-month unfair dismissal rules to the Worker Protection Act - I'll keep you protected and compliant without the legal jargon.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-consulting"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-learningandtraining"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "The HR Director your recruitment business needs - without the full-time cost. Helping founders scale smarter, lead better, and exit stronger."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment and recruitment adjacent businesses who are looking to establish firm foundations for growth or preparing for exit in the next 1-5 years."
+        },
+        "website": {
+          "en-US": "https://www.donnakennedyhr.co.uk"
+        },
+        "contactName": {
+          "en-US": "Donna Kennedy"
+        },
+        "contactEmail": {
+          "en-US": "donna@donnakennedyhr.co.uk"
+        },
+        "contactPhone": {
+          "en-US": "07841383022"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Founders, CEOs and leadership teams. Businesses with one ops person managing multiple functions and who would benefit from specialist knowledge or advice around People and Culture."
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Fractional HR advisory, strategy workshops, and coaching to help recruitment founders build businesses that run without them, perform without excuses, and sell for what they're worth.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Simple, scalable performance and career frameworks that create clarity, reduce leadership inconsistency, and build a stronger bench - making your business more valuable and easier to run today, whatever your exit timeline.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Join RecConnect to find out more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "n/a",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-northstarpeople",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "NorthStar People"
+        },
+        "slug": {
+          "en-US": "northstar-people"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We're a team of recruitment experts who bring sharp thinking, fresh energy, and practical advice to help businesses in the recruitment industry grow, solve challenges, and lead with confidence.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We know the recruitment industry is dynamic, demanding, and full of both massive opportunities and unique challenges. Our services are built to cut through the noise and provide clear, actionable solutions that directly address the most critical aspects of running and improving your business.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We don't offer generic advice or support; we partner with you to implement real-world strategies that deliver measurable results, whether you're looking to scale rapidly, boost profitability, or strengthen your position in the market.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-consulting"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-learningandtraining"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "Expert advice. Real growth. Zero fluff. We combine your ambition with our collective recruitment and business expertise to work as one team to achieve your business goals and personal potential."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment agencies from solo entrepreneurs to large businesses and the recruitment industry suppliers who value knowledge and expertise from the coal face."
+        },
+        "website": {
+          "en-US": "https://northstarpeople.com/"
+        },
+        "contactName": {
+          "en-US": "Paul Sharpe"
+        },
+        "contactEmail": {
+          "en-US": "paul@northstarpeople.com"
+        },
+        "contactPhone": {
+          "en-US": "07789 924581"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Business owners and leaders specialising in the recruitment industry."
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Business Strategy & Planning: Develop robust strategies that drive sustainable growth in competitive recruitment markets. We provide the external perspective and expertise needed to identify opportunities and create clear roadmaps for success.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "RPO & MSP Solutions: Design, build and deploy RPO solutions that create recurring revenue and long-term client partnerships. Our 7-step RPO programme helps recruitment businesses evolve and scale with confidence.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Business Mentor: Running your own business can be lonely. Our mentors will be there to cheer you on, challenge your thinking, share knowledge and provide a confidential sounding board when you most need it.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Learning & Development: NorthStar People's recruitment L&D training empowers recruitment businesses to achieve sustainable growth and professional excellence through impactful, tailored solutions.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Performance Coaching: Help your people do better work. Your consultants get focused one-to-one time with a coach who understands recruitment. Together they set clear goals, build the right habits, and stay accountable.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Start-Ups: Starting a recruitment business is exciting, but it can also be overwhelming. We help founders and early stage leaders set up their business for success from day one.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We don't offer generic advice — we partner with you to implement real-world strategies that deliver measurable results, whether you're looking to scale rapidly, boost profitability, or strengthen your market position.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Join RecConnect to find out more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-prominence",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Prominence"
+        },
+        "slug": {
+          "en-US": "prominence"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "At Prominence, we help recruitment businesses grow by acting as their dedicated marketing team or by supporting existing in-house functions. With deep industry expertise, we know how to position your brand to win more clients, attract high-quality candidates, and hire top recruiters into your own teams.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Our tailored strategies focus on building visibility, credibility, and engagement across the channels that matter most, ensuring your business stands out in a competitive market. By combining smart marketing with a deep understanding of recruitment, we help you scale your business organically and sustainably.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Whether you're looking for a partner to run your marketing end-to-end or just need extra firepower alongside your internal team, we provide the tools, creativity, and insight that deliver measurable results.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-marketing"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "As a ready-to-go marketing team, we partner with recruitment agencies to establish a strategic pathway to growth. By removing the biggest roadblocks - time, expertise, and budget - we make results-driven marketing accessible to ambitious recruitment agencies."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment Groups, SME Recruitment Agencies, Scale Up Recruitment Agencies, Enterprise Recruitment Agencies, Launch / Solo Recruitment Agencies"
+        },
+        "website": {
+          "en-US": "https://www.weareprominence.com"
+        },
+        "contactName": {
+          "en-US": "Tom Burkinshaw"
+        },
+        "contactEmail": {
+          "en-US": "thomas.burkinshaw@weareprominence.com"
+        },
+        "contactPhone": {
+          "en-US": "07872040640"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Business Owners, Operations Managers, Marketing Managers"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "At Prominence, we help recruitment businesses grow by acting as their dedicated marketing team or by supporting existing in-house functions — delivering real marketing ROI with minimal hassle.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Think of Prominence as an extension of your recruitment agency. We're as committed as your own team, focusing on delivering genuine marketing ROI with minimal hassle. Our aim is to be part of your growth by delivering quantifiable results.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Roi-AI, Mailchimp, Bullhorn Automation (and other email marketing providers), Shazamme, WordPress, Volcanic (and other website vendors). We can slide into your existing tech stack or advise on best practice based on your business.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-recfindrengage",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Recfindr Engage"
+        },
+        "slug": {
+          "en-US": "recfindr-engage"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Recfindr Engage is a digital-sales-room platform built specifically for recruitment agencies. Instead of sending static CVs, PDFs, or long email chains, recruiters create personalised rooms to present candidates, prep talent for interviews, or run business development outreach. Each room brings together documents, video, process stages, and custom content in one clean, trackable space—no downloads, no logins.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Agencies use Recfindr to improve response rates, reduce admin time, and provide a modern client and candidate experience. Real-time analytics show who viewed what, how long for, and when to follow up, helping teams prioritise the right conversations. With growing integrations into leading CRMs and simple team-wide collaboration, Recfindr supports scalable workflows for single consultants through to multi-office agencies.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-bdtoolmarketing"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "Recfindr Engage helps recruitment agencies send personalised digital rooms for candidate presentations, interview prep, and business development—track engagement, speed up decisions, and ditch endless PDFs."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment agencies and executive search firms"
+        },
+        "website": {
+          "en-US": "https://www.recfindr.co.uk"
+        },
+        "contactName": {
+          "en-US": "Alexandra Chirica"
+        },
+        "contactEmail": {
+          "en-US": "alexandra@recfindr.co.uk"
+        },
+        "contactPhone": {
+          "en-US": "07825368964"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Recruiters, consultants, account managers, BD leads, and operations teams"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Personalised candidate and BD rooms with real-time engagement analytics—know who's interested before you pick up the phone.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Faster, cleaner delivery of CVs and documents—no attachments, no formatting headaches, and seamless sharing across clients and hiring teams.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Bullhorn (template mapping), Loxo (contact activity sync), plus email sharing and more CRM connections in development",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Join RecConnect to find out more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-recruiterinsider",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Recruiter Insider"
+        },
+        "slug": {
+          "en-US": "recruiter-insider"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We help recruitment agencies improve their performance by capturing detailed feedback from candidates and clients at every stage of the hiring process and post-placement.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Instead of relying on vague satisfaction scores, we measure specific elements of the hiring process and provide insights that show what consultants are doing well and where they need to improve.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Agencies can see the impact of each stage, from the job brief through to final placement, and understand how these behaviours influence fill rates, conversion ratios, and overall revenue.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "The platform delivers clear dashboards, benchmarking, and real case study data that agencies can use to train consultants, win new business, and strengthen client relationships.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "It also highlights the consultants who are delivering exceptional experiences so agencies can showcase them to clients and candidates. Recruiter Insider turns everyday recruitment activity into actionable insights that help agencies stand out, improve consistency, and achieve better outcomes for the people they work with.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-feedback"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "We help you measure and understand the relationships you have with your candidates and clients to improve your reputation and fill more jobs."
+        },
+        "targetAudience": {
+          "en-US": "Agencies with 6+ consultants"
+        },
+        "website": {
+          "en-US": "https://www.recruiterinsider.com"
+        },
+        "contactName": {
+          "en-US": "Justin Hillier"
+        },
+        "contactEmail": {
+          "en-US": "jhillier@recruiterinsider.co.uk"
+        },
+        "contactPhone": {
+          "en-US": "07399211721"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Owners, Team Leaders, Marketing, Ops Managers, Client Services, Business Development, Consultants"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Improve fill rates by improving the skills of your consultants — understand what truly impacts the hiring process and act on it.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Win more new business and deepen client relationships with unique insights into the hiring process that allow for powerful benchmarking and differentiation.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Bullhorn, BH4SF, Jobadder, Mercury, Vincere, Loxo, Tracker",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Join RecConnect to find out more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-syunconsulting",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Syun Consulting"
+        },
+        "slug": {
+          "en-US": "syun-consulting"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Syun Consulting is an independent consultancy dedicated to helping recruitment businesses unlock the full potential of their technology and data. With deep expertise and hands-on sector experience, we have supported hundreds of firms in building the right systems and processes to fuel growth, reduce inefficiencies and create a strong platform for the future.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We know that recruitment companies face constant pressure to scale, adapt and innovate. That's why we focus on practical, tailored solutions that deliver measurable improvements. From implementing new CRMs and advising on technology strategy to optimising data and automating processes, our work ensures that recruitment leaders can drive growth and innovation, knowing their systems and processes are built to support long-term success.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Our services span five key areas: CRM Implementation, Recruitment Technology Consultancy, Data Optimisation, Process Automation, and AI Deployment.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Each project is shaped around the unique challenges of the business we're working with. Whether it's untangling legacy data, building a scalable tech roadmap or introducing AI-driven tools, we take a client-first approach to ensure solutions are effective, robust and aligned with long-term objectives.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "At Syun Consulting, our goal is simple: to give recruitment businesses clarity, control and confidence in their systems so they can focus on what matters most – placing talent, winning clients and driving sustainable growth.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-technology"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-consulting"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "Syun Consulting supports recruitment businesses in overcoming fragmented systems, poor data and inefficient workflows. Using CRM expertise, AI-led data optimisation, process automation and technology strategy, we provide tailored, practical solutions that enable scalable growth, strengthen operations and give leaders the confidence to focus on strategy and client delivery."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment Businesses"
+        },
+        "website": {
+          "en-US": "https://www.syunconsulting.com/"
+        },
+        "contactName": {
+          "en-US": "Kamal Ladwa"
+        },
+        "contactEmail": {
+          "en-US": "kamal@syunconsulting.com"
+        },
+        "contactPhone": {
+          "en-US": "0207 971 7986"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Business Owners, Managing Directors, Operations Directors"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Syun Consulting delivers independent, experience-driven advice that helps recruitment businesses optimise their technology and data. We identify inefficiencies, implement practical solutions and provide guidance on CRMs, automation and AI-led processes, enabling leaders to make informed decisions, improve performance and focus on strategic growth.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Syun Consulting equips recruitment businesses with scalable, future-ready technology and processes. Through CRM implementation, process automation and AI-led data optimisation, we help firms improve efficiency, reduce manual workload and ensure systems are robust and adaptable, giving leaders confidence that their operations can support growth today and long-term objectives tomorrow.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Specialists with clients using either: Vincere, Loxo, Mercury, Bullhorn",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "memberOffer": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Join RecConnect to find out more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-xemplo",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Xemplo"
+        },
+        "slug": {
+          "en-US": "xemplo"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Xemplo is a tech-enabled workforce operations platform designed for recruitment and labour hire agencies to manage placements at scale.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "It connects placement data from your ATS directly to onboarding, compliance, timesheets, payroll preparation and billing workflows, removing manual handoffs between systems. By automating these back-office processes, Xemplo reduces rework, minimises errors and helps agencies protect margins as contractor volumes grow.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "With real-time visibility across onboarding status, time capture and pay and bill readiness, finance and operations teams can stay in control without slowing down consultants or talent teams. Xemplo integrates with leading ATS and payroll systems, ensuring accurate data flows from placement through to pay run and invoice, supporting faster execution, stronger compliance and scalable growth for recruitment and labour hire businesses.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-automation"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-backofficesupport"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "shortDescription": {
+          "en-US": "Xemplo connects placements to onboarding, timesheets, payroll and billing, helping recruitment and labour hire agencies automate back-office workflows, reduce rework and protect margins at scale."
+        },
+        "targetAudience": {
+          "en-US": "Recruitment Businesses, SMBs, Labour Hire Agencies"
+        },
+        "website": {
+          "en-US": "https://www.xemplo.com"
+        },
+        "contactName": {
+          "en-US": "Lee Haley"
+        },
+        "contactEmail": {
+          "en-US": "lee.haley@xemplo.com"
+        },
+        "contactPhone": {
+          "en-US": "+44 330 053 4393"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Finance, Managers, Talent, HR, Payroll, Ops"
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Accelerates onboarding and automates critical back-office workflows. Xemplo eliminates lag time between placement and operations by automating onboarding, service agreements, timesheets, payroll preparation, and compliance checks, all directly from your ATS, reducing manual effort and speed-to-service for agencies.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Consistent, accurate financial and compliance execution at scale. With built-in rate calculators, automatic syncing of pay and charge rates, visibility into process flow and integrated timesheet management, Xemplo drives accuracy across payroll, billing and compliance, helping agencies protect margins and keep placements moving.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Integrates with leading ATS and payroll systems including Bullhorn, JobAdder, Idibu, Sage Intact and more",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "id": "sup-mynta",
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "supplier"
+          }
+        },
+        "publishedVersion": 1
+      },
+      "fields": {
+        "name": {
+          "en-US": "Myn TA Work Perks Group"
+        },
+        "slug": {
+          "en-US": "myn-ta-work-perks-group"
+        },
+        "description": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "We partner with exceptional recruiters and forward-thinking employers to deliver faster, smarter, and more transparent hiring. Our platform covers the entire source-to-pay journey — with integrated ATS, VMS, AI-powered sourcing, payroll, compliance, and candidate engagement.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              },
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Whether you're building your recruitment brand or scaling your workforce, Myn connects you to what matters: results.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "shortDescription": {
+          "en-US": "Myn empowers top recruiters to build and grow their own businesses — with no upfront costs, no limits, and up to 90% of fees kept."
+        },
+        "categories": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-umbrellaservices"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-sourcing"
+              }
+            },
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Entry",
+                "id": "cat-backofficesupport"
+              }
+            }
+          ]
+        },
+        "featured": {
+          "en-US": false
+        },
+        "targetAudience": {
+          "en-US": "Solopreneurs and agency recruiters looking to launch or scale their own business."
+        },
+        "website": {
+          "en-US": "https://www.myn.co.uk"
+        },
+        "contactName": {
+          "en-US": "Tony Fernandez"
+        },
+        "contactEmail": {
+          "en-US": "tony.fernandez@myn.co.uk"
+        },
+        "contactPhone": {
+          "en-US": "00353864068899"
+        },
+        "tier": {
+          "en-US": "standard"
+        },
+        "typicalUsers": {
+          "en-US": "Agency Recruiters who are looking to launch their own business OR solopreneurs who would like support to scale their business up and take on more complex and lucrative projects."
+        },
+        "benefit1": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Everything you need to set up or scale your own recruitment business — from integrated ATS and VMS through to payroll, compliance, and AI-powered sourcing, all under one roof.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "benefit2": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "The Myn brand and network will help you bring in more clients, secure referral business and drastically increase your ability to stand out above the crowd in your chosen vertical.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "integrations": {
+          "en-US": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "MS365 suite, HubSpot, LinkedIn, and the Myn platform for candidate sourcing and client management.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// CONNECTED 2026 - event landing page
+// BOX Piccadilly, London · Thursday 12 November 2026 · 9:30am to 5pm
+//
+// Composes the section components. Content lives in src/data/connected.ts
+// and styling in src/styles/connected.css.
+//
+// Tickets: every CTA links to the Eventbrite event (new tab). If
+// EMBED_CHECKOUT is true in src/data/connected.ts, the embedded checkout
+// also loads so those buttons open the buy window in a modal over this
+// page. Keep it false until Embedded Checkout is enabled for the event.
+// ───────────────────────────────────────────────────────────────────
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/connected.css';
+import { EVENT_ID, EMBED_CHECKOUT } from '@/data/connected';
+
+import Hero from '@/components/connected/Hero.astro';
+import Marquee from '@/components/connected/Marquee.astro';
+import EventSponsor from '@/components/home/EventSponsor.astro';
+import Overview from '@/components/connected/Overview.astro';
+import VideoReel from '@/components/connected/VideoReel.astro';
+import Highlights from '@/components/connected/Highlights.astro';
+import Agenda from '@/components/connected/Agenda.astro';
+import Speakers from '@/components/connected/Speakers.astro';
+import Sponsors from '@/components/connected/Sponsors.astro';
+import Quote from '@/components/connected/Quote.astro';
+import Tickets from '@/components/connected/Tickets.astro';
+import Faq from '@/components/connected/Faq.astro';
+import Location from '@/components/connected/Location.astro';
+import FinalCta from '@/components/connected/FinalCta.astro';
+---
+
+<BaseLayout
+  title="CONNECTED 2026 | The immersive recruitment experience at BOX London"
+  description="CONNECTED 2026. The iconic immersive experience for recruitment professionals. BOX Piccadilly, London. Thursday 12 November 2026, 9:30am to 5pm. Keynotes, PechaKucha, live music, DJ and magic."
+  image="/images/box/Box1.webp"
+  keywords="recruitment event, recruitment conference London, RecConnect, CONNECTED 2026, BOX Piccadilly"
+  noSuffix={true}
+  eventBar={false}
+>
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <!-- after-dark wrapper guarantees the dark canvas -->
+  <div class="c-connected">
+    <!-- Film grain over the whole page -->
+    <div class="c-grain" aria-hidden="true"></div>
+
+    <Hero />
+    <Marquee />
+    <EventSponsor />
+    <Overview />
+    <VideoReel />
+    <Highlights />
+    <Agenda />
+    <Speakers />
+    <Sponsors />
+    <Quote />
+    <Tickets />
+    <Faq />
+    <Location />
+    <FinalCta />
+  </div>
+</BaseLayout>
+
+<!-- Eventbrite embedded checkout (only when explicitly enabled) -->
+{EMBED_CHECKOUT && (
+  <Fragment>
+    <script is:inline src="https://www.eventbrite.com/static/widgets/eb_widgets.js"></script>
+    <script is:inline define:vars={{ eventId: EVENT_ID }}>
+      (function () {
+        function bind() {
+          var EB = window.EBWidgets;
+          if (!EB || typeof EB.createWidget !== 'function') return false;
+          document.querySelectorAll('[data-eb-checkout]').forEach(function (btn, i) {
+            if (!btn.id) btn.id = 'eb-trigger-' + i;
+            EB.createWidget({
+              widgetType: 'checkout',
+              eventId: eventId,
+              modal: true,
+              modalTriggerElementId: btn.id,
+              onOrderComplete: function () {},
+            });
+            btn.addEventListener('click', function (e) { e.preventDefault(); });
+          });
+          return true;
+        }
+        var tries = 0;
+        var timer = setInterval(function () {
+          tries++;
+          if (bind() || tries > 60) clearInterval(timer);
+        }, 100);
+      })();
+    </script>
+  </Fragment>
+)}
+
+<!-- Scroll reveal -->
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>

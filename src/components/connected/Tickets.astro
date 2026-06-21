@@ -1,0 +1,73 @@
+---
+import { EVENTBRITE_URL, FULL_DAY_PRICE, AFTERNOON_PRICE } from '@/data/connected';
+
+const fullDayFeatures = [
+  'Keynotes and headline speakers',
+  'PechaKucha and collaboration sessions',
+  'A varied lunch included',
+  'Full afternoon of entertainment',
+  'Live music, DJ and close-up magic',
+];
+const afternoonFeatures = [
+  'Afternoon entertainment and networking',
+  'Live music and DJ',
+  'Close-up magic',
+  'Connect with the room',
+  'Perfect if mornings are a stretch',
+];
+---
+
+<section id="tickets" class="relative bg-[#0a0a0a] py-20 md:py-28 overflow-hidden">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-[#ff6a13]/10 blur-[160px]"></div>
+  <div class="container-wide relative z-10">
+    <div class="max-w-2xl mx-auto text-center mb-14 reveal">
+      <p class="c-kicker">Secure your place</p>
+      <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95] mb-4">Two ways in</h2>
+      <p class="text-lg text-white/65 font-light">Whatever your role in a recruitment agency business, this event is for you.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+      <!-- Full day -->
+      <div class="c-ticket c-ticket-feature reveal">
+        <div class="c-ticket-flag">Most popular</div>
+        <h3 class="c-display uppercase text-4xl text-white mb-1 leading-none">Full Day Pass</h3>
+        <p class="text-white/60 font-light mb-6">All the action, start to finish.</p>
+        {FULL_DAY_PRICE && <p class="text-3xl font-bold text-[#ff6a13] mb-6">{FULL_DAY_PRICE}</p>}
+        <ul class="space-y-3 mb-8">
+          {fullDayFeatures.map((f) => (
+            <li class="flex items-start gap-3 text-white/80">
+              <svg class="w-5 h-5 text-[#ff6a13] mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span class="font-light">{f}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="c-perf"></div>
+        <a href={EVENTBRITE_URL} data-eb-checkout target="_blank" rel="noopener noreferrer" class="c-btn-orange w-full justify-center">
+          {FULL_DAY_PRICE ? 'Get your full day pass' : 'Get tickets'}
+        </a>
+      </div>
+
+      <!-- Afternoon -->
+      <div class="c-ticket reveal" style="--d:90ms">
+        <h3 class="c-display uppercase text-4xl text-white mb-1 leading-none">Afternoon Pass</h3>
+        <p class="text-white/60 font-light mb-6">Come for the party and the people.</p>
+        {AFTERNOON_PRICE && <p class="text-3xl font-bold text-white mb-6">{AFTERNOON_PRICE}</p>}
+        <ul class="space-y-3 mb-8">
+          {afternoonFeatures.map((f) => (
+            <li class="flex items-start gap-3 text-white/80">
+              <svg class="w-5 h-5 text-[#4299e1] mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span class="font-light">{f}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="c-perf"></div>
+        <a href={EVENTBRITE_URL} data-eb-checkout target="_blank" rel="noopener noreferrer" class="c-btn-outline w-full justify-center">
+          {AFTERNOON_PRICE ? 'Get your afternoon pass' : 'Get tickets'}
+        </a>
+      </div>
+    </div>
+
+    <p class="text-center text-white/40 text-sm mt-8">For industry service providers, this event is invite only.</p>
+  </div>
+</section>

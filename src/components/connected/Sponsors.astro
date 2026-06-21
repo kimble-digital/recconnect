@@ -1,0 +1,171 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// CONNECTED 2026 sponsor wall - pulled from Contentful by slug.
+// Tiers: Headline / Gold / Silver. Gold + Silver sit on white chips so
+// brand colours read on the black page. The Headline logo (Keybridge,
+// a 1-colour mark) renders as a white silhouette straight on the black,
+// a touch larger, no white box. Edit SPONSORS below if any slug changes.
+// ───────────────────────────────────────────────────────────────────
+import { fetchEntry } from '@/lib/contentful';
+
+// Where the "Become a sponsor" button goes.
+const SPONSOR_CTA_HREF = '/contact';
+
+type Tier = 'headline' | 'gold' | 'silver';
+
+interface SponsorConfig { slug: string; tier: Tier; name: string; fallbackLogo?: string; fallbackUrl?: string; }
+
+const SPONSORS: SponsorConfig[] = [
+  { slug: 'keybridge-it', tier: 'headline', name: 'Keybridge IT', fallbackLogo: '/images/box/keybridge%20logo%20-%20sub%20brands%20-%201%20colour.svg', fallbackUrl: 'https://www.keybridgeit.com/' },
+  { slug: 'astute-payroll', tier: 'gold', name: 'Deel' },
+  { slug: '3r',        tier: 'gold',   name: '3R' },
+  { slug: 'ringover',  tier: 'gold',   name: 'Ringover' },
+  { slug: 'bullhorn',  tier: 'gold',   name: 'Bullhorn' },
+  { slug: 'xemplo',    tier: 'silver', name: 'Xemplo' },
+  { slug: 'wave-rs',   tier: 'silver', name: 'Wave' },
+  { slug: 'shazamme',  tier: 'gold',   name: 'Shazamme' },
+];
+
+interface Sponsor { name: string; tier: Tier; logoUrl: string; href: string; }
+
+async function load(cfg: SponsorConfig): Promise<Sponsor> {
+  let logoUrl = '';
+  let href = '';
+  try {
+    const entry: any = await fetchEntry('supplier', cfg.slug, false);
+    if (entry) {
+      const f = entry.fields;
+      logoUrl = f.logo?.fields?.file?.url ? `https:${f.logo.fields.file.url}` : '';
+      const site = f.website || '';
+      href = site ? (site.startsWith('http') ? site : `https://${site}`) : `/suppliers/${f.slug || cfg.slug}`;
+    }
+  } catch (e) {
+    // swallow - fall back below
+  }
+  // A curated fallbackLogo always wins (e.g. Keybridge's local SVG), so we
+  // never inherit a problematic logo from Contentful for that sponsor.
+  if (cfg.fallbackLogo) logoUrl = cfg.fallbackLogo;
+  if (cfg.fallbackUrl) href = cfg.fallbackUrl;
+  if (!logoUrl) logoUrl = '';
+  if (!href) href = `/suppliers/${cfg.slug}`;
+  return { name: cfg.name, tier: cfg.tier, logoUrl, href };
+}
+
+const all = await Promise.all(SPONSORS.map(load));
+const headline = all.filter((s) => s.tier === 'headline');
+const gold = all.filter((s) => s.tier === 'gold');
+const silver = all.filter((s) => s.tier === 'silver');
+
+function isExternal(href: string) { return href.startsWith('http'); }
+---
+
+<section class="bg-black py-20 md:py-24 overflow-hidden relative">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[#ff6a13]/8 blur-[150px]"></div>
+  <div class="container-wide relative z-10 text-center">
+
+    <p class="c-kicker reveal" style="margin-bottom:2.5rem;">Proudly sponsored by</p>
+
+    {headline.length > 0 && (
+      <div class="sw-tier reveal">
+        <p class="sw-label sw-label-headline">Headline Sponsor</p>
+        <div class="sw-row">
+          {headline.map((s) => (
+            <a class="sw-chip sw-headline" href={s.href} target={isExternal(s.href) ? '_blank' : undefined} rel={isExternal(s.href) ? 'noopener noreferrer' : undefined} aria-label={s.name}>
+              {s.logoUrl ? <img src={s.logoUrl} alt={s.name} loading="lazy" /> : <span class="sw-name">{s.name}</span>}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {gold.length > 0 && (
+      <div class="sw-tier reveal">
+        <p class="sw-label sw-label-gold">Gold Sponsors</p>
+        <div class="sw-row">
+          {gold.map((s) => (
+            <a class="sw-chip sw-gold" href={s.href} target={isExternal(s.href) ? '_blank' : undefined} rel={isExternal(s.href) ? 'noopener noreferrer' : undefined} aria-label={s.name}>
+              {s.logoUrl ? <img src={s.logoUrl} alt={s.name} loading="lazy" /> : <span class="sw-name">{s.name}</span>}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {silver.length > 0 && (
+      <div class="sw-tier reveal">
+        <p class="sw-label sw-label-silver">Silver Sponsors</p>
+        <div class="sw-row">
+          {silver.map((s) => (
+            <a class="sw-chip sw-silver" href={s.href} target={isExternal(s.href) ? '_blank' : undefined} rel={isExternal(s.href) ? 'noopener noreferrer' : undefined} aria-label={s.name}>
+              {s.logoUrl ? <img src={s.logoUrl} alt={s.name} loading="lazy" /> : <span class="sw-name">{s.name}</span>}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="sw-cta reveal">
+      <p class="sw-cta-text">Want your brand in the room with the industry's sharpest leaders?</p>
+      <a href={SPONSOR_CTA_HREF} class="sw-cta-btn">
+        Become a sponsor
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sw-tier { margin-bottom: 3rem; }
+  .sw-tier:last-child { margin-bottom: 0; }
+  .sw-label {
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase;
+    letter-spacing: 0.24em; font-size: 0.95rem; margin-bottom: 1.4rem;
+  }
+  .sw-label-headline { color: #ff6a13; }
+  .sw-label-gold { color: #e6b450; }
+  .sw-label-silver { color: #c2cad6; }
+
+  .sw-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; }
+
+  .sw-chip {
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sw-chip img { object-fit: contain; width: auto; }
+
+  /* Gold + Silver: white chips so colour brand logos read */
+  .sw-gold, .sw-silver { background: #fff; border-radius: 0.6rem; box-shadow: 0 10px 26px -14px rgba(0,0,0,0.7); }
+  .sw-gold:hover, .sw-silver:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -14px rgba(255,106,19,0.45); }
+  .sw-gold .sw-name, .sw-silver .sw-name { font-weight: 600; color: #1a1f2e; }
+
+  .sw-gold { height: 76px; padding: 0 1.5rem; } .sw-gold img { max-height: 40px; max-width: 170px; } .sw-gold .sw-name { font-size: 1.05rem; }
+  .sw-silver { height: 62px; padding: 0 1.25rem; } .sw-silver img { max-height: 30px; max-width: 140px; } .sw-silver .sw-name { font-size: 0.95rem; }
+
+  /* Headline: no white box, white silhouette, a touch larger */
+  .sw-headline { padding: 0.5rem 1rem; }
+  /* explicit height (not just max-height) so the SVG, which has no intrinsic
+     dimensions, actually renders instead of collapsing to zero. */
+  .sw-headline img { height: 60px; width: auto; max-width: 340px; filter: brightness(0) invert(1); opacity: 0.95; transition: opacity 0.2s ease; }
+  .sw-headline:hover { transform: translateY(-3px); }
+  .sw-headline:hover img { opacity: 1; }
+  .sw-headline .sw-name { font-weight: 600; color: #fff; font-size: 1.4rem; }
+
+  .sw-cta { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+  .sw-cta-text { color: rgba(255,255,255,0.7); font-weight: 300; font-size: 1.05rem; margin-bottom: 1.25rem; }
+  .sw-cta-btn {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; font-size: 1.2rem;
+    color: #fff; border: 1px solid rgba(255,106,19,0.6); border-radius: 0.4rem;
+    padding: 0.8rem 1.9rem; text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease;
+  }
+  .sw-cta-btn:hover { background: rgba(255,106,19,0.12); border-color: #ff6a13; transform: translateY(-2px); }
+  .sw-cta-btn svg { width: 1.1rem; height: 1.1rem; }
+
+  @media (max-width: 560px) {
+    .sw-headline img { max-height: 52px; }
+    .sw-gold { height: 64px; } .sw-gold img { max-height: 34px; }
+    .sw-silver { height: 54px; } .sw-silver img { max-height: 26px; }
+  }
+</style>

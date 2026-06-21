@@ -1,6 +1,66 @@
 ---
+// SSR — renders on each request so Contentful changes go live instantly
+export const prerender = false;
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { articles, authors } from '@/data/articles';
+import { getArticles } from '@/lib/contentful';
+
+// ─── Fetch from Contentful ──────────────────────────────────────────
+const rawEntries = await getArticles({ include: 2 });
+
+// Helper: extract plain text from Rich Text
+function richTextToPlain(doc: any): string {
+  if (!doc || typeof doc === 'string') return doc || '';
+  if (!doc.content) return '';
+  return doc.content
+    .map((node: any) => {
+      if (node.nodeType === 'paragraph' || node.nodeType?.startsWith('heading')) {
+        return (node.content || []).map((c: any) => c.value || '').join('');
+      }
+      if (node.nodeType === 'unordered-list' || node.nodeType === 'ordered-list') {
+        return (node.content || [])
+          .map((li: any) => (li.content || []).map((p: any) => (p.content || []).map((c: any) => c.value || '').join('')).join(''))
+          .join('\n');
+      }
+      return '';
+    }).filter(Boolean).join('\n\n');
+}
+
+// Map Contentful entries to flat shape
+interface ArticleData {
+  title: string;
+  slug: string;
+  date: string;
+  author: string;
+  authorHeadshot: string;
+  authorRole: string;
+  category: string;
+  summary: string;
+  content: string;
+  image: string;
+  trend?: string;
+}
+
+const articles: ArticleData[] = rawEntries.map((entry: any) => {
+  const f = entry.fields;
+  const authorEntry = f.author;
+  return {
+    title: f.title || '',
+    slug: f.slug || '',
+    date: f.publishDate || '',
+    author: authorEntry?.fields?.name || '',
+    authorHeadshot: authorEntry?.fields?.headshot?.fields?.file?.url
+      ? `https:${authorEntry.fields.headshot.fields.file.url}`
+      : '',
+    authorRole: authorEntry?.fields?.role || '',
+    category: f.type === 'salt_report' ? 'salt-report' : 'rec-matters',
+    summary: f.shortDescription || '',
+    content: richTextToPlain(f.content),
+    image: f.featuredImage?.fields?.file?.url
+      ? `https:${f.featuredImage.fields.file.url}`
+      : '',
+  };
+});
 
 const allCount = articles.length;
 const saltCount = articles.filter(a => a.category === 'salt-report').length;
@@ -9,6 +69,38 @@ const recCount = articles.filter(a => a.category === 'rec-matters').length;
 const featured = articles[0];
 const secondary = articles.slice(1, 4);
 const remaining = articles.slice(4);
+
+// ─── Fetch Simon's Playing Injured Substack feed ─────────────────────
+interface SubstackPost {
+  title: string;
+  link: string;
+  pubDate: string;
+}
+
+let substackPosts: SubstackPost[] = [];
+try {
+  const rssRes = await fetch('https://playinginjured.substack.com/feed', {
+    headers: { 'User-Agent': 'RecConnect/1.0' },
+  });
+  const rssText = await rssRes.text();
+  const items = rssText.match(/<item>([\s\S]*?)<\/item>/g) || [];
+  substackPosts = items.slice(0, 4).map(item => {
+    const title =
+      item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/s)?.[1] ||
+      item.match(/<title>(.*?)<\/title>/s)?.[1] || '';
+    const link =
+      item.match(/<link>(.*?)<\/link>/s)?.[1] || '';
+    const pubDate =
+      item.match(/<pubDate>(.*?)<\/pubDate>/s)?.[1] || '';
+    return {
+      title: title.trim(),
+      link: link.trim(),
+      pubDate: pubDate.trim(),
+    };
+  }).filter(p => p.title && p.link);
+} catch (_) {
+  // Feed unavailable — section simply won't render
+}
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('en-GB', {
@@ -24,10 +116,6 @@ function readTime(content: string) {
 
 function getCategoryLabel(cat: string) {
   return cat === 'salt-report' ? 'Salt Report' : 'Rec Matters';
-}
-
-function getAuthorData(name: string) {
-  return authors[name as keyof typeof authors] || { name, slug: '', role: '', headshot: '' };
 }
 ---
 
@@ -100,8 +188,8 @@ function getAuthorData(name: string) {
           <div class="flex items-center gap-3 text-sm text-slate-500">
             <div class="flex items-center gap-2">
               <div class="w-6 h-6 rounded-full bg-brand-slate overflow-hidden">
-                {getAuthorData(featured.author).headshot && (
-                  <img src={getAuthorData(featured.author).headshot} alt={featured.author} class="w-full h-full object-cover" />
+                {featured.authorHeadshot && (
+                  <img src={featured.authorHeadshot} alt={featured.author} class="w-full h-full object-cover" />
                 )}
               </div>
               <span class="font-medium text-slate-700">{featured.author}</span>
@@ -151,6 +239,46 @@ function getAuthorData(name: string) {
               </div>
             </a>
           ))}
+          {/* ── Simon's Personal Thoughts ── */}
+          {substackPosts.length > 0 && (
+            <div class="pt-5 mt-2 border-t border-slate-200">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400 whitespace-nowrap">
+                  Playing Injured on Substack
+                </span>
+                <span class="flex-1 h-px bg-slate-200"></span>
+                <a
+                  href="https://playinginjured.substack.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-[0.6rem] text-primary hover:underline whitespace-nowrap"
+                >
+                  Playing Injured ↗
+                </a>
+              </div>
+              <div class="flex flex-col divide-y divide-slate-100">
+                {substackPosts.map(post => (
+                  <a
+                    href={post.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex flex-col gap-0.5 py-2.5 first:pt-0 last:pb-0"
+                  >
+                    <span class="text-xs font-semibold text-brand-navy group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                      {post.title}
+                    </span>
+                    <span class="text-[0.65rem] text-slate-400">
+                      {new Date(post.pubDate).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

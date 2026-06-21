@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CONNECTED 2026 · Speaker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     EDIT PER SPEAKER
+     ============================================================ */
+  :root{
+    --photo: url('/images/box/speakers/Adam-Oldfield.jpeg'); /* portrait */
+    --orange:#ff6a13;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#0a0a0a;height:100%;overflow:hidden;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',system-ui,sans-serif;}
+  #stage{transform-origin:center center;}
+
+  /* Screenshot THIS element (1280x1280) */
+  .card{position:relative;width:1280px;height:1280px;overflow:hidden;background:#0a0a0a;color:#fff;}
+  .glow{position:absolute;left:-6%;bottom:-16%;width:760px;height:600px;border-radius:50%;background:rgba(255,106,19,.4);filter:blur(170px);}
+  .glow2{position:absolute;right:-12%;top:-12%;width:520px;height:440px;border-radius:50%;background:rgba(66,153,225,.14);filter:blur(150px);}
+  .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 35% 45%,transparent 30%,rgba(0,0,0,.62) 100%);}
+  .grain{position:absolute;inset:0;opacity:.08;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .wordmark{position:absolute;top:90px;left:90px;z-index:3;display:flex;align-items:center;gap:16px;}
+  .boxtag{font-family:'Bebas Neue';font-size:32px;letter-spacing:.04em;background:var(--orange);color:#0a0a0a;padding:2px 13px;border-radius:6px;}
+  .wm-lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.24em;font-size:24px;color:rgba(255,255,255,.62);}
+
+  .portrait{position:absolute;top:150px;right:90px;width:470px;height:600px;border-radius:12px;overflow:hidden;z-index:2;
+    background:var(--photo) center top/cover no-repeat;
+    filter:grayscale(1) contrast(1.06) brightness(.9);
+    box-shadow:0 30px 80px rgba(0,0,0,.6);}
+  .portrait::after{content:"";position:absolute;inset:0;border-radius:12px;
+    background:linear-gradient(to top, rgba(255,106,19,.45), transparent 55%);mix-blend-mode:multiply;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);}
+
+  .content{position:absolute;left:90px;right:90px;bottom:250px;z-index:3;}
+  .eyebrow{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.28em;font-size:28px;color:var(--orange);margin-bottom:22px;}
+  .name{font-family:'Bebas Neue';text-transform:uppercase;line-height:.86;font-size:150px;color:#fff;}
+  .role{font-size:30px;font-weight:300;color:rgba(255,255,255,.72);margin-top:22px;}
+  .talk{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.04em;font-size:40px;color:#fff;margin-top:26px;max-width:760px;line-height:1.04;}
+  .talk span{color:var(--orange);}
+
+  .footer{position:absolute;left:90px;right:90px;bottom:84px;z-index:3;display:flex;align-items:flex-end;justify-content:space-between;}
+  .meta .d{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.16em;font-size:28px;color:rgba(255,255,255,.8);}
+  .meta .u{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.18em;font-size:22px;color:rgba(255,255,255,.45);margin-top:8px;}
+  .spon{display:flex;flex-direction:column;align-items:flex-end;gap:9px;}
+  .spon-lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.22em;font-size:18px;color:rgba(255,255,255,.5);}
+  .spon img{height:40px;width:auto;filter:brightness(0) invert(1);opacity:.92;}
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="card" id="card">
+      <div class="glow"></div>
+      <div class="glow2"></div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <div class="wordmark">
+        <span class="boxtag">BOX</span>
+        <span class="wm-lbl">Connected 2026</span>
+      </div>
+
+      <div class="portrait"></div>
+
+      <div class="content">
+        <!-- EDIT: name, role, talk -->
+        <p class="eyebrow">Speaking at CONNECTED 2026</p>
+        <h1 class="name">Adam Oldfield</h1>
+        <p class="role">Founder &amp; CEO, Example Recruitment</p>
+        <p class="talk">On: <span>the future of agile hiring</span></p>
+      </div>
+
+      <div class="footer">
+        <div class="meta">
+          <div class="d">Thu 12 Nov 2026 · BOX Piccadilly, London</div>
+          <div class="u">recconnect.co/connected-2026</div>
+        </div>
+        <div class="spon">
+          <span class="spon-lbl">Headline Sponsor</span>
+          <img src="/images/keybridge-logo-col-white.svg" alt="Keybridge IT" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportbar">
+    <button data-scale="1">⬇ PNG 1280</button>
+    <button data-scale="2">⬇ PNG 2×</button>
+  </div>
+  <style>
+    #exportbar{position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px;font-family:'Inter',system-ui,sans-serif;}
+    #exportbar button{background:#ff6a13;color:#0a0a0a;border:0;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+    #exportbar button:hover{background:#ff7a1f;}
+    #exportbar button:disabled{opacity:.6;cursor:default;}
+    @media print{#exportbar{display:none;}}
+  </style>
+  <script type="module">
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    const embed = new URLSearchParams(location.search).has('embed');
+    const stage = document.getElementById('stage');
+    const bar = document.getElementById('exportbar');
+    if(embed && bar) bar.style.display='none';
+    function fit(){ if(!stage) return; const s = embed ? 1 : Math.min(1,(innerHeight-48)/1280,(innerWidth-48)/1280); stage.style.transform='scale('+s+')'; }
+    addEventListener('resize', fit); fit();
+    const fname = (location.pathname.split('/').pop()||'card').replace(/\.html?$/,'')||'card';
+    async function exportPng(scale){
+      const card=document.getElementById('card');
+      if(stage) stage.style.transform='none';
+      await document.fonts.ready;
+      const result=await snapdom(card,{scale,embedFonts:true});
+      fit();
+      await result.download({format:'png',filename:fname});
+    }
+    document.querySelectorAll('#exportbar button').forEach(b=>{
+      b.addEventListener('click', async ()=>{ const o=b.textContent;b.disabled=true;b.textContent='Rendering…';
+        try{await exportPng(+b.dataset.scale);}catch(e){alert('Export failed: '+e.message);} b.disabled=false;b.textContent=o; });
+    });
+    const dl=new URLSearchParams(location.search).get('dl');
+    if(dl){ addEventListener('load',()=>setTimeout(()=>exportPng(+dl||2),500)); }
+  </script>
+</body>
+</html>

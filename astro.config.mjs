@@ -8,7 +8,7 @@ export default defineConfig({
   site: 'https://recconnect.co',
   integrations: [
     react(),
-    tailwind(),
+    tailwind({ configFile: "./tailwind.config.mjs" }),
     sitemap(),
   ],
   output: 'static',

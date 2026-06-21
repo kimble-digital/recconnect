@@ -1,0 +1,35 @@
+---
+import { faqs } from '@/data/connected';
+---
+
+<section class="bg-black py-20 md:py-28">
+  <div class="container-narrow">
+    <div class="mb-12 reveal">
+      <p class="c-kicker">Good to know</p>
+      <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95]">Frequently asked questions</h2>
+    </div>
+    <div class="space-y-3">
+      {faqs.map((f) => (
+        <div class="c-faq reveal">
+          <button class="c-faq-q" aria-expanded="false">
+            <span>{f.q}</span>
+            <svg class="c-faq-icon w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          </button>
+          <div class="c-faq-a"><p>{f.a}</p></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.c-faq-q').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const faq = btn.closest('.c-faq') as HTMLElement;
+      const answer = faq.querySelector('.c-faq-a') as HTMLElement;
+      const open = faq.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(open));
+      answer.style.maxHeight = open ? `${answer.scrollHeight}px` : '0';
+    });
+  });
+</script>
