@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RecConnect · Join social cards</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#16181d;font-family:'Inter',system-ui,sans-serif;color:#fff;padding:40px 20px 80px;}
+  .page-head{max-width:1080px;margin:0 auto 28px;}
+  .page-head h1{font-family:'Anton';text-transform:uppercase;font-size:30px;font-weight:400;}
+  .page-head p{color:#9aa3b2;font-size:14px;margin-top:8px;line-height:1.6;}
+  .cardwrap{max-width:1080px;margin:0 auto 40px;}
+  .bartop{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .bartop .name{font-size:13px;color:#9aa3b2;}
+  .bartop button{background:#2dd4bf;color:#08322c;border:0;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px;}
+  .bartop button:hover{background:#5fe3d3;}
+  .bartop button:disabled{opacity:.6;cursor:default;}
+
+  .card{width:1080px;height:1080px;position:relative;overflow:hidden;background:#0a0b0f;color:#fff;}
+  .bg{position:absolute;inset:0;background-size:cover;background-position:center;}
+  .mintglow{position:absolute;left:-8%;bottom:-22%;width:620px;height:520px;border-radius:50%;background:rgba(45,212,191,0.20);filter:blur(160px);}
+  .brandlogo{height:38px;width:auto;}
+  .kicker{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.3em;font-size:26px;color:#2dd4bf;}
+  .url{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.2em;font-size:24px;color:rgba(255,255,255,0.65);}
+  .ctapill{display:inline-flex;align-items:center;font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.08em;font-size:30px;background:#2dd4bf;color:#08322c;padding:14px 34px;border-radius:12px;}
+
+  /* Card 1 — single photo statement */
+  .c1 .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,12,0.55) 0%,rgba(8,9,12,0.2) 35%,rgba(8,9,12,0.85) 78%,rgba(8,9,12,0.96) 100%);}
+  .c1 .inner{position:absolute;inset:0;z-index:2;padding:72px;display:flex;flex-direction:column;justify-content:space-between;}
+  .c1 .title{font-family:'Anton';text-transform:uppercase;font-size:150px;line-height:0.9;margin:18px 0 24px;}
+  .c1 .sub{font-size:32px;line-height:1.45;color:rgba(255,255,255,0.85);max-width:760px;font-weight:300;margin-bottom:34px;}
+
+  /* Card 2 — photo grid + benefits band */
+  .c2 .photos{position:absolute;top:0;left:0;right:0;height:600px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px;}
+  .c2 .photos div{background-size:cover;background-position:center;}
+  .c2 .band{position:absolute;left:0;right:0;bottom:0;height:480px;background:#0a0b0f;z-index:2;padding:60px 72px;display:flex;flex-direction:column;justify-content:center;}
+  .c2 .title2{font-family:'Anton';text-transform:uppercase;font-size:84px;line-height:0.95;margin:18px 0 22px;}
+  .c2 .bullets{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.12em;font-size:30px;color:#2dd4bf;margin-bottom:34px;}
+  .c2 .row2{display:flex;align-items:center;justify-content:space-between;}
+  .c2 .toprowabs{position:absolute;top:40px;left:40px;z-index:3;}
+  .c2 .toprowabs img{height:34px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.6));}
+
+  /* Card 3 — testimonial */
+  .c3 .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,12,0.7),rgba(8,9,12,0.82));}
+  .c3 .inner{position:absolute;inset:0;z-index:2;padding:80px 80px 72px;display:flex;flex-direction:column;justify-content:space-between;}
+  .c3 .qmark{font-family:'Anton';font-size:160px;line-height:0.6;color:#2dd4bf;height:90px;}
+  .c3 .quote{font-size:52px;line-height:1.28;font-weight:500;max-width:880px;}
+  .c3 .byline{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.16em;font-size:26px;color:rgba(255,255,255,0.7);margin-top:30px;}
+  .c3 .row3{display:flex;align-items:center;justify-content:space-between;}
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Join · social cards</h1>
+    <p>Square 1080×1080 membership cards for Instagram / LinkedIn. Click a download button on any card. Logo is pulled live from the site, so it updates when the logo changes.</p>
+  </div>
+  <div id="cards"></div>
+
+  <script type="module">
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    const LOGO = '/images/recconnect-typemark-white.svg';
+    const M = (n) => `/images/members/${n}`;
+
+    const cards = [
+      `<div class="card c1" id="card-join-room">
+        <div class="bg" style="background-image:url('${M('1764586220000.jpeg')}')"></div>
+        <div class="grad"></div><div class="mintglow"></div>
+        <div class="inner">
+          <img class="brandlogo" src="${LOGO}" alt="RecConnect" />
+          <div>
+            <p class="kicker">Membership</p>
+            <h2 class="title">Join the Club.</h2>
+            <p class="sub">Lunches our partners pay for. Events people clear their diary for. The room you want to be in, not hear about later.</p>
+            <span class="url">recconnect.co/join</span>
+          </div>
+        </div>
+      </div>`,
+
+      `<div class="card c2" id="card-join-grid">
+        <div class="photos">
+          <div style="background-image:url('${M('1778143388772.jpeg')}')"></div>
+          <div style="background-image:url('${M('1764586220594.jpeg')}')"></div>
+          <div style="background-image:url('${M('1781858954346.jpeg')}')"></div>
+          <div style="background-image:url('${M('1780477619860.jpeg')}')"></div>
+        </div>
+        <div class="toprowabs"><img src="${LOGO}" alt="RecConnect" /></div>
+        <div class="band">
+          <p class="kicker">Why members stay</p>
+          <h2 class="title2">Lunches. Events.<br/>Your people.</h2>
+          <p class="bullets">Partner-paid lunches · Diary-clearing events · Never stuck alone</p>
+          <div class="row2"><span class="ctapill">Join the Club</span><span class="url">recconnect.co/join</span></div>
+        </div>
+      </div>`,
+
+      `<div class="card c3" id="card-join-quote">
+        <div class="bg" style="background-image:url('${M('1774598490671.jpeg')}')"></div>
+        <div class="grad"></div><div class="mintglow"></div>
+        <div class="inner">
+          <img class="brandlogo" src="${LOGO}" alt="RecConnect" />
+          <div>
+            <p class="qmark">&ldquo;</p>
+            <p class="quote">The RecConnect events are revered, they are SO good. The shared knowledge is unreal.</p>
+            <p class="byline">Alexandra Chirica · Founder</p>
+          </div>
+          <div class="row3"><span class="ctapill">Join the Club</span><span class="url">recconnect.co/join</span></div>
+        </div>
+      </div>`,
+    ];
+
+    const ids = ['card-join-room','card-join-grid','card-join-quote'];
+    document.getElementById('cards').innerHTML = cards.map((c,i)=>`
+      <div class="cardwrap">
+        <div class="bartop">
+          <span class="name">${ids[i]} · 1080 × 1080</span>
+          <span><button data-card="${ids[i]}" data-name="${ids[i]}" data-scale="1">⬇ 1080</button><button data-card="${ids[i]}" data-name="${ids[i]}-2x" data-scale="2">⬇ 2×</button></span>
+        </div>${c}
+      </div>`).join('');
+
+    async function exportPng(id,name,scale){
+      const card=document.getElementById(id);
+      await document.fonts.ready;
+      const result=await snapdom(card,{scale,embedFonts:true});
+      await result.download({format:'png',filename:name});
+    }
+    document.querySelectorAll('.bartop button').forEach((b)=>{
+      b.addEventListener('click', async ()=>{
+        const o=b.textContent;b.disabled=true;b.textContent='…';
+        try{ await exportPng(b.dataset.card,b.dataset.name,+b.dataset.scale); }
+        catch(e){ alert('Export failed: '+e.message); }
+        b.disabled=false;b.textContent=o;
+      });
+    });
+  </script>
+</body>
+</html>
