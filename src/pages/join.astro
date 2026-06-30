@@ -1,0 +1,200 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const STRIPE_CLUB = 'https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06';
+const WHATSAPP = 'https://chat.whatsapp.com/B9IcWZkj7fIEU806wCpsnZ';
+
+const photos = [
+  '/images/members/1764586220000.jpeg',
+  '/images/members/1778143388772.jpeg',
+  '/images/members/1764586220594.jpeg',
+  '/images/members/1773400489067.jpeg',
+  '/images/members/1764586227852.jpeg',
+  '/images/members/1774598490671.jpeg',
+  '/images/members/1776926373520.jpeg',
+  '/images/members/1778143390829.jpeg',
+  '/images/members/1780477619860.jpeg',
+  '/images/members/1781858954346.jpeg',
+  '/images/members/1781858954964.jpeg',
+  '/images/members/1782385508224.jpeg',
+];
+
+const pillars = [
+  {
+    kicker: 'The community',
+    title: 'Never stuck. Never alone.',
+    body: "Hit a wall on a deal, a hire, or a tricky client? Drop it in the WhatsApp groups and a room full of recruitment leaders has your back within minutes. Advice, introductions, and honest answers, on tap, from people who have been exactly where you are.",
+    img: '/images/members/1773400489067.jpeg',
+  },
+  {
+    kicker: 'The events',
+    title: "Diary-clearing, not diary-filling.",
+    body: 'From intimate roundtables to CONNECTED, our flagship after-dark experience in the heart of London. Lights down, PowerPoint gone, and the kind of real conversations that actually move your business forward. Members get priority access and discounted tickets.',
+    img: '/images/members/1764586220000.jpeg',
+  },
+  {
+    kicker: 'The lunches',
+    title: 'Long lunches, on the house.',
+    body: 'Lunches and dinners hosted in great rooms and picked up by our partners. Good food, sharp people, and zero hard sell, just the conversations and connections that make the difference. The kind of afternoon you leave with three new contacts and a fresh idea.',
+    img: '/images/members/1778143388772.jpeg',
+  },
+];
+---
+
+<BaseLayout
+  title="Join RecConnect"
+  description="Lunches your partners pay for, events people clear their diary for, and a community that means you are never stuck alone. Join the recruitment club worth being in."
+>
+  <!-- ═══ HERO ═══ -->
+  <section class="relative overflow-hidden min-h-[88vh] flex items-center bg-brand-navy">
+    <div class="absolute inset-0 z-0">
+      <img src="/images/members/1764586220000.jpeg" alt="" class="w-full h-full object-cover opacity-40" loading="eager" />
+      <div class="absolute inset-0 bg-primary/[0.12] mix-blend-overlay"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(ellipse at 35% 45%, rgba(10,11,15,0.55), rgba(10,11,15,0.95) 78%);"></div>
+    </div>
+
+    <div class="container-wide relative z-10 pt-32 pb-16">
+      <div class="max-w-3xl">
+        <p class="kicker text-primary text-[0.8rem] mb-5">Membership</p>
+        <h1 class="font-display uppercase text-white text-5xl md:text-7xl leading-[0.9] mb-6">
+          This is where it
+          <span class="font-script normal-case text-primary inline-block align-[-0.06em] leading-none text-6xl md:text-8xl ml-1">happens.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-200 max-w-2xl leading-relaxed mb-9">
+          Lunches your partners pay for. Events people clear their diary for. A community that means you are never stuck on a problem alone. RecConnect is the room you want to be in, not the one you hear about afterwards.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#join" class="btn-primary text-base px-8 py-3.5">Join the Club</a>
+          <a href="#whats-inside" class="btn-outline-light text-base px-8 py-3.5">See what's inside</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTO MARQUEE ═══ -->
+  <div class="jm bg-brand-navy py-3" aria-hidden="true">
+    <div class="jm-track">
+      {[...photos, ...photos].map((src) => (
+        <div class="jm-item"><img src={src} alt="" loading="lazy" /></div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ═══ PILLARS ═══ -->
+  <section id="whats-inside" class="bg-white py-20 md:py-28">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-3xl mb-16">
+        <p class="kicker text-primary-dark text-[0.8rem] mb-4">Why members stay</p>
+        <h2 class="font-display uppercase text-brand-navy text-4xl md:text-6xl leading-[0.95]">More than a membership.</h2>
+      </div>
+
+      <div class="space-y-16 md:space-y-24">
+        {pillars.map((p, i) => (
+          <div class={`grid lg:grid-cols-2 gap-8 lg:gap-14 items-center ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+            <div class="relative">
+              <div class="absolute -inset-3 bg-primary/10 blur-[50px] rounded-3xl pointer-events-none"></div>
+              <img src={p.img} alt="" class="relative w-full aspect-[4/3] object-cover rounded-2xl ring-1 ring-slate-200 shadow-xl" loading="lazy" />
+            </div>
+            <div>
+              <p class="kicker text-primary-dark text-[0.75rem] mb-3">{p.kicker}</p>
+              <h3 class="font-display uppercase text-brand-navy text-3xl md:text-5xl leading-[0.95] mb-4">{p.title}</h3>
+              <p class="text-lg text-slate-600 leading-relaxed">{p.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COLLAGE STRIP ═══ -->
+  <section class="bg-brand-navy py-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 px-2">
+      {photos.slice(0, 8).map((src) => (
+        <div class="aspect-square overflow-hidden rounded-lg">
+          <img src={src} alt="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section id="join" class="relative overflow-hidden bg-brand-navy py-20 md:py-28 scroll-mt-24">
+    <div class="absolute -top-16 -right-16 w-72 h-[26rem] bg-primary/[0.07] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="max-w-5xl mx-auto px-6 relative z-10">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <p class="kicker text-primary text-[0.8rem] mb-4">Become a member</p>
+        <h2 class="font-display uppercase text-white text-4xl md:text-6xl leading-[0.95] mb-4">Pick your way in</h2>
+        <p class="text-slate-400 text-lg">Start free and feel the room, or jump straight into the Club. No long contracts, cancel any time.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 items-start">
+        <!-- Core -->
+        <div class="rounded-xl p-7 flex flex-col h-full bg-white/[0.03] border border-white/10">
+          <h3 class="text-lg font-bold text-white mb-1">Core</h3>
+          <p class="text-slate-400 text-sm mb-4">Get a taste of the community</p>
+          <div class="text-4xl font-bold text-white mb-6">Free</div>
+          <ul class="space-y-2.5 mb-7 flex-1 text-sm text-slate-300">
+            <li class="flex gap-2"><span class="text-primary">✓</span> Open WhatsApp community</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Member directory listing</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Industry insights & newsletter</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Event invites, discounted entry</li>
+          </ul>
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 px-6 rounded-lg border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors">Join free</a>
+        </div>
+
+        <!-- Club (featured) -->
+        <div class="rounded-xl p-7 flex flex-col h-full bg-white border-2 border-primary shadow-lg relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="bg-primary text-brand-navy text-xs font-bold px-3 py-1 rounded-full">Most popular</span>
+          </div>
+          <h3 class="text-lg font-bold text-brand-navy mb-1">Club</h3>
+          <p class="text-slate-500 text-sm mb-4">Where the real conversations happen</p>
+          <div class="flex items-baseline gap-1 mb-6"><span class="text-4xl font-bold text-brand-navy">£39</span><span class="text-slate-500">/mo</span></div>
+          <ul class="space-y-2.5 mb-7 flex-1 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Everything in Core</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Paying-member WhatsApp groups</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Priority events & member pricing</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Monthly insight drops</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Exclusive supplier discounts</li>
+          </ul>
+          <a href={STRIPE_CLUB} target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 px-6 rounded-lg bg-primary text-brand-navy font-semibold text-sm hover:bg-primary-dark transition-colors">Join the Club</a>
+        </div>
+
+        <!-- Club+ -->
+        <div class="rounded-xl p-7 flex flex-col h-full bg-white/[0.03] border border-white/10">
+          <h3 class="text-lg font-bold text-white mb-1">Club+</h3>
+          <p class="text-slate-400 text-sm mb-4">For leadership teams</p>
+          <div class="flex items-baseline gap-1 mb-6"><span class="text-4xl font-bold text-white">£100</span><span class="text-slate-400">/mo</span></div>
+          <ul class="space-y-2.5 mb-7 flex-1 text-sm text-slate-300">
+            <li class="flex gap-2"><span class="text-primary">✓</span> Everything in Club</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Two member seats</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Exclusive lunches & roundtables</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Priority networking</li>
+          </ul>
+          <a href="/contact" class="block w-full text-center py-3 px-6 rounded-lg border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors">Enquire</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ═══ -->
+  <section class="relative bg-brand-navy py-20 md:py-28 border-t border-white/10">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <p class="kicker text-primary text-[0.8rem] mb-4">Don't miss the next one</p>
+      <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-5">The next one's already in the diary.</h2>
+      <p class="text-lg text-slate-400 mb-9 max-w-xl mx-auto leading-relaxed">
+        Join today and you could be in the room within weeks, not wondering what you missed.
+      </p>
+      <a href="#join" class="btn-primary text-base px-8 py-3.5">See membership options</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .jm { overflow: hidden; }
+  .jm-track { display: inline-flex; gap: 10px; animation: jm-scroll 50s linear infinite; }
+  .jm-item { flex: 0 0 auto; }
+  .jm-item img { height: 150px; width: auto; border-radius: 10px; object-fit: cover; display: block; }
+  @keyframes jm-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .jm-track { animation: none; } }
+</style>
