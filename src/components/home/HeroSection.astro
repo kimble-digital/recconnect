@@ -1,17 +1,9 @@
 ---
-import LogoWall from '@/components/LogoWall.astro';
 const BOOK_URL = 'https://www.amazon.co.uk/dp/B0H4NF36K8?ref=cm_sw_r_ffobk_cp_ud_dp_8QP171CNN3TK5E1GSWHF&bestFormat=true';
 ---
 
 <section class="relative bg-brand-navy overflow-hidden min-h-screen flex flex-col">
-  <!-- Repeating-logo wallpaper + dark radial gradient -->
-  <div class="absolute inset-0 z-0">
-    <LogoWall color="#2dd4bf" opacity={0.1} size={130} class="absolute inset-0 w-full h-full" />
-    <div
-      class="absolute inset-0"
-      style="background: radial-gradient(ellipse at 50% 42%, rgba(10,11,15,0.5), rgba(10,11,15,0.97) 72%);"
-    ></div>
-  </div>
+  {/* Background image goes here (to be supplied) */}
 
   <!-- Mint glow -->
   <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[380px] bg-primary/10 rounded-full blur-[150px] z-0"></div>
