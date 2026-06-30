@@ -54,6 +54,10 @@
   .btn.share{background:#0a66c2;color:#fff;width:100%;justify-content:center;font-size:21px;padding:15px;}
   .btn.share:hover{background:#0b5cab;}
   .orline{font-family:'Bebas Neue';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#6b7480;margin:22px 0 12px;}
+  .copied{font-family:'Bebas Neue';letter-spacing:.08em;font-size:15px;color:#5fe3d3;}
+  .smallnote.lb-callout{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:11px 13px;color:#cfe8df;}
+  @keyframes capflash{0%{border-color:var(--acc);box-shadow:0 0 0 3px rgba(45,212,191,.3);}100%{border-color:rgba(255,255,255,.15);box-shadow:none;}}
+  .cap-box.flash{animation:capflash 1.7s ease;}
   .cap-box{width:100%;height:150px;resize:vertical;background:#0a0b0f;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#d7dde6;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;padding:12px 14px;}
   .cap-box:focus{outline:none;border-color:var(--acc);}
   .row-btns{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap;}
@@ -84,19 +88,18 @@
         <h3 class="lb-title" id="lbTitle"></h3>
 
         <button class="btn share" id="lbShare">Share to LinkedIn</button>
-        <p class="smallnote" id="lbShareNote">One click: downloads the image, copies the caption, and opens LinkedIn. In the composer, attach the image and paste the caption.</p>
+        <p class="smallnote" id="lbShareNote"></p>
 
-        <p class="orline">Or grab them separately</p>
         <div class="steps">
           <div class="step">
-            <p class="lab">The image</p>
+            <p class="lab">Step 1 &middot; Download the image</p>
             <button class="btn ghost" id="lbDownload">&#8595; Download PNG</button>
             <p class="dlfallback" id="lbFallback"></p>
           </div>
           <div class="step" id="lbCapStep">
-            <p class="lab">The caption</p>
+            <p class="lab">Step 2 &middot; Copy the caption, then paste it into your LinkedIn post</p>
             <textarea class="cap-box" id="lbCap" readonly></textarea>
-            <div class="row-btns"><button class="btn ghost" id="lbCopy">Copy caption</button></div>
+            <div class="row-btns"><button class="btn" id="lbCopy">Copy caption</button><span class="copied" id="lbCopied"></span></div>
           </div>
         </div>
         <p class="tip" id="lbTip"></p>
@@ -205,9 +208,13 @@
         style="border:0;transform-origin:top left;width:${c.w}px;height:${c.h}px;transform:scale(${scale})"></iframe>`;
       lbKicker.textContent = GROUPS.find(g=>g.key===c.group).label;
       lbTitle.textContent = c.title;
-      if(c.cap){ lbCapStep.classList.remove('hidden'); lbCap.value = c.cap;
-        lbTip.textContent = 'For LinkedIn: download the image, copy the caption, then start a new post, attach the image and paste the caption.'; }
+      lbShareNote.classList.remove('lb-callout');
+      lbShareNote.innerHTML = "Opens LinkedIn with the image downloaded and caption copied. Heads up: LinkedIn won't let anyone auto-fill a post, so you still attach the image and <b>paste the caption</b> yourself.";
+      document.getElementById('lbCopied').textContent = '';
+      if(c.cap){ lbCapStep.classList.remove('hidden'); lbCap.value = c.cap; lbCap.classList.remove('flash');
+        lbTip.textContent = 'No caption gets posted automatically anywhere. Always paste it into the post yourself.'; }
       else { lbCapStep.classList.add('hidden');
+        lbShareNote.innerHTML = "Opens LinkedIn with the image downloaded. This card has no caption, so add your own words in the post.";
         lbTip.textContent = 'This is a visual card with no caption. Download it and add your own words on LinkedIn.'; }
       lbFallback.innerHTML = '';
       lb.classList.add('show'); lb.setAttribute('aria-hidden','false');
@@ -236,6 +243,12 @@
       setTimeout(()=>{ lbDownload.innerHTML='&#8595; Download PNG'; }, 1800);
     });
 
+    const lbCopied = document.getElementById('lbCopied');
+    function flashCaption(){
+      if(!cur || !cur.cap) return;
+      lbCap.classList.remove('flash'); void lbCap.offsetWidth; lbCap.classList.add('flash');
+      try { lbCap.focus(); lbCap.select(); } catch(e){}
+    }
     async function copyCaption(){
       if(!cur || !cur.cap) return false;
       try { await navigator.clipboard.writeText(cur.cap); return true; }
@@ -243,8 +256,10 @@
     }
     lbCopy.addEventListener('click', async () => {
       const ok = await copyCaption();
-      lbCopy.textContent = ok ? 'Copied!' : 'Press Ctrl/Cmd C';
-      setTimeout(()=>lbCopy.textContent='Copy caption',1600);
+      flashCaption();
+      lbCopied.textContent = ok ? 'Copied — now paste into LinkedIn' : '';
+      lbCopy.textContent = ok ? 'Copied!' : 'Select all + Ctrl/Cmd C';
+      setTimeout(()=>{ lbCopy.textContent='Copy caption'; }, 1800);
     });
 
     // Mobile: try the native share sheet with the actual image file attached.
@@ -268,11 +283,16 @@
     // copy the caption and download the image so both are ready to drop in.
     function shareDesktop(c){
       window.open(LINKEDIN_COMPOSER, '_blank', 'noopener');
-      copyCaption();
       triggerDownload(c);
-      lbShareNote.innerHTML = c.cap
-        ? '<b style="color:#cfe8df">Caption copied and image downloading.</b> In LinkedIn, click the photo icon to attach the image, then paste (Ctrl/Cmd V).'
-        : '<b style="color:#cfe8df">Image downloading.</b> In LinkedIn, click the photo icon and attach it from your downloads.';
+      lbShareNote.classList.add('lb-callout');
+      if(c.cap){
+        copyCaption();
+        flashCaption();
+        lbCopied.textContent = 'Copied — now paste into LinkedIn';
+        lbShareNote.innerHTML = '&#10003; <b>Image downloading, caption copied.</b><br>Now in LinkedIn: click the <b>photo icon</b> to attach the image, then <b>paste the caption (Ctrl/Cmd&nbsp;V)</b> into the post box.';
+      } else {
+        lbShareNote.innerHTML = '&#10003; <b>Image downloading.</b><br>In LinkedIn, click the <b>photo icon</b> and attach it from your downloads.';
+      }
     }
 
     lbShare.addEventListener('click', async () => {
