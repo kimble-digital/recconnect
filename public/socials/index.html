@@ -55,6 +55,9 @@
   .btn.share:hover{background:#0b5cab;}
   .orline{font-family:'Bebas Neue';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#6b7480;margin:22px 0 12px;}
   .copied{font-family:'Bebas Neue';letter-spacing:.08em;font-size:15px;color:#5fe3d3;}
+  .step{margin-bottom:22px;}
+  .divider{font-family:'Bebas Neue';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#6b7480;margin:4px 0 12px;display:flex;align-items:center;gap:10px;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1);}
   .smallnote.lb-callout{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:11px 13px;color:#cfe8df;}
   @keyframes capflash{0%{border-color:var(--acc);box-shadow:0 0 0 3px rgba(45,212,191,.3);}100%{border-color:rgba(255,255,255,.15);box-shadow:none;}}
   .cap-box.flash{animation:capflash 1.7s ease;}
@@ -87,21 +90,22 @@
         <p class="lb-kicker" id="lbKicker">RecConnect</p>
         <h3 class="lb-title" id="lbTitle"></h3>
 
+        <div class="step" id="lbCapStep">
+          <p class="lab">The post</p>
+          <textarea class="cap-box" id="lbCap" readonly></textarea>
+          <div class="row-btns"><button class="btn" id="lbCopy">&#128203; Copy post</button><span class="copied" id="lbCopied"></span></div>
+        </div>
+
+        <div class="step">
+          <p class="lab">The image</p>
+          <button class="btn ghost" id="lbDownload">&#8595; Download image (PNG)</button>
+          <p class="dlfallback" id="lbFallback"></p>
+        </div>
+
+        <div class="divider">Or in one go</div>
         <button class="btn share" id="lbShare">Share to LinkedIn</button>
         <p class="smallnote" id="lbShareNote"></p>
 
-        <div class="steps">
-          <div class="step">
-            <p class="lab">Step 1 &middot; Download the image</p>
-            <button class="btn ghost" id="lbDownload">&#8595; Download PNG</button>
-            <p class="dlfallback" id="lbFallback"></p>
-          </div>
-          <div class="step" id="lbCapStep">
-            <p class="lab">Step 2 &middot; Copy the caption, then paste it into your LinkedIn post</p>
-            <textarea class="cap-box" id="lbCap" readonly></textarea>
-            <div class="row-btns"><button class="btn" id="lbCopy">Copy caption</button><span class="copied" id="lbCopied"></span></div>
-          </div>
-        </div>
         <p class="tip" id="lbTip"></p>
       </div>
     </div>
@@ -209,7 +213,7 @@
       lbKicker.textContent = GROUPS.find(g=>g.key===c.group).label;
       lbTitle.textContent = c.title;
       lbShareNote.classList.remove('lb-callout');
-      lbShareNote.innerHTML = "Opens LinkedIn with the image downloaded and caption copied. Heads up: LinkedIn won't let anyone auto-fill a post, so you still attach the image and <b>paste the caption</b> yourself.";
+      lbShareNote.innerHTML = "Opens LinkedIn with the image downloaded and post copied. Heads up: LinkedIn won't let anyone auto-fill a post, so you still attach the image and <b>paste the post</b> yourself.";
       document.getElementById('lbCopied').textContent = '';
       if(c.cap){ lbCapStep.classList.remove('hidden'); lbCap.value = c.cap; lbCap.classList.remove('flash');
         lbTip.textContent = 'No caption gets posted automatically anywhere. Always paste it into the post yourself.'; }
@@ -259,7 +263,7 @@
       flashCaption();
       lbCopied.textContent = ok ? 'Copied — now paste into LinkedIn' : '';
       lbCopy.textContent = ok ? 'Copied!' : 'Select all + Ctrl/Cmd C';
-      setTimeout(()=>{ lbCopy.textContent='Copy caption'; }, 1800);
+      setTimeout(()=>{ lbCopy.innerHTML='&#128203; Copy post'; }, 1800);
     });
 
     // Mobile: try the native share sheet with the actual image file attached.
@@ -289,7 +293,7 @@
         copyCaption();
         flashCaption();
         lbCopied.textContent = 'Copied — now paste into LinkedIn';
-        lbShareNote.innerHTML = '&#10003; <b>Image downloading, caption copied.</b><br>Now in LinkedIn: click the <b>photo icon</b> to attach the image, then <b>paste the caption (Ctrl/Cmd&nbsp;V)</b> into the post box.';
+        lbShareNote.innerHTML = '&#10003; <b>Image downloading, post copied.</b><br>Now in LinkedIn: click the <b>photo icon</b> to attach the image, then <b>paste the post (Ctrl/Cmd&nbsp;V)</b> into the box.';
       } else {
         lbShareNote.innerHTML = '&#10003; <b>Image downloading.</b><br>In LinkedIn, click the <b>photo icon</b> and attach it from your downloads.';
       }
