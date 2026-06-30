@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PhotoMarquee from '@/components/PhotoMarquee.astro';
 
 const ENQUIRE = '#enquire';
 
@@ -153,6 +154,8 @@ const tiers = [
       </div>
     </div>
   </section>
+
+  <PhotoMarquee kicker="The rooms you'll be in" />
 
   <!-- ═══ THE DATA PLATFORM ═══ -->
   <section class="relative overflow-hidden bg-brand-navy py-20 md:py-28">
