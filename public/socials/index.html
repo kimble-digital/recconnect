@@ -282,7 +282,7 @@
     lbCopy.addEventListener('click', async () => {
       const ok = await copyCaption();
       flashCaption();
-      lbCopied.textContent = ok ? 'Copied — now paste into LinkedIn' : '';
+      lbCopied.textContent = ok ? 'Copied. Now paste into LinkedIn' : '';
       lbCopy.textContent = ok ? 'Copied!' : 'Select all + Ctrl/Cmd C';
       setTimeout(()=>{ lbCopy.innerHTML='&#128203; Copy post'; }, 1800);
     });
@@ -313,7 +313,7 @@
       if(c.cap){
         copyCaption();
         flashCaption();
-        lbCopied.textContent = 'Copied — now paste into LinkedIn';
+        lbCopied.textContent = 'Copied. Now paste into LinkedIn';
         lbShareNote.innerHTML = '&#10003; <b>Image downloading, post copied.</b><br>Now in LinkedIn: click the <b>photo icon</b> to attach the image, then <b>paste the post (Ctrl/Cmd&nbsp;V)</b> into the box.';
       } else {
         lbShareNote.innerHTML = '&#10003; <b>Image downloading.</b><br>In LinkedIn, click the <b>photo icon</b> and attach it from your downloads.';
