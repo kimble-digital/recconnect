@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RecConnect · Event header</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  @font-face{font-family:'Reissue';src:url('/fonts/reissue.otf') format('opentype');font-weight:400;font-style:normal;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#16181d;height:100%;overflow:hidden;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',system-ui,sans-serif;}
+  #stage{transform-origin:center center;}
+  /* 2:1 Eventbrite header. 1080x540 base, export 2x -> 2160x1080. */
+  .card{--acc:#2dd4bf;width:1080px;height:540px;position:relative;overflow:hidden;background:#0a0b0f;color:#fff;}
+  .card.orange{--acc:#ff6a13;}
+  .card.orange .mintglow{background:rgba(255,106,19,0.26);}
+  .card.orange .shard{background:rgba(255,106,19,0.09);}
+  .year{display:block;color:#ff6a13;text-shadow:0 0 38px rgba(255,106,19,0.55),0 0 90px rgba(255,106,19,0.32);}
+  .card .bg{position:absolute;inset:0;background-size:cover;background-position:center;}
+  .card .tint{position:absolute;inset:0;background:linear-gradient(105deg,rgba(8,9,12,0.94) 0%,rgba(8,9,12,0.82) 42%,rgba(8,9,12,0.5) 100%);}
+  .card .mintglow{position:absolute;left:-6%;bottom:-30%;width:560px;height:420px;border-radius:50%;background:rgba(45,212,191,0.22);filter:blur(150px);}
+  .card .shard{position:absolute;top:-40px;right:-40px;width:240px;height:600px;background:rgba(45,212,191,0.07);clip-path:polygon(20% 0,100% 0,80% 100%,0 100%);transform:rotate(8deg);}
+  .card .inner{position:absolute;inset:0;z-index:2;padding:52px 60px;display:flex;flex-direction:column;justify-content:space-between;}
+  .toprow{display:flex;align-items:flex-start;justify-content:space-between;}
+  .brandlogo{height:30px;width:auto;}
+  .spon{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  .spon-lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.22em;font-size:15px;color:rgba(255,255,255,0.55);}
+  .spon-logo{height:40px;width:auto;filter:brightness(0) invert(1);opacity:0.95;}
+  .mid{max-width:760px;}
+  .kicker{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.28em;font-size:20px;color:var(--acc);margin-bottom:18px;}
+  .rule{width:56px;height:4px;background:var(--acc);border-radius:2px;margin-bottom:20px;}
+  .title{font-family:'Anton';text-transform:uppercase;line-height:0.95;letter-spacing:0.01em;color:#fff;}
+  .accent{font-family:'Reissue',cursive;color:var(--acc);line-height:0.8;display:block;white-space:nowrap;margin-top:2px;}
+  .meta{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.16em;font-size:23px;color:rgba(255,255,255,0.75);}
+  .url{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.18em;font-size:18px;color:var(--acc);margin-top:6px;}
+  #exportbar{position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px;}
+  #exportbar button{background:#2dd4bf;color:#08322c;border:0;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;}
+  #exportbar button:hover{background:#5fe3d3;}
+  #exportbar button:disabled{opacity:.6;cursor:default;}
+</style>
+</head>
+<body>
+  <div id="stage"><div class="card" id="card"></div></div>
+  <div id="exportbar">
+    <button data-scale="1">⬇ 1080×540</button>
+    <button data-scale="2">⬇ 2× (2160×1080)</button>
+  </div>
+  <script type="module">
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    const LOGO = '/images/recconnect-typemark-white.svg';
+    const KEYBRIDGE = '/images/keybridge-logo-col-white.svg';
+
+    const EVENTS = {
+      connected: { theme:'orange', kicker:'The immersive recruitment experience', title:'CONNECTED', year:'2026', size:96,
+        meta:'Thu 12 Nov 2026 &nbsp;·&nbsp; BOX Piccadilly, London', bg:'/images/events/connected.jpg',
+        spon:{ lbl:'Headline sponsor', logo:KEYBRIDGE } },
+      manchester: { kicker:'Recruitment Leader Experience', title:'The Manchester Recruitment Leader Experience', size:58,
+        meta:'Wed 22 Oct 2026 &nbsp;·&nbsp; JMW Solicitors, Manchester', bg:'/images/events/manchester.jpg',
+        spon:{ lbl:'In partnership with', logo:KEYBRIDGE } },
+      cambridge: { kicker:'Recruitment Leader Experience', title:'The Cambridge Recruitment Leader Experience', size:58,
+        meta:'Thu 24 Sep 2026 &nbsp;·&nbsp; Gonville Hotel, Cambridge', bg:'/images/events/cambridge.jpg',
+        spon:{ lbl:'In partnership with', logo:KEYBRIDGE } },
+      'digital-workers': { kicker:'A RecConnect event', title:'The Rise of', size:54, accent:'Digital Workers', accentSize:90,
+        meta:'Thu 10 Sep 2026 &nbsp;·&nbsp; 80 Strand, London', bg:'/images/events/digital-workers.jpg',
+        spon:null },
+    };
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'connected';
+    const e = EVENTS[id] || EVENTS.connected;
+
+    const cardEl = document.getElementById('card');
+    cardEl.className = 'card' + (e.theme ? ' ' + e.theme : '');
+    cardEl.innerHTML = `
+      <div class="bg" style="background-image:url('${e.bg}')"></div>
+      <div class="tint"></div><div class="mintglow"></div><div class="shard"></div>
+      <div class="inner">
+        <div class="toprow">
+          <img class="brandlogo" src="${LOGO}" alt="RecConnect" />
+          ${e.spon ? `<div class="spon"><span class="spon-lbl">${e.spon.lbl}</span><img class="spon-logo" src="${e.spon.logo}" alt="sponsor" /></div>` : ''}
+        </div>
+        <div class="mid">
+          <p class="kicker">${e.kicker}</p><div class="rule"></div>
+          <h2 class="title" style="font-size:${e.size}px">${e.title}${e.year ? `<span class="year">${e.year}</span>` : ''}${e.accent ? `<span class="accent" style="font-size:${e.accentSize}px">${e.accent}</span>` : ''}</h2>
+        </div>
+        <div><p class="meta">${e.meta}</p><p class="url">recconnect.co/events</p></div>
+      </div>`;
+
+    const embed = params.has('embed');
+    const stage = document.getElementById('stage');
+    const bar = document.getElementById('exportbar');
+    if(embed && bar) bar.style.display='none';
+    function fit(){ const s = embed ? 1 : Math.min(1,(innerWidth-40)/1080,(innerHeight-110)/540); stage.style.transform='scale('+s+')'; }
+    addEventListener('resize', fit); fit();
+
+    async function exportPng(scale){
+      if(stage) stage.style.transform='none'; await document.fonts.ready;
+      const r = await snapdom(document.getElementById('card'), { scale, embedFonts:true }); fit();
+      await r.download({ format:'png', filename:'event-'+id });
+    }
+    document.querySelectorAll('#exportbar button').forEach(b=>b.addEventListener('click', async ()=>{
+      const o=b.textContent;b.disabled=true;b.textContent='Rendering…';
+      try{ await exportPng(+b.dataset.scale); }catch(err){ alert('Export failed: '+err.message); }
+      b.disabled=false;b.textContent=o;
+    }));
+    const dl=params.get('dl'); if(dl) addEventListener('load',()=>setTimeout(()=>exportPng(+dl||2),400));
+  </script>
+</body>
+</html>

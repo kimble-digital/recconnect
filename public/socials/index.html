@@ -3,92 +3,107 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CONNECTED 2026 — Social cards</title>
+<title>RecConnect · Social studio</title>
 <meta name="robots" content="noindex" />
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
-  :root{ --orange:#ff6a13; }
+  :root{ --acc:#2dd4bf; }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:#0a0a0a;color:#fff;font-family:'Inter',system-ui,sans-serif;padding:0 56px 90px;}
-  header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,106,19,.25);padding:30px 0 18px;margin-bottom:8px;}
-  .wm{display:flex;align-items:center;gap:14px;}
-  .boxtag{font-family:'Bebas Neue';font-size:24px;letter-spacing:.04em;background:var(--orange);color:#0a0a0a;padding:1px 10px;border-radius:5px;}
-  .wm-lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.22em;font-size:18px;color:rgba(255,255,255,.6);}
-  header h1{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.02em;font-size:44px;margin-top:14px;}
+  body{background:#0a0b0f;color:#fff;font-family:'Inter',system-ui,sans-serif;padding:0 56px 90px;}
+  header{position:sticky;top:0;z-index:50;background:rgba(10,11,15,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(45,212,191,.25);padding:30px 0 18px;margin-bottom:8px;}
+  header h1{font-family:'Anton';text-transform:uppercase;letter-spacing:.01em;font-size:40px;font-weight:400;}
+  header p{color:#9aa3b2;font-size:13px;margin-top:6px;}
   .filter{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
-  .chip{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,106,19,.4);border-radius:999px;padding:7px 18px;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;cursor:pointer;transition:all .15s;}
-  .chip:hover{border-color:var(--orange);color:#fff;}
-  .chip.active{background:var(--orange);color:#0a0a0a;border-color:var(--orange);}
+  .chip{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:7px 18px;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;cursor:pointer;transition:all .15s;}
+  .chip:hover{border-color:var(--acc);color:#fff;}
+  .chip.active{background:var(--acc);color:#08322c;border-color:var(--acc);}
   section{margin-top:48px;}
-  section>h2{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.14em;font-size:30px;color:var(--orange);border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:10px;margin-bottom:26px;}
+  section>h2{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.14em;font-size:28px;color:var(--acc);border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:10px;margin-bottom:26px;}
   .row{display:flex;flex-wrap:wrap;gap:24px;}
-  .thumb{width:300px;}
-  .frame{width:300px;height:300px;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);}
-  .frame iframe{width:1280px;height:1280px;border:0;transform:scale(.234375);transform-origin:top left;pointer-events:none;}
+  .frame{border-radius:10px;overflow:hidden;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);}
+  .frame iframe{border:0;transform-origin:top left;pointer-events:none;}
   figcaption{display:flex;justify-content:space-between;align-items:center;margin-top:11px;font-size:13px;}
-  figcaption .t{color:rgba(255,255,255,.6);}
-  .acts a{font-family:'Bebas Neue';letter-spacing:.08em;text-transform:uppercase;font-size:15px;color:var(--orange);text-decoration:none;margin-left:14px;}
+  figcaption .t{color:rgba(255,255,255,.62);}
+  .acts a{font-family:'Bebas Neue';letter-spacing:.08em;text-transform:uppercase;font-size:15px;color:var(--acc);text-decoration:none;margin-left:14px;}
   .acts a:hover{text-decoration:underline;}
   .hidden{display:none!important;}
 </style>
 </head>
 <body>
   <header>
-    <div class="wm"><span class="boxtag">BOX</span><span class="wm-lbl">× RecConnect</span></div>
-    <h1>CONNECTED 2026 · Social cards</h1>
-    <div class="filter">
-      <button class="chip active" data-filter="all">All</button>
-      <button class="chip" data-filter="event">Event</button>
-      <button class="chip" data-filter="speakers">Speakers</button>
-      <button class="chip" data-filter="sponsors">Sponsors</button>
-    </div>
+    <h1>RecConnect · Social studio</h1>
+    <p>Brand-consistent cards. Click "PNG ⬇" to export, or "Open" to tweak then download. The logo is pulled live from the site.</p>
+    <div class="filter" id="chips"></div>
   </header>
 
   <div id="grid"></div>
 
   <script>
-    // Files live in /socials/. Add a card = add a line.
     const BASE = '/socials/';
-    const CARDS = [
-      { group:'event',    file:'connected-card-1-announce.html',   title:'Announce' },
-      { group:'event',    file:'connected-card-2-statement.html',  title:'Statement' },
-      { group:'event',    file:'connected-card-3-experience.html', title:'Experience' },
+    const THUMB = 320; // thumbnail width in px
 
-      { group:'speakers', file:'speaker-adam-oldfield.html',  title:'Adam Oldfield' },
-      { group:'speakers', file:'speaker-amy-bathie.html',     title:'Amy Bathie' },
-      { group:'speakers', file:'speaker-ellie-hibberd.html',  title:'Ellie Hibberd' },
-      { group:'speakers', file:'speaker-louise-wrench.html',  title:'Louise Wrench' },
-      { group:'speakers', file:'speaker-michelle-flynn.html', title:'Michelle Flynn' },
-      { group:'speakers', file:'speaker-rohan-shah.html',    title:'Rohan Shah' },
-
-      { group:'sponsors', file:'sponsor-keybridge.html', title:'Keybridge IT (Headline)' },
-      { group:'sponsors', file:'sponsor-deel.html',      title:'Deel (Gold)' },
-      { group:'sponsors', file:'sponsor-3r.html',        title:'3R (Gold)' },
-      { group:'sponsors', file:'sponsor-ringover.html',  title:'Ringover (Gold)' },
-      { group:'sponsors', file:'sponsor-bullhorn.html',  title:'Bullhorn (Gold)' },
-      { group:'sponsors', file:'sponsor-xemplo.html',    title:'Xemplo (Silver)' },
-      { group:'sponsors', file:'sponsor-wave.html',      title:'Wave (Silver)' },
-      { group:'sponsors', file:'sponsor-shazamme.html',  title:'Shazamme (Gold)' },
-    ];
+    // Add a card = add a line. w/h are the card's native pixel size.
     const GROUPS = [
-      { key:'event', label:'Event' },
+      { key:'headers',  label:'Event headers' },
+      { key:'join',     label:'Membership' },
+      { key:'event',    label:'CONNECTED' },
       { key:'speakers', label:'Speakers' },
       { key:'sponsors', label:'Sponsors' },
     ];
+    const CARDS = [
+      { group:'headers', file:'event-header.html?id=connected',       title:'CONNECTED 2026', w:1080, h:540 },
+      { group:'headers', file:'event-header.html?id=manchester',      title:'Manchester',     w:1080, h:540 },
+      { group:'headers', file:'event-header.html?id=cambridge',       title:'Cambridge',      w:1080, h:540 },
+      { group:'headers', file:'event-header.html?id=digital-workers', title:'Digital Workers',w:1080, h:540 },
+
+      { group:'join', file:'join-card.html?id=room',  title:'Join · Statement', w:1080, h:1080 },
+      { group:'join', file:'join-card.html?id=grid',  title:'Join · Grid',      w:1080, h:1080 },
+      { group:'join', file:'join-card.html?id=quote', title:'Join · Quote',     w:1080, h:1080 },
+
+      { group:'event', file:'connected-card-1-announce.html',   title:'Announce',   w:1280, h:1280 },
+      { group:'event', file:'connected-card-2-statement.html',  title:'Statement',  w:1280, h:1280 },
+      { group:'event', file:'connected-card-3-experience.html', title:'Experience', w:1280, h:1280 },
+
+      { group:'speakers', file:'speaker-adam-oldfield.html',  title:'Adam Oldfield',  w:1280, h:1280 },
+      { group:'speakers', file:'speaker-amy-bathie.html',     title:'Amy Bathie',     w:1280, h:1280 },
+      { group:'speakers', file:'speaker-ellie-hibberd.html',  title:'Ellie Hibberd',  w:1280, h:1280 },
+      { group:'speakers', file:'speaker-louise-wrench.html',  title:'Louise Wrench',  w:1280, h:1280 },
+      { group:'speakers', file:'speaker-michelle-flynn.html', title:'Michelle Flynn', w:1280, h:1280 },
+      { group:'speakers', file:'speaker-rohan-shah.html',     title:'Rohan Shah',     w:1280, h:1280 },
+
+      { group:'sponsors', file:'sponsor-keybridge.html', title:'Keybridge IT (Headline)', w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-deel.html',      title:'Deel (Gold)',     w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-3r.html',        title:'3R (Gold)',       w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-ringover.html',  title:'Ringover (Gold)', w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-bullhorn.html',  title:'Bullhorn (Gold)', w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-xemplo.html',    title:'Xemplo (Silver)', w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-wave.html',      title:'Wave (Silver)',   w:1280, h:1280 },
+      { group:'sponsors', file:'sponsor-shazamme.html',  title:'Shazamme (Gold)', w:1280, h:1280 },
+    ];
+
+    const q = (url, extra) => BASE + url + (url.includes('?') ? '&' : '?') + extra;
+
+    document.getElementById('chips').innerHTML =
+      `<button class="chip active" data-filter="all">All</button>` +
+      GROUPS.map(g => `<button class="chip" data-filter="${g.key}">${g.label}</button>`).join('');
 
     document.getElementById('grid').innerHTML = GROUPS.map(g => {
       const items = CARDS.filter(c => c.group === g.key);
       if(!items.length) return '';
       const figs = items.map(c => {
-        const url = BASE + c.file;
+        const scale = THUMB / c.w;
+        const fw = Math.round(THUMB), fh = Math.round(c.h * scale);
         return `
-        <figure class="thumb">
-          <div class="frame"><iframe src="${url}?embed=1" loading="lazy" scrolling="no" tabindex="-1"></iframe></div>
+        <figure style="width:${fw}px">
+          <div class="frame" style="width:${fw}px;height:${fh}px">
+            <iframe src="${q(c.file,'embed=1')}" loading="lazy" scrolling="no" tabindex="-1"
+              style="width:${c.w}px;height:${c.h}px;transform:scale(${scale})"></iframe>
+          </div>
           <figcaption>
             <span class="t">${c.title}</span>
             <span class="acts">
-              <a href="${url}" target="_blank" rel="noopener">Open</a>
-              <a href="${url}?dl=2" target="_blank" rel="noopener">PNG ⬇</a>
+              <a href="${BASE + c.file}" target="_blank" rel="noopener">Open</a>
+              <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">PNG ⬇</a>
             </span>
           </figcaption>
         </figure>`;
