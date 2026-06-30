@@ -1,0 +1,59 @@
+---
+/**
+ * PhotoMarquee — full-bleed scrolling strip of member/event photos.
+ * Social-proof band reused on the homepage and Join page.
+ */
+interface Props {
+  kicker?: string;
+  speed?: number; // seconds for one loop
+}
+const { kicker, speed = 55 } = Astro.props;
+
+const photos = [
+  '/images/members/1764586220000.jpeg',
+  '/images/members/1778143388772.jpeg',
+  '/images/members/1764586220594.jpeg',
+  '/images/members/1773400489067.jpeg',
+  '/images/members/1764586227852.jpeg',
+  '/images/members/1774598490671.jpeg',
+  '/images/members/1776926373520.jpeg',
+  '/images/members/1778143390829.jpeg',
+  '/images/members/1780477619860.jpeg',
+  '/images/members/1781858954346.jpeg',
+  '/images/members/1781858954964.jpeg',
+  '/images/members/1782385508224.jpeg',
+];
+---
+
+<section class="bg-brand-navy py-10 md:py-14 overflow-hidden">
+  {kicker && (
+    <p class="kicker text-primary text-[0.8rem] text-center mb-7">{kicker}</p>
+  )}
+  <div class="pm" aria-hidden="true">
+    <div class="pm-track" style={`animation-duration:${speed}s`}>
+      {[...photos, ...photos].map((src) => (
+        <div class="pm-item"><img src={src} alt="" loading="lazy" /></div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pm { overflow: hidden; }
+  .pm-track { display: inline-flex; gap: 12px; animation: pm-scroll linear infinite; }
+  .pm-item { flex: 0 0 auto; }
+  .pm-item img {
+    height: 180px;
+    width: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+  }
+  @keyframes pm-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pm-track { animation: none; }
+  }
+</style>
