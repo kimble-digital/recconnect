@@ -30,6 +30,23 @@ const dataPoints = [
   'The technology and tools each agency already uses',
 ];
 
+const activations = [
+  {
+    kicker: 'Sponsor CONNECTED',
+    title: 'Put your brand at the centre of the room.',
+    body: "CONNECTED is the industry's most talked-about event, an immersive day that hundreds of senior recruitment leaders clear their diary for. Headline and category sponsorships put your brand on the stage and in the conversation, not on a forgotten lanyard. Ask us for the 2026 sponsorship pack.",
+    img: '/images/members/connected-2026.jpg',
+    ctaLabel: 'Request the 2026 sponsorship pack',
+  },
+  {
+    kicker: 'Host a lunch',
+    title: 'A table of decision-makers, all yours.',
+    body: 'Host an intimate lunch for a curated table of around ten senior agency leaders, exactly the people you want in front of. We handle the guest list and the logistics, you bring the brand and the conversation. No stand, no pitch, just the right people over a long lunch, arranged and costed around what you want to achieve.',
+    img: '/images/members/1778143388772.jpeg',
+    ctaLabel: 'Enquire about hosting a lunch',
+  },
+];
+
 const tiers = [
   {
     name: 'Category Partner',
@@ -205,6 +222,34 @@ const tiers = [
             <p class="text-[0.7rem] text-slate-600 mt-4">Illustrative record. Real data is provided to partners in line with our privacy commitments.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WAYS TO SHOW UP ═══ -->
+  <section class="relative overflow-hidden bg-white py-20 md:py-28">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-3xl mb-16">
+        <p class="kicker text-primary-dark text-[0.8rem] mb-4">Ways to show up</p>
+        <h2 class="font-display uppercase text-brand-navy text-4xl md:text-6xl leading-[0.95] mb-5">Get in front of them.</h2>
+        <p class="text-lg text-slate-600 leading-relaxed">Beyond the directory and the data, there are bigger moments to put your brand in the room with the people who actually buy.</p>
+      </div>
+
+      <div class="space-y-16 md:space-y-24">
+        {activations.map((a, i) => (
+          <div class={`grid lg:grid-cols-2 gap-8 lg:gap-14 items-center ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+            <div class="relative">
+              <div class="absolute -inset-3 bg-primary/10 blur-[50px] rounded-3xl pointer-events-none"></div>
+              <img src={a.img} alt="" class="relative w-full aspect-[4/3] object-cover rounded-2xl ring-1 ring-slate-200 shadow-xl" loading="lazy" />
+            </div>
+            <div>
+              <p class="kicker text-primary-dark text-[0.75rem] mb-3">{a.kicker}</p>
+              <h3 class="font-display uppercase text-brand-navy text-3xl md:text-5xl leading-[0.95] mb-4">{a.title}</h3>
+              <p class="text-lg text-slate-600 leading-relaxed mb-6">{a.body}</p>
+              <a href="#enquire" class="btn-primary text-sm px-6 py-2.5">{a.ctaLabel}</a>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
