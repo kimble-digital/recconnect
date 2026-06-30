@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const ENQUIRE = '/contact';
+const ENQUIRE = '#enquire';
 
 const reasons = [
   {
@@ -255,19 +255,90 @@ const tiers = [
     </div>
   </section>
 
-  <!-- ═══ FINAL CTA ═══ -->
-  <section class="relative overflow-hidden bg-brand-navy py-20 md:py-28">
+  <!-- ═══ ENQUIRY FORM ═══ -->
+  <section id="enquire" class="relative overflow-hidden bg-brand-navy py-20 md:py-28 scroll-mt-24">
     <div class="absolute -bottom-20 -right-20 w-80 h-96 bg-coral/[0.06] rotate-[14deg] pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
-    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
-      <p class="kicker text-primary text-[0.8rem] mb-4">Ready?</p>
-      <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-5">Let's talk partnership</h2>
-      <p class="text-lg text-slate-400 mb-9 max-w-xl mx-auto leading-relaxed">
-        Tell us about your business and who you want to reach. We'll show you the audience data and find the package that fits.
-      </p>
-      <a href={ENQUIRE} class="btn-primary text-base px-8 py-3.5">Become a partner</a>
-      <p class="text-sm text-slate-500 mt-6">
-        Or email <a href="mailto:hello@recconnect.co" class="text-primary hover:text-white transition-colors">hello@recconnect.co</a>
+    <div class="max-w-2xl mx-auto px-6 relative z-10">
+      <div class="text-center mb-9">
+        <p class="kicker text-primary text-[0.8rem] mb-4">Become a partner</p>
+        <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-4">Let's talk partnership</h2>
+        <p class="text-slate-400 leading-relaxed">Tell us about your business and who you want to reach. We'll show you the audience data and find the package that fits.</p>
+      </div>
+
+      <form data-lead action="/api/submit" data-success="Thanks. We'll be in touch shortly to talk partnership." novalidate>
+        <input type="hidden" name="formType" value="partner" />
+        <div class="absolute -left-[9999px]" aria-hidden="true">
+          <label>Company website<input type="text" name="company_website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="p-name" class="mb-1.5 block text-sm font-medium text-slate-300">Name <span class="text-primary">*</span></label>
+            <input id="p-name" name="name" type="text" required autocomplete="name" class="form-input" />
+          </div>
+          <div>
+            <label for="p-email" class="mb-1.5 block text-sm font-medium text-slate-300">Email <span class="text-primary">*</span></label>
+            <input id="p-email" name="email" type="email" required autocomplete="email" class="form-input" />
+          </div>
+          <div>
+            <label for="p-company" class="mb-1.5 block text-sm font-medium text-slate-300">Company <span class="text-primary">*</span></label>
+            <input id="p-company" name="company" type="text" required autocomplete="organization" class="form-input" />
+          </div>
+          <div>
+            <label for="p-interest" class="mb-1.5 block text-sm font-medium text-slate-300">Package interest</label>
+            <select id="p-interest" name="interest" class="form-input">
+              <option value="">Not sure yet</option>
+              <option>Category Partner</option>
+              <option>Featured Supplier</option>
+              <option>Listed Supplier</option>
+              <option>Trainer Membership</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-4">
+          <label for="p-message" class="mb-1.5 block text-sm font-medium text-slate-300">What do you offer, and who do you want to reach?</label>
+          <textarea id="p-message" name="message" rows="4" class="form-input"></textarea>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-4">
+          <button type="submit" class="btn-primary px-7 py-3 text-sm">Send enquiry</button>
+          <p data-status class="text-sm" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <p class="text-sm text-slate-500 mt-6 text-center">
+        Prefer email? <a href="mailto:hello@recconnect.co" class="text-primary hover:text-white transition-colors">hello@recconnect.co</a>
       </p>
     </div>
   </section>
+
+  <script>
+    document.querySelectorAll<HTMLFormElement>('form[data-lead]').forEach((form) => {
+      const statusEl = form.querySelector<HTMLElement>('[data-status]');
+      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const invalid = ['ring-2', 'ring-red-400'];
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (statusEl) { statusEl.textContent = ''; statusEl.className = 'text-sm'; }
+        form.querySelectorAll('[data-invalid]').forEach((el) => { el.classList.remove(...invalid); el.removeAttribute('data-invalid'); });
+        const data = Object.fromEntries(new FormData(form).entries());
+        const original = btn?.textContent || 'Send';
+        if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+        try {
+          const res = await fetch(form.getAttribute('action') || '/api/submit', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+          });
+          const body = await res.json().catch(() => ({}));
+          if (res.ok && body.ok) {
+            form.reset();
+            if (statusEl) { statusEl.textContent = form.getAttribute('data-success') || 'Thanks, we will be in touch.'; statusEl.className = 'text-sm font-medium text-emerald-400'; }
+          } else {
+            (body.fields || []).forEach((n: string) => { const el = form.querySelector(`[name="${n}"]`); if (el) { el.classList.add(...invalid); el.setAttribute('data-invalid', 'true'); } });
+            if (statusEl) { statusEl.textContent = body.error || 'Something went wrong. Please try again.'; statusEl.className = 'text-sm font-medium text-red-400'; }
+          }
+        } catch {
+          if (statusEl) { statusEl.textContent = 'Network error. Please try again.'; statusEl.className = 'text-sm font-medium text-red-400'; }
+        } finally { if (btn) { btn.disabled = false; btn.textContent = original; } }
+      });
+    });
+  </script>
 </BaseLayout>

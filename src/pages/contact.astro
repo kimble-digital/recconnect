@@ -4,7 +4,7 @@ import PageHero from '@/components/PageHero.astro';
 
 // Enquiry form is hidden until Resend is configured in Vercel
 // (RESEND_API_KEY, CONTACT_TO, CONTACT_FROM). Set to true to re-enable.
-const showEnquiryForm = false;
+const showEnquiryForm = true;
 ---
 
 <BaseLayout
@@ -102,11 +102,12 @@ const showEnquiryForm = false;
             Send us a message
           </h2>
           <p class="text-slate-500">
-            Prefer to write? Fill this in and we'll get back to you — usually within one working day.
+            Prefer to write? Fill this in and we'll get back to you, usually within one working day.
           </p>
         </div>
 
         <form id="contact-form" novalidate>
+          <input type="hidden" name="formType" value="enquiry" />
           <!-- Honeypot: positioned off-screen; real users never see or fill it -->
           <div class="absolute -left-[9999px]" aria-hidden="true">
             <label>Company website
@@ -300,7 +301,7 @@ const showEnquiryForm = false;
         btn.textContent = 'Sending…';
 
         try {
-          const res = await fetch('/api/contact', {
+          const res = await fetch('/api/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),

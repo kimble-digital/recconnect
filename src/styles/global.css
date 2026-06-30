@@ -105,7 +105,12 @@ a {
   .badge {
     @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
   }
+  /* Form inputs for dark sections */
+  .form-input {
+    @apply w-full rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-white placeholder-slate-500 outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20;
+  }
 }
+.form-input option { color: #0a0b0f; }
 
 /* ── Display / edgy type helpers (outside @layer so !important wins over
    the global heading rule). Used across the bolder homepage. ── */
