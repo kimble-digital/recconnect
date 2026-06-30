@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RecConnect · Banner crop test</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#0a0b0f;color:#fff;font-family:'Inter',system-ui,sans-serif;padding:34px 48px 80px;}
+  h1{font-family:'Anton';text-transform:uppercase;font-size:34px;font-weight:400;}
+  .lead{color:#9aa3b2;font-size:14px;margin-top:8px;max-width:760px;line-height:1.55;}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 14px;align-items:center;}
+  select,.toggle{font-family:'Bebas Neue';letter-spacing:.08em;text-transform:uppercase;font-size:16px;}
+  select{background:#101216;color:#fff;border:1px solid rgba(45,212,191,.4);border-radius:8px;padding:9px 14px;}
+  .toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 14px;cursor:pointer;color:#cfd5de;}
+  .toggle input{accent-color:var(--c,#2dd4bf);}
+  .swatch{width:12px;height:12px;border-radius:3px;}
+
+  .stageWrap{position:relative;width:960px;max-width:100%;}
+  .stage{position:relative;width:100%;aspect-ratio:2/1;border-radius:10px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.12);}
+  .stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  /* dim the area OUTSIDE the card crop so the surviving zone pops */
+  .dim{position:absolute;top:0;bottom:0;background:rgba(5,6,8,.74);pointer-events:none;}
+  .dim.l{left:0;} .dim.r{right:0;}
+  /* outline frames */
+  .frame{position:absolute;top:0;bottom:0;pointer-events:none;border-left:2px dashed var(--fc);border-right:2px dashed var(--fc);}
+  .flabel{position:absolute;top:6px;font-family:'Bebas Neue';letter-spacing:.1em;font-size:12px;color:var(--fc);background:rgba(8,9,12,.7);padding:1px 6px;border-radius:4px;transform:translateX(-50%);}
+  .legend{margin-top:18px;font-size:13px;color:#aab2be;line-height:1.7;max-width:760px;}
+  .legend b{color:#fff;}
+  .verdict{margin-top:22px;background:#101216;border:1px solid rgba(45,212,191,.3);border-radius:12px;padding:18px 20px;max-width:760px;font-size:14px;line-height:1.6;}
+  .verdict h3{font-family:'Bebas Neue';letter-spacing:.1em;font-size:18px;color:var(--c,#2dd4bf);margin-bottom:8px;}
+  code{background:#0a0b0f;border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:1px 6px;font-size:12.5px;color:#cfe8df;}
+</style>
+</head>
+<body>
+  <h1>Banner crop test</h1>
+  <p class="lead">Your 2:1 banner is shown at full size below (this is how Eventbrite displays it on the actual event page). The overlays show how it gets cut when squeezed into smaller listing cards and thumbnails. Anything inside the bright zone survives; anything in the shaded edges gets clipped.</p>
+
+  <div class="controls">
+    <select id="ev">
+      <option value="connected">CONNECTED 2026</option>
+      <option value="manchester" selected>Manchester</option>
+      <option value="cambridge">Cambridge</option>
+      <option value="digital-workers">Digital Workers</option>
+    </select>
+    <label class="toggle" style="--c:#2dd4bf"><input type="checkbox" id="t-card" checked><span class="swatch" style="background:#2dd4bf"></span>Listing card crop (~1.55:1)</label>
+    <label class="toggle" style="--c:#f2b33d"><input type="checkbox" id="t-169"><span class="swatch" style="background:#f2b33d"></span>16:9 crop</label>
+    <label class="toggle" style="--c:#fb6b4b"><input type="checkbox" id="t-sq"><span class="swatch" style="background:#fb6b4b"></span>Square 1:1 crop</label>
+  </div>
+
+  <div class="stageWrap">
+    <div class="stage" id="stage">
+      <iframe id="frame" title="banner"></iframe>
+      <div class="dim l" id="dimL"></div>
+      <div class="dim r" id="dimR"></div>
+      <div class="frame" id="f169" style="--fc:#f2b33d;display:none"><span class="flabel" style="left:50%">16:9</span></div>
+      <div class="frame" id="fsq" style="--fc:#fb6b4b;display:none"><span class="flabel" style="left:50%">1:1</span></div>
+    </div>
+  </div>
+
+  <p class="legend">
+    <b>Where it shows up:</b> the full 2:1 is what people see on the Eventbrite <b>event page</b> itself. The <b style="color:#2dd4bf">~1.55:1</b> crop is the tight listing card (like your events grid). <b style="color:#f2b33d">16:9</b> is Eventbrite search results and most email/preview thumbnails. <b style="color:#fb6b4b">1:1</b> is a square social slot (use the dedicated square cards for those instead).
+  </p>
+
+  <div class="verdict">
+    <h3>The verdict</h3>
+    <p>The big title and the background art survive every crop. What sits in the shaded edges and gets clipped in tight cards is the <b>logo (far left)</b>, the <b>sponsor lockup (far right)</b> and the <b>date line (bottom-left)</b>. They're safe on the full event page, at risk in listing thumbnails. If you want them to survive everywhere, I can pull all the text and logos into the bright safe zone (about <code>130px</code> side margins) and let the photo bleed to the edges. Toggle the frames above to see it on each event.</p>
+  </div>
+
+  <script>
+    const frame = document.getElementById('frame');
+    const ev = document.getElementById('ev');
+    const dimL = document.getElementById('dimL'), dimR = document.getElementById('dimR');
+    const f169 = document.getElementById('f169'), fsq = document.getElementById('fsq');
+    const tCard = document.getElementById('t-card'), t169 = document.getElementById('t-169'), tSq = document.getElementById('t-sq');
+
+    // crop widths as % of the 2:1 width. surviving width = (cropRatio/2) of full width.
+    const pct = r => (r/2)*100;            // surviving width % for ratio r:1
+    const sideDim = r => (100 - pct(r))/2; // % cut from EACH side
+
+    function render(){
+      frame.src = '/socials/event-header.html?id=' + ev.value + '&embed=1';
+      // card crop ~1.55:1 -> dim the cut edges
+      const cardCut = sideDim(1.55);
+      const on = tCard.checked;
+      dimL.style.display = dimR.style.display = on ? 'block' : 'none';
+      dimL.style.width = cardCut + '%';
+      dimR.style.width = cardCut + '%';
+      // 16:9 frame
+      const c169 = sideDim(16/9);
+      f169.style.display = t169.checked ? 'block' : 'none';
+      f169.style.left = c169 + '%'; f169.style.right = c169 + '%';
+      // 1:1 frame
+      const cSq = sideDim(1);
+      fsq.style.display = tSq.checked ? 'block' : 'none';
+      fsq.style.left = cSq + '%'; fsq.style.right = cSq + '%';
+    }
+    ev.addEventListener('change', render);
+    [tCard,t169,tSq].forEach(t => t.addEventListener('change', render));
+    render();
+  </script>
+</body>
+</html>
