@@ -51,6 +51,9 @@
   .btn:hover{background:#5fe3d3;}
   .btn.ghost{background:transparent;color:var(--acc);border:1px solid rgba(45,212,191,.5);}
   .btn.ghost:hover{background:rgba(45,212,191,.12);}
+  .btn.share{background:#0a66c2;color:#fff;width:100%;justify-content:center;font-size:21px;padding:15px;}
+  .btn.share:hover{background:#0b5cab;}
+  .orline{font-family:'Bebas Neue';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#6b7480;margin:22px 0 12px;}
   .cap-box{width:100%;height:150px;resize:vertical;background:#0a0b0f;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#d7dde6;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;padding:12px 14px;}
   .cap-box:focus{outline:none;border-color:var(--acc);}
   .row-btns{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap;}
@@ -79,14 +82,19 @@
       <div class="lb-side">
         <p class="lb-kicker" id="lbKicker">RecConnect</p>
         <h3 class="lb-title" id="lbTitle"></h3>
+
+        <button class="btn share" id="lbShare">Share to LinkedIn</button>
+        <p class="smallnote" id="lbShareNote">One click: downloads the image, copies the caption, and opens LinkedIn. In the composer, attach the image and paste the caption.</p>
+
+        <p class="orline">Or grab them separately</p>
         <div class="steps">
           <div class="step">
-            <p class="lab">1 · The image</p>
-            <button class="btn" id="lbDownload">&#8595; Download image (PNG)</button>
+            <p class="lab">The image</p>
+            <button class="btn ghost" id="lbDownload">&#8595; Download PNG</button>
             <p class="dlfallback" id="lbFallback"></p>
           </div>
           <div class="step" id="lbCapStep">
-            <p class="lab">2 · The caption</p>
+            <p class="lab">The caption</p>
             <textarea class="cap-box" id="lbCap" readonly></textarea>
             <div class="row-btns"><button class="btn ghost" id="lbCopy">Copy caption</button></div>
           </div>
@@ -207,21 +215,66 @@
     lb.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeLb));
     document.addEventListener('keydown', e => { if(e.key==='Escape' && lb.classList.contains('show')) closeLb(); });
 
-    // download: render the card inside the preview iframe with a dl flag so the
-    // export + download happen in-page (no stranded tab).
+    // Render the card inside the preview iframe with a dl flag so the export +
+    // download happen in-page (no stranded tab).
+    function triggerDownload(c){
+      const ifr = lbFrame.querySelector('iframe');
+      if(ifr) ifr.src = q(c.file, 'embed=1&dl=2&t='+Date.now());
+      lbFallback.innerHTML = `Nothing downloaded? <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">open the card in a new tab</a> and use its button.`;
+    }
+
     lbDownload.addEventListener('click', () => {
       if(!cur) return;
-      const c = cur, scale = PREV / c.w;
-      const ifr = lbFrame.querySelector('iframe');
-      ifr.src = q(c.file, 'embed=1&dl=2&t='+Date.now());
-      const o = lbDownload.textContent; lbDownload.textContent = 'Preparing…';
-      setTimeout(()=>{ lbDownload.innerHTML='&#8595; Download image (PNG)'; }, 1800);
-      lbFallback.innerHTML = `Nothing downloaded? <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">open the card in a new tab</a> and use its download button.`;
+      triggerDownload(cur);
+      lbDownload.textContent = 'Preparing…';
+      setTimeout(()=>{ lbDownload.innerHTML='&#8595; Download PNG'; }, 1800);
     });
 
+    async function copyCaption(){
+      if(!cur || !cur.cap) return false;
+      try { await navigator.clipboard.writeText(cur.cap); return true; }
+      catch(err){ try{ lbCap.select(); document.execCommand('copy'); return true; }catch(e){ return false; } }
+    }
     lbCopy.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(cur.cap); const o=lbCopy.textContent; lbCopy.textContent='Copied!'; setTimeout(()=>lbCopy.textContent=o,1500); }
-      catch(err){ lbCap.select(); document.execCommand('copy'); lbCopy.textContent='Copied!'; setTimeout(()=>lbCopy.textContent='Copy caption',1500); }
+      const ok = await copyCaption();
+      lbCopy.textContent = ok ? 'Copied!' : 'Press Ctrl/Cmd C';
+      setTimeout(()=>lbCopy.textContent='Copy caption',1600);
+    });
+
+    // Mobile: try the native share sheet with the actual image file attached.
+    const LINKEDIN_COMPOSER = 'https://www.linkedin.com/feed/?shareActive=true';
+    async function tryNativeShare(c){
+      try{
+        const ifr = lbFrame.querySelector('iframe');
+        const node = ifr && ifr.contentDocument && ifr.contentDocument.getElementById('card');
+        if(!node || !window.captureCardBlob || !navigator.canShare) return false;
+        const blob = await window.captureCardBlob(node, 2);
+        const file = new File([blob], (c.title||'recconnect').replace(/[^\w]+/g,'-')+'.png', { type:'image/png' });
+        if(navigator.canShare({ files:[file] })){
+          await navigator.share({ files:[file], text: c.cap || '' });
+          return true;
+        }
+      }catch(err){ /* fall back below */ }
+      return false;
+    }
+
+    // Desktop: open the LinkedIn composer (sync, keeps the click gesture), then
+    // copy the caption and download the image so both are ready to drop in.
+    function shareDesktop(c){
+      window.open(LINKEDIN_COMPOSER, '_blank', 'noopener');
+      copyCaption();
+      triggerDownload(c);
+      lbShareNote.innerHTML = c.cap
+        ? '<b style="color:#cfe8df">Caption copied and image downloading.</b> In LinkedIn, click the photo icon to attach the image, then paste (Ctrl/Cmd V).'
+        : '<b style="color:#cfe8df">Image downloading.</b> In LinkedIn, click the photo icon and attach it from your downloads.';
+    }
+
+    lbShare.addEventListener('click', async () => {
+      if(!cur) return;
+      const c = cur;
+      const isMobile = navigator.canShare && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+      if(isMobile){ const ok = await tryNativeShare(c); if(ok) return; }
+      shareDesktop(c);
     });
 
     /* ---- filters ---- */
@@ -234,6 +287,16 @@
         s.classList.toggle('hidden', f !== 'all' && s.dataset.group !== f);
       });
     }));
+  </script>
+
+  <script type="module">
+    // Used only for mobile native share: capture a card's DOM (from the same-origin
+    // preview iframe) into a PNG blob so it can be attached via navigator.share.
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    window.captureCardBlob = async (node, scale = 2) => {
+      const r = await snapdom(node, { scale, embedFonts: true });
+      return await r.toBlob({ format: 'png' });
+    };
   </script>
 </body>
 </html>
