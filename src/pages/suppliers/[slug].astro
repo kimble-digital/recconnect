@@ -111,6 +111,8 @@ const s = {
   contactPhone:     f.contactPhone || '',
   contactName:      f.contactName || '',
   logoUrl:          f.logo?.fields?.file?.url ? `https:${f.logo.fields.file.url}` : '',
+  logoW:            f.logo?.fields?.file?.details?.image?.width || 0,
+  logoH:            f.logo?.fields?.file?.details?.image?.height || 0,
   featured:         f.featured || false,
   benefit1:         richTextToPlain(f.benefit1),
   benefit1Html:     richTextToHtml(f.benefit1),
@@ -141,6 +143,8 @@ const accentColorLight = `hsl(${hue}, 55%, 96%)`;
 const accentColorBorder = `hsl(${hue}, 55%, 88%)`;
 
 const hasLogo = !!(s.logoUrl && s.logoUrl.startsWith('http'));
+const aspect = s.logoW && s.logoH ? s.logoW / s.logoH : 1;
+const isPhoto = hasLogo && aspect < 1.25; // square/portrait images are headshots, not logos
 
 const showOffer = s.memberOffer
   && !s.memberOffer.toLowerCase().includes('join recconnect')
@@ -247,35 +251,24 @@ const jsonLd = {
           <div class="w-1 rounded-full flex-shrink-0 mr-8" style={`background: ${accentColor};`}></div>
 
           {/* Content */}
-          <div class="flex-1 min-w-0 flex flex-col gap-5">
+          <div class="flex-1 min-w-0 flex flex-col-reverse lg:flex-row lg:items-start gap-8 lg:gap-12">
 
-            {/* Logo — wide pill, fixed height so landscape logos look right */}
-            {hasLogo && (
-              <div class="inline-flex">
-                <div
-                  class="bg-white/95 rounded-xl overflow-hidden flex items-center justify-center px-7"
-                  style="height: 96px; max-width: 320px;"
-                >
-                  <img
-                    src={s.logoUrl}
-                    alt={`${s.name} logo`}
-                    class="max-h-16 w-auto object-contain"
-                  />
-                </div>
-              </div>
-            )}
+            {/* Text column */}
+            <div class="flex-1 min-w-0 flex flex-col gap-5">
 
             {/* Name + badges row */}
             <div>
               <div class="flex flex-wrap items-center gap-2 mb-3">
-                {/* Colour initials badge — inline, small */}
-                <span
-                  class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold text-white flex-shrink-0"
-                  style={`background: ${accentColor};`}
-                  aria-hidden="true"
-                >
-                  {initials}
-                </span>
+                {/* Colour initials badge — only when there is no image */}
+                {!hasLogo && (
+                  <span
+                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold text-white flex-shrink-0"
+                    style={`background: ${accentColor};`}
+                    aria-hidden="true"
+                  >
+                    {initials}
+                  </span>
+                )}
 
                 {s.featured && (
                   <span class="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
@@ -339,6 +332,21 @@ const jsonLd = {
                 </a>
               )}
             </div>
+
+            </div>{/* /text column */}
+
+            {/* Image column — photos bare, logos in a white box */}
+            {hasLogo && (
+              <div class="flex-shrink-0">
+                {isPhoto ? (
+                  <img src={s.logoUrl} alt={s.name} class="w-44 h-44 lg:w-60 lg:h-60 rounded-2xl object-cover ring-1 ring-white/10 shadow-2xl" loading="lazy" />
+                ) : (
+                  <div class="bg-white rounded-2xl flex items-center justify-center p-6 w-44 h-44 lg:w-60 lg:h-60 shadow-2xl ring-1 ring-white/10">
+                    <img src={s.logoUrl} alt={`${s.name} logo`} class="max-w-full max-h-full object-contain" loading="lazy" />
+                  </div>
+                )}
+              </div>
+            )}
 
           </div>
         </div>
