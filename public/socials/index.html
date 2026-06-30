@@ -56,9 +56,12 @@
       { group:'headers', file:'event-header.html?id=cambridge',       title:'Cambridge',      w:1080, h:540 },
       { group:'headers', file:'event-header.html?id=digital-workers', title:'Digital Workers',w:1080, h:540 },
 
-      { group:'join', file:'join-card.html?id=room',  title:'Join · Statement', w:1080, h:1080 },
-      { group:'join', file:'join-card.html?id=grid',  title:'Join · Grid',      w:1080, h:1080 },
-      { group:'join', file:'join-card.html?id=quote', title:'Join · Quote',     w:1080, h:1080 },
+      { group:'join', file:'join-card.html?id=room',  title:'Statement', w:1080, h:1080, cap:`The room you want to be in, not the one you hear about afterwards. RecConnect is where established recruitment leaders meet, learn and actually grow. Lunches our partners pay for, events people clear their diary for, and a community that has your back. recconnect.co/join #recruitment #recruitmentleaders` },
+      { group:'join', file:'join-card.html?id=grid',  title:'Grid', w:1080, h:1080, cap:`Lunches. Events. Your people. Partner paid lunches, diary clearing events, and a WhatsApp group that means you are never stuck on a problem alone. Join the Club at recconnect.co/join #recruitment #recruitmentcommunity` },
+      { group:'join', file:'join-card.html?id=quote', title:'Quote', w:1080, h:1080, cap:`Our members call the RecConnect events revered, and SO good. That is not us saying it, that is them. Come and find out why at recconnect.co/join #recruitment #recruitmentleaders` },
+      { group:'join', file:'join-card.html?id=gang',  title:'Join the gang', w:1080, h:1080, cap:`Recruitment is better with the right people around you. Join the gang of senior leaders who get it, swap war stories over long lunches, and leave every event with three new contacts and a fresh idea. recconnect.co/join #recruitment` },
+      { group:'join', file:'join-card.html?id=fomo',  title:'Be in the room', w:1080, h:1080, cap:`Tired of hearing about the event you missed? Be in the room next time. Members get priority access, member pricing and a community that has their back all year round. recconnect.co/join #recruitment` },
+      { group:'join', file:'join-card.html?id=free',  title:'Start free', w:1080, h:1080, cap:`Not ready to commit? Start free. Join the open RecConnect community for the member directory, industry insights and event invites, then upgrade when you are ready. recconnect.co/join #recruitment` },
 
       { group:'event', file:'connected-card-1-announce.html',   title:'Announce',   w:1280, h:1280 },
       { group:'event', file:'connected-card-2-statement.html',  title:'Statement',  w:1280, h:1280 },
@@ -102,6 +105,7 @@
           <figcaption>
             <span class="t">${c.title}</span>
             <span class="acts">
+              ${c.cap ? `<a href="#" class="copy" data-file="${c.file}">Copy text</a>` : ''}
               <a href="${BASE + c.file}" target="_blank" rel="noopener">Open</a>
               <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">PNG ⬇</a>
             </span>
@@ -110,6 +114,13 @@
       }).join('');
       return `<section data-group="${g.key}"><h2>${g.label}</h2><div class="row">${figs}</div></section>`;
     }).join('');
+
+    const CAPS = {}; CARDS.forEach(c => { if(c.cap) CAPS[c.file] = c.cap; });
+    document.querySelectorAll('.copy').forEach(a => a.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await navigator.clipboard.writeText(CAPS[a.dataset.file]); const o=a.textContent; a.textContent='Copied!'; setTimeout(()=>a.textContent=o,1500); }
+      catch(err){ alert('Copy failed: '+err.message); }
+    }));
 
     const chips = document.querySelectorAll('.chip');
     chips.forEach(c => c.addEventListener('click', () => {
