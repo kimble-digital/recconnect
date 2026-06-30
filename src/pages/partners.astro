@@ -1,0 +1,273 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const ENQUIRE = '/contact';
+
+const reasons = [
+  {
+    title: 'Small rooms, real conversations',
+    body: "No stand to man, no badge scanners, no shouting over a conference floor. Just a room of 20 to 100 people who are there because Simon personally curated the list. Every one of them is a potential customer.",
+  },
+  {
+    title: 'Peer trust transfers to you',
+    body: 'Agency owners talk to each other. When you are part of RecConnect, mentioned in the newsletter, presenting at a lunch, listed in the directory, you inherit credibility from the community itself. You cannot buy that in a magazine.',
+  },
+  {
+    title: 'Decision-makers, not gatekeepers',
+    body: 'The RecConnect audience are the people who sign contracts. MDs and founders who decide which CRM to buy, which job board to use, which finance partner to appoint. One good conversation here beats fifty cold messages.',
+  },
+  {
+    title: 'No exhibition noise',
+    body: 'Events, roundtables, and lunches create the conditions for genuine conversations. People remember those. They do not remember a brochure they picked up at a conference.',
+  },
+];
+
+const dataPoints = [
+  'Full contact details for named decision-makers',
+  'Sector and specialism categorisation',
+  'Company headcount and growth stage',
+  'The technology and tools each agency already uses',
+];
+
+const tiers = [
+  {
+    name: 'Category Partner',
+    price: '£500',
+    per: '/month',
+    year: '£6,000 / year',
+    tagline: 'Maximum visibility and category exclusivity',
+    featured: true,
+    features: [
+      'Featured across the entire website',
+      'Category sponsorship: exclusive ownership of your niche',
+      'Enhanced supplier profile, custom designed',
+      'Business contact profiles',
+      'Featured placement in blogs and editorial',
+      'Four guest post articles per year',
+      'Included in every newsletter',
+      'Two dedicated email sends to the full database per year',
+      'Premium access to the community database and sales insights hub',
+    ],
+  },
+  {
+    name: 'Featured Supplier',
+    price: '£250',
+    per: '/month',
+    year: '£3,000 / year',
+    tagline: 'Consistent visibility without full category ownership',
+    featured: false,
+    features: [
+      'Listing within relevant categories',
+      'Additional branding on selected category pages',
+      'Single business contact profile',
+      'One guest post article per year',
+      'Mentions and links from relevant editorial',
+      'Regular newsletter inclusion',
+      'One dedicated email send to the full database per year',
+      'Access to the community database and sales insights hub',
+    ],
+  },
+  {
+    name: 'Listed Supplier',
+    price: '£150',
+    per: '/month',
+    year: '£1,800 / year',
+    tagline: 'A credible, discoverable presence on the platform',
+    featured: false,
+    features: [
+      'Standard supplier profile (logo, overview, services)',
+      'Listing within relevant categories',
+      'Inclusion in platform search and directory',
+      'Basic access to the community database and sales insights hub',
+    ],
+  },
+  {
+    name: 'Trainer Membership',
+    price: '£240',
+    per: '/year',
+    year: 'Billed annually',
+    tagline: 'For trainers and coaches in the network',
+    featured: false,
+    features: [
+      'Listed supplier profile',
+      'Inclusion in the trainer category',
+      'Discoverable by agencies seeking training',
+      'Eligibility for referrals and event opportunities',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Partner with RecConnect"
+  description="Put your brand in front of a curated audience of senior independent recruitment agency leaders. Partner packages, audience data, and the community database."
+>
+  <!-- ═══ HERO ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy pt-36 pb-16 md:pt-44 md:pb-24 border-b border-white/10">
+    <div class="absolute -top-16 -right-20 w-80 h-[30rem] bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="absolute -bottom-24 -left-16 w-44 h-96 bg-coral/[0.05] -rotate-[18deg] pointer-events-none" style="clip-path: polygon(55% 0, 100% 0, 45% 100%, 0 100%);"></div>
+
+    <div class="container-wide relative z-10">
+      <div class="max-w-3xl">
+        <p class="kicker text-primary text-[0.8rem] mb-5">Partner with RecConnect</p>
+        <h1 class="font-display uppercase text-white text-5xl md:text-7xl leading-[0.9] mb-6">
+          Where suppliers
+          <span class="font-script normal-case text-primary inline-block align-[-0.06em] leading-none text-6xl md:text-8xl ml-1">convert.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed mb-4">
+          Volume media sells reach. RecConnect sells access.
+        </p>
+        <p class="text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed mb-9">
+          Put your brand in front of a curated audience of senior independent agency leaders, the people who actually choose the tools, sign the contracts, and shape the market.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href={ENQUIRE} class="btn-primary text-base px-8 py-3.5">Become a partner</a>
+          <a href="#packages" class="btn-outline-light text-base px-8 py-3.5">See the packages</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY PARTNERS CONVERT ═══ -->
+  <section class="relative overflow-hidden bg-white py-20 md:py-28">
+    <div class="absolute -top-12 -left-16 w-56 h-72 bg-primary/[0.07] -rotate-[16deg] pointer-events-none" style="clip-path: polygon(0 0, 100% 0, 40% 100%);"></div>
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="max-w-3xl mb-14">
+        <p class="kicker text-primary-dark text-[0.8rem] mb-4">The difference</p>
+        <h2 class="font-display uppercase text-brand-navy text-4xl md:text-6xl leading-[0.95] mb-5">Fewer people. More deals.</h2>
+        <p class="text-lg text-slate-600 leading-relaxed">
+          A supplier spending with a trade magazine gets a logo in front of thousands of readers, most of them geographically irrelevant, already locked into a competitor, or too small to convert. A RecConnect partner gets named placement with a curated senior UK audience, and a seat in the room at events those people actually want to attend.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        {reasons.map((r) => (
+          <div class="bg-slate-50 rounded-xl p-7 border border-slate-200 hover:border-primary/50 transition-colors">
+            <div class="w-11 h-11 bg-primary icon-shard flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-brand-navy" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h3 class="text-lg font-bold text-brand-navy mb-2">{r.title}</h3>
+            <p class="text-slate-600 leading-relaxed">{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE DATA PLATFORM ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy py-20 md:py-28">
+    <div class="absolute top-1/4 -right-10 w-28 h-[34rem] bg-primary/[0.06] rotate-[8deg] pointer-events-none" style="clip-path: polygon(55% 0, 100% 0, 45% 100%, 0 100%);"></div>
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <p class="kicker text-primary text-[0.8rem] mb-4">Community database &amp; sales insights hub</p>
+          <h2 class="font-display uppercase text-white text-4xl md:text-6xl leading-[0.95] mb-5">Know exactly who to talk to.</h2>
+          <p class="text-lg text-slate-300 leading-relaxed mb-6">
+            This is what no magazine or conference can give you. Partners get access to a live, documented view of the recruitment market and the RecConnect membership, so your sales team stops guessing and starts having the right conversations.
+          </p>
+          <ul class="space-y-3 mb-8">
+            {dataPoints.map((d) => (
+              <li class="flex items-start gap-3 text-slate-200">
+                <span class="mt-1 w-5 h-5 flex-shrink-0 bg-primary icon-shard flex items-center justify-center">
+                  <svg class="w-3 h-3 text-brand-navy" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                </span>
+                {d}
+              </li>
+            ))}
+          </ul>
+          <p class="text-sm text-slate-500">Access is tiered by partnership level, from basic discovery through to premium intelligence for Category Partners.</p>
+        </div>
+
+        <!-- Stylised data card -->
+        <div class="relative">
+          <div class="absolute -inset-4 bg-primary/10 blur-[60px] rounded-full pointer-events-none"></div>
+          <div class="relative rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <span class="kicker text-primary text-[0.65rem]">Member record</span>
+              <span class="text-[0.65rem] text-slate-500 font-mono">RC-2026</span>
+            </div>
+            {[
+              { k: 'Agency', v: 'Northbound Talent' },
+              { k: 'Decision-maker', v: 'MD / Founder' },
+              { k: 'Sector', v: 'Technology &amp; Engineering' },
+              { k: 'Headcount', v: '45 (growth stage)' },
+              { k: 'CRM', v: 'Bullhorn' },
+              { k: 'Job board', v: 'LinkedIn Recruiter' },
+            ].map((row) => (
+              <div class="flex items-center justify-between py-2.5 border-b border-white/5">
+                <span class="text-sm text-slate-500">{row.k}</span>
+                <span class="text-sm text-white font-medium" set:html={row.v}></span>
+              </div>
+            ))}
+            <p class="text-[0.7rem] text-slate-600 mt-4">Illustrative record. Real data is provided to partners in line with our privacy commitments.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PACKAGES ═══ -->
+  <section id="packages" class="relative overflow-hidden bg-white py-20 md:py-28 scroll-mt-24">
+    <div class="absolute -top-16 -right-16 w-72 h-[26rem] bg-primary/[0.07] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="absolute -bottom-20 -left-16 w-32 h-72 bg-gold/[0.08] -rotate-[22deg] pointer-events-none" style="clip-path: polygon(55% 0, 100% 0, 45% 100%, 0 100%);"></div>
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <p class="kicker text-primary-dark text-[0.8rem] mb-4">Partner packages</p>
+        <h2 class="font-display uppercase text-brand-navy text-4xl md:text-6xl leading-[0.95] mb-4">Choose your level</h2>
+        <p class="text-lg text-slate-600">Every tier includes access to the community database and sales insights hub. The bigger the commitment, the deeper the access and visibility.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+        {tiers.map((t) => (
+          <div class={`rounded-xl p-7 flex flex-col h-full ${t.featured ? 'bg-white border-2 border-primary shadow-lg relative' : 'bg-slate-50 border border-slate-200'}`}>
+            {t.featured && (
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span class="bg-primary text-brand-navy text-xs font-bold px-3 py-1 rounded-full">Recommended</span>
+              </div>
+            )}
+            <div class="mb-5">
+              <h3 class="text-lg font-bold text-brand-navy mb-1">{t.name}</h3>
+              <p class="text-slate-500 text-sm mb-4 min-h-[2.5rem]">{t.tagline}</p>
+              <div class="flex items-baseline gap-1">
+                <span class="text-4xl font-bold text-brand-navy">{t.price}</span>
+                <span class="text-slate-500">{t.per}</span>
+              </div>
+              <p class="text-slate-400 text-xs mt-1">{t.year}</p>
+            </div>
+            <ul class="space-y-2.5 mb-7 flex-1">
+              {t.features.map((f) => (
+                <li class="flex items-start gap-2 text-sm text-slate-600">
+                  <svg class="w-4 h-4 text-primary-dark flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <a href={ENQUIRE} class={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-sm transition-colors ${t.featured ? 'bg-primary text-brand-navy hover:bg-primary-dark' : 'border border-slate-300 text-slate-700 hover:bg-slate-100'}`}>
+              Become a partner
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-center text-slate-500 text-sm mt-10">
+        Category Partners are expected to bring clients to at least one event per year, creating a great experience for their best customers in a context that is not a sales call.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ═══ -->
+  <section class="relative overflow-hidden bg-brand-navy py-20 md:py-28">
+    <div class="absolute -bottom-20 -right-20 w-80 h-96 bg-coral/[0.06] rotate-[14deg] pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+      <p class="kicker text-primary text-[0.8rem] mb-4">Ready?</p>
+      <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-5">Let's talk partnership</h2>
+      <p class="text-lg text-slate-400 mb-9 max-w-xl mx-auto leading-relaxed">
+        Tell us about your business and who you want to reach. We'll show you the audience data and find the package that fits.
+      </p>
+      <a href={ENQUIRE} class="btn-primary text-base px-8 py-3.5">Become a partner</a>
+      <p class="text-sm text-slate-500 mt-6">
+        Or email <a href="mailto:hello@recconnect.co" class="text-primary hover:text-white transition-colors">hello@recconnect.co</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
