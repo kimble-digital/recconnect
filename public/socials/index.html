@@ -12,7 +12,7 @@
   body{background:#0a0b0f;color:#fff;font-family:'Inter',system-ui,sans-serif;padding:0 56px 90px;}
   header{position:sticky;top:0;z-index:50;background:rgba(10,11,15,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(45,212,191,.25);padding:30px 0 18px;margin-bottom:8px;}
   header h1{font-family:'Anton';text-transform:uppercase;letter-spacing:.01em;font-size:40px;font-weight:400;}
-  header p{color:#9aa3b2;font-size:13px;margin-top:6px;}
+  header p{color:#9aa3b2;font-size:13px;margin-top:6px;max-width:680px;line-height:1.5;}
   .filter{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
   .chip{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:7px 18px;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;cursor:pointer;transition:all .15s;}
   .chip:hover{border-color:var(--acc);color:#fff;}
@@ -20,29 +20,86 @@
   section{margin-top:48px;}
   section>h2{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.14em;font-size:28px;color:var(--acc);border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:10px;margin-bottom:26px;}
   .row{display:flex;flex-wrap:wrap;gap:24px;}
-  .frame{border-radius:10px;overflow:hidden;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);}
+  figure{cursor:pointer;}
+  .frame{position:relative;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);transition:border-color .15s,transform .15s;}
+  figure:hover .frame{border-color:var(--acc);transform:translateY(-2px);}
   .frame iframe{border:0;transform-origin:top left;pointer-events:none;}
-  figcaption{display:flex;justify-content:space-between;align-items:center;margin-top:11px;font-size:13px;}
-  figcaption .t{color:rgba(255,255,255,.62);}
-  .acts a{font-family:'Bebas Neue';letter-spacing:.08em;text-transform:uppercase;font-size:15px;color:var(--acc);text-decoration:none;margin-left:14px;}
-  .acts a:hover{text-decoration:underline;}
+  .hover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(8,9,12,.55);opacity:0;transition:opacity .15s;font-family:'Bebas Neue';letter-spacing:.12em;text-transform:uppercase;font-size:17px;color:#fff;}
+  figure:hover .hover{opacity:1;}
+  .hover .pill{background:var(--acc);color:#08322c;padding:8px 18px;border-radius:8px;}
+  figcaption{display:flex;justify-content:space-between;align-items:center;margin-top:11px;font-size:13px;gap:10px;}
+  figcaption .t{color:rgba(255,255,255,.7);}
+  figcaption .tag{font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--acc);border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:2px 9px;white-space:nowrap;}
   .hidden{display:none!important;}
+
+  /* lightbox */
+  #lb{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:32px;}
+  #lb.show{display:flex;}
+  .lb-bg{position:absolute;inset:0;background:rgba(4,5,7,.82);backdrop-filter:blur(6px);}
+  .lb-panel{position:relative;z-index:2;display:flex;gap:30px;background:#101216;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;max-width:980px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 30px 90px rgba(0,0,0,.6);}
+  .lb-close{position:absolute;top:14px;right:16px;z-index:5;background:rgba(255,255,255,.08);border:0;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;line-height:1;}
+  .lb-close:hover{background:rgba(255,255,255,.18);}
+  .lb-prev{flex:0 0 auto;}
+  .lb-prev .frame{cursor:default;}
+  .lb-prev .frame:hover{transform:none;border-color:rgba(255,255,255,.1);}
+  .lb-side{flex:1 1 320px;min-width:280px;display:flex;flex-direction:column;}
+  .lb-kicker{font-family:'Bebas Neue';letter-spacing:.18em;text-transform:uppercase;font-size:14px;color:var(--acc);}
+  .lb-title{font-family:'Anton';text-transform:uppercase;font-size:30px;margin:4px 0 18px;line-height:1;}
+  .steps{display:flex;flex-direction:column;gap:18px;}
+  .step .lab{font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:14px;color:rgba(255,255,255,.55);margin-bottom:8px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Bebas Neue';letter-spacing:.06em;text-transform:uppercase;font-size:19px;background:var(--acc);color:#08322c;border:0;border-radius:10px;padding:13px 24px;cursor:pointer;}
+  .btn:hover{background:#5fe3d3;}
+  .btn.ghost{background:transparent;color:var(--acc);border:1px solid rgba(45,212,191,.5);}
+  .btn.ghost:hover{background:rgba(45,212,191,.12);}
+  .cap-box{width:100%;height:150px;resize:vertical;background:#0a0b0f;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#d7dde6;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;padding:12px 14px;}
+  .cap-box:focus{outline:none;border-color:var(--acc);}
+  .row-btns{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap;}
+  .smallnote{font-size:12px;color:#7c8694;margin-top:6px;}
+  .dlfallback{font-size:12px;color:#7c8694;margin-top:8px;}
+  .dlfallback a{color:var(--acc);}
+  .tip{margin-top:auto;padding-top:20px;font-size:12.5px;color:#9aa3b2;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);}
+  @media(max-width:760px){ .lb-panel{flex-direction:column;} }
 </style>
 </head>
 <body>
   <header>
     <h1>RecConnect · Social studio</h1>
-    <p>Brand-consistent cards. Click "PNG ⬇" to export, or "Open" to tweak then download. The logo is pulled live from the site.</p>
+    <p>Click any card to preview it, download the image, and copy its caption. Then paste both into your LinkedIn post. The logo and event details are pulled live from the site.</p>
     <div class="filter" id="chips"></div>
   </header>
 
   <div id="grid"></div>
 
+  <!-- in-page preview -->
+  <div id="lb" aria-hidden="true">
+    <div class="lb-bg" data-close></div>
+    <div class="lb-panel">
+      <button class="lb-close" data-close aria-label="Close">&times;</button>
+      <div class="lb-prev"><div class="frame" id="lbFrame"></div></div>
+      <div class="lb-side">
+        <p class="lb-kicker" id="lbKicker">RecConnect</p>
+        <h3 class="lb-title" id="lbTitle"></h3>
+        <div class="steps">
+          <div class="step">
+            <p class="lab">1 · The image</p>
+            <button class="btn" id="lbDownload">&#8595; Download image (PNG)</button>
+            <p class="dlfallback" id="lbFallback"></p>
+          </div>
+          <div class="step" id="lbCapStep">
+            <p class="lab">2 · The caption</p>
+            <textarea class="cap-box" id="lbCap" readonly></textarea>
+            <div class="row-btns"><button class="btn ghost" id="lbCopy">Copy caption</button></div>
+          </div>
+        </div>
+        <p class="tip" id="lbTip"></p>
+      </div>
+    </div>
+  </div>
+
   <script>
     const BASE = '/socials/';
-    const THUMB = 320; // thumbnail width in px
+    const THUMB = 320;
 
-    // Add a card = add a line. w/h are the card's native pixel size.
     const GROUPS = [
       { key:'headers',  label:'Event headers' },
       { key:'join',     label:'Membership' },
@@ -91,37 +148,83 @@
       GROUPS.map(g => `<button class="chip" data-filter="${g.key}">${g.label}</button>`).join('');
 
     document.getElementById('grid').innerHTML = GROUPS.map(g => {
-      const items = CARDS.filter(c => c.group === g.key);
+      const items = CARDS.map((c,i)=>({...c,i})).filter(c => c.group === g.key);
       if(!items.length) return '';
       const figs = items.map(c => {
         const scale = THUMB / c.w;
         const fw = Math.round(THUMB), fh = Math.round(c.h * scale);
         return `
-        <figure style="width:${fw}px">
+        <figure data-i="${c.i}" style="width:${fw}px">
           <div class="frame" style="width:${fw}px;height:${fh}px">
             <iframe src="${q(c.file,'embed=1')}" loading="lazy" scrolling="no" tabindex="-1"
               style="width:${c.w}px;height:${c.h}px;transform:scale(${scale})"></iframe>
+            <div class="hover"><span class="pill">Preview &amp; download</span></div>
           </div>
           <figcaption>
             <span class="t">${c.title}</span>
-            <span class="acts">
-              ${c.cap ? `<a href="#" class="copy" data-file="${c.file}">Copy text</a>` : ''}
-              <a href="${BASE + c.file}" target="_blank" rel="noopener">Open</a>
-              <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">PNG ⬇</a>
-            </span>
+            <span class="tag">${c.cap ? 'Image + caption' : 'Image'}</span>
           </figcaption>
         </figure>`;
       }).join('');
       return `<section data-group="${g.key}"><h2>${g.label}</h2><div class="row">${figs}</div></section>`;
     }).join('');
 
-    const CAPS = {}; CARDS.forEach(c => { if(c.cap) CAPS[c.file] = c.cap; });
-    document.querySelectorAll('.copy').forEach(a => a.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try { await navigator.clipboard.writeText(CAPS[a.dataset.file]); const o=a.textContent; a.textContent='Copied!'; setTimeout(()=>a.textContent=o,1500); }
-      catch(err){ alert('Copy failed: '+err.message); }
-    }));
+    /* ---- lightbox ---- */
+    const lb = document.getElementById('lb');
+    const lbFrame = document.getElementById('lbFrame');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbKicker = document.getElementById('lbKicker');
+    const lbCap = document.getElementById('lbCap');
+    const lbCapStep = document.getElementById('lbCapStep');
+    const lbCopy = document.getElementById('lbCopy');
+    const lbDownload = document.getElementById('lbDownload');
+    const lbFallback = document.getElementById('lbFallback');
+    const lbTip = document.getElementById('lbTip');
+    const PREV = 460;
+    let cur = null;
 
+    function openLb(i){
+      const c = CARDS[i]; cur = c;
+      const scale = PREV / c.w, fw = Math.round(PREV), fh = Math.round(c.h*scale);
+      lbFrame.style.width = fw+'px'; lbFrame.style.height = fh+'px';
+      lbFrame.innerHTML = `<iframe src="${q(c.file,'embed=1')}" scrolling="no" tabindex="-1"
+        style="border:0;transform-origin:top left;width:${c.w}px;height:${c.h}px;transform:scale(${scale})"></iframe>`;
+      lbKicker.textContent = GROUPS.find(g=>g.key===c.group).label;
+      lbTitle.textContent = c.title;
+      if(c.cap){ lbCapStep.classList.remove('hidden'); lbCap.value = c.cap;
+        lbTip.textContent = 'For LinkedIn: download the image, copy the caption, then start a new post, attach the image and paste the caption.'; }
+      else { lbCapStep.classList.add('hidden');
+        lbTip.textContent = 'This is a visual card with no caption. Download it and add your own words on LinkedIn.'; }
+      lbFallback.innerHTML = '';
+      lb.classList.add('show'); lb.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function closeLb(){ lb.classList.remove('show'); lb.setAttribute('aria-hidden','true');
+      lbFrame.innerHTML=''; document.body.style.overflow=''; cur=null; }
+
+    document.querySelectorAll('figure[data-i]').forEach(f =>
+      f.addEventListener('click', ()=>openLb(+f.dataset.i)));
+    lb.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeLb));
+    document.addEventListener('keydown', e => { if(e.key==='Escape' && lb.classList.contains('show')) closeLb(); });
+
+    // download: render the card inside the preview iframe with a dl flag so the
+    // export + download happen in-page (no stranded tab).
+    lbDownload.addEventListener('click', () => {
+      if(!cur) return;
+      const c = cur, scale = PREV / c.w;
+      const ifr = lbFrame.querySelector('iframe');
+      ifr.src = q(c.file, 'embed=1&dl=2&t='+Date.now());
+      const o = lbDownload.textContent; lbDownload.textContent = 'Preparing…';
+      setTimeout(()=>{ lbDownload.innerHTML='&#8595; Download image (PNG)'; }, 1800);
+      lbFallback.innerHTML = `Nothing downloaded? <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">open the card in a new tab</a> and use its download button.`;
+    });
+
+    lbCopy.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(cur.cap); const o=lbCopy.textContent; lbCopy.textContent='Copied!'; setTimeout(()=>lbCopy.textContent=o,1500); }
+      catch(err){ lbCap.select(); document.execCommand('copy'); lbCopy.textContent='Copied!'; setTimeout(()=>lbCopy.textContent='Copy caption',1500); }
+    });
+
+    /* ---- filters ---- */
     const chips = document.querySelectorAll('.chip');
     chips.forEach(c => c.addEventListener('click', () => {
       chips.forEach(x => x.classList.remove('active'));
