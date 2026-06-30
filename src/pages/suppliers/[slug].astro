@@ -134,7 +134,7 @@ const initials = s.name
 
 const hues = [210, 160, 340, 25, 270, 190, 45, 300, 140, 15];
 const hash = s.name.split('').reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
-const hue = hues[hash % hues.length];
+const hue = 168; // pinned to brand teal so accents never clash with the mint UI
 const accentColor = `hsl(${hue}, 55%, 48%)`;
 const accentColorLight = `hsl(${hue}, 55%, 96%)`;
 const accentColorBorder = `hsl(${hue}, 55%, 88%)`;
@@ -159,7 +159,7 @@ const related = allEntries
   .map((e: any) => {
     const ef = e.fields;
     const relHash = (ef.name || '').split('').reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
-    const relHue = hues[relHash % hues.length];
+    const relHue = 168; // brand teal
     return {
       name:             ef.name || '',
       slug:             ef.slug || '',
@@ -250,13 +250,13 @@ const jsonLd = {
             {hasLogo && (
               <div class="inline-flex">
                 <div
-                  class="bg-white/95 rounded-xl overflow-hidden flex items-center justify-center px-5"
-                  style="height: 56px; max-width: 220px;"
+                  class="bg-white/95 rounded-xl overflow-hidden flex items-center justify-center px-7"
+                  style="height: 96px; max-width: 320px;"
                 >
                   <img
                     src={s.logoUrl}
                     alt={`${s.name} logo`}
-                    class="max-h-8 w-auto object-contain"
+                    class="max-h-16 w-auto object-contain"
                   />
                 </div>
               </div>
