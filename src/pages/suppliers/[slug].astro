@@ -132,7 +132,7 @@ const initials = s.name
   .map((w: string) => w[0])
   .join('') || s.name.slice(0, 2).toUpperCase();
 
-const hues = [210, 160, 340, 25, 270, 190, 45, 300, 140, 15];
+const hues = [170, 158, 186, 40, 12]; // brand accents: mint, teal cousins, gold, coral
 const hash = s.name.split('').reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
 const hue = 168; // pinned to brand teal so accents never clash with the mint UI
 const accentColor = `hsl(${hue}, 55%, 48%)`;
