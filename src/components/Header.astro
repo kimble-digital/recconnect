@@ -8,6 +8,17 @@ const navItems = [
   { label: 'Contact', href: '/contact' },
 ];
 
+// Mobile menu uses fuller, clearer labels (more room than the top bar)
+const mobileNavItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Supplier Directory', href: '/suppliers' },
+  { label: 'Become a Partner', href: '/partners' },
+  { label: 'Member Benefits', href: '/join' },
+  { label: 'Insights', href: '/insights' },
+  { label: 'Events', href: '/events' },
+  { label: 'Contact', href: '/contact' },
+];
+
 const currentPath = Astro.url.pathname;
 ---
 
@@ -82,16 +93,16 @@ const currentPath = Astro.url.pathname;
     </div>
 
     <!-- Mobile Navigation -->
-    <div id="mobile-menu" class="hidden md:hidden pb-4">
-      <div class="flex flex-col gap-3">
-        {navItems.map((item) => (
+    <div id="mobile-menu" class="hidden md:hidden mt-2 rounded-xl bg-[#0a0b0f]/97 backdrop-blur-md ring-1 ring-white/10 shadow-2xl px-4 py-2">
+      <div class="flex flex-col">
+        {mobileNavItems.map((item) => (
           <a
             href={item.href}
             class:list={[
-              'text-sm font-medium transition-colors py-2',
+              'text-base font-medium py-3 border-b border-white/5 last:border-b-0 transition-colors',
               currentPath === item.href
                 ? 'text-primary'
-                : 'text-white/80 hover:text-white',
+                : 'text-white/85 hover:text-white',
             ]}
           >
             {item.label}
@@ -99,7 +110,7 @@ const currentPath = Astro.url.pathname;
         ))}
         <a
           href="/join"
-          class="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-brand-navy px-5 py-2.5 text-sm font-semibold rounded-lg transition-colors mt-2"
+          class="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-brand-navy px-5 py-3 text-sm font-semibold rounded-lg transition-colors mt-3 mb-1"
         >
           Join Today
         </a>
@@ -114,5 +125,10 @@ const currentPath = Astro.url.pathname;
 
   menuToggle?.addEventListener('click', () => {
     menu?.classList.toggle('hidden');
+  });
+
+  // close the menu after tapping a link
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => menu.classList.add('hidden'));
   });
 </script>
