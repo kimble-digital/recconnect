@@ -362,7 +362,7 @@ const tiers = [
               <form data-lead action="/api/submit" data-success="Thanks. We'll be in touch shortly to talk partnership." novalidate>
                 <input type="hidden" name="formType" value="partner" />
                 <div class="absolute -left-[9999px]" aria-hidden="true">
-                  <label>Company website<input type="text" name="company_website" tabindex="-1" autocomplete="off" /></label>
+                  <label>Leave this field empty<input type="text" name="rc_hp" tabindex="-1" autocomplete="off" data-1p-ignore="true" data-lpignore="true" /></label>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">
@@ -379,19 +379,24 @@ const tiers = [
                     <input id="p-company" name="company" type="text" required autocomplete="organization" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
                   </div>
                   <div>
-                    <label for="p-interest" class="mb-1.5 block text-sm font-medium text-brand-navy">Package interest</label>
-                    <select id="p-interest" name="interest" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
-                      <option value="">Not sure yet</option>
-                      <option>Category Partner</option>
-                      <option>Featured Supplier</option>
-                      <option>Listed Supplier</option>
-                      <option>Trainer Membership</option>
-                    </select>
+                    <label for="p-role" class="mb-1.5 block text-sm font-medium text-brand-navy">Job title <span class="text-primary-dark">*</span></label>
+                    <input id="p-role" name="role" type="text" required autocomplete="organization-title" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
                   </div>
                 </div>
                 <div class="mt-4">
-                  <label for="p-message" class="mb-1.5 block text-sm font-medium text-brand-navy">What do you offer, and who do you want to reach?</label>
-                  <textarea id="p-message" name="message" rows="4" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></textarea>
+                  <label for="p-interest" class="mb-1.5 block text-sm font-medium text-brand-navy">Package interest <span class="text-primary-dark">*</span></label>
+                  <select id="p-interest" name="interest" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
+                    <option value="" disabled selected>Please choose...</option>
+                    <option>Not sure yet</option>
+                    <option>Category Partner</option>
+                    <option>Featured Supplier</option>
+                    <option>Listed Supplier</option>
+                    <option>Trainer Membership</option>
+                  </select>
+                </div>
+                <div class="mt-4">
+                  <label for="p-message" class="mb-1.5 block text-sm font-medium text-brand-navy">What do you offer, and who do you want to reach? <span class="text-primary-dark">*</span></label>
+                  <textarea id="p-message" name="message" rows="4" required class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></textarea>
                 </div>
                 <div class="mt-6 flex flex-wrap items-center gap-4">
                   <button type="submit" class="btn-primary px-7 py-3 text-sm">Send enquiry</button>

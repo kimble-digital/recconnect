@@ -10,6 +10,7 @@ import Testimonials from '@/components/home/Testimonials.astro';
 import CoreAreas from '@/components/home/CoreAreas.astro';
 import PricingSection from '@/components/home/PricingSection.astro';
 import FinalCTA from '@/components/home/FinalCTA.astro';
+import EventAlertSignup from '@/components/EventAlertSignup.astro';
 ---
 <BaseLayout title="Join the Club. Connect. Grow. Get Results." heroMode={true}>
   {/* ── Hook ── */}
@@ -24,6 +25,23 @@ import FinalCTA from '@/components/home/FinalCTA.astro';
   <StatsSection />
   <PhotoMarquee kicker="Inside the room" />
   <Testimonials />
+
+  {/* ── Events & offers signup ── */}
+  <section class="relative overflow-hidden bg-brand-navy py-16 md:py-20 border-y border-white/10">
+    <div class="absolute -top-16 -right-20 w-72 h-96 bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="container-wide relative z-10">
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
+        <div>
+          <p class="kicker text-primary text-[0.8rem] mb-3">Stay in the loop</p>
+          <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-3">Be first to hear about events and member offers.</h2>
+          <p class="text-slate-400 leading-relaxed">Drop your details in and we will email you when new events land and when partners put fresh offers on the table. No spam, unsubscribe any time.</p>
+        </div>
+        <div class="lg:pl-6">
+          <EventAlertSignup successText="You're on the list. We'll email you about new events and member offers." />
+        </div>
+      </div>
+    </div>
+  </section>
 
   {/* ── Authority ── */}
   <CoreAreas />

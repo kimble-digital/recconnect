@@ -1,0 +1,69 @@
+---
+// Reusable event-alert / offers signup. First name + email so confirmations
+// can be personalised. Posts to /api/submit with formType "event-alert".
+// Carries its own submit script (scoped to form[data-event-alert]) so it works
+// on any page without a page-level handler.
+interface Props {
+  buttonLabel?: string;
+  successText?: string;
+  class?: string;
+}
+const {
+  buttonLabel = "Notify me",
+  successText = "You're on the list. We'll email you about new events and member offers.",
+  class: className = "",
+} = Astro.props;
+---
+
+<div class={className}>
+  <form data-event-alert data-success={successText} action="/api/submit" novalidate class="flex flex-col sm:flex-row gap-3">
+    <input type="hidden" name="formType" value="event-alert" />
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label>Leave this field empty<input type="text" name="rc_hp" tabindex="-1" autocomplete="off" data-1p-ignore="true" data-lpignore="true" /></label>
+    </div>
+    <input name="name" type="text" required placeholder="First name" aria-label="First name" autocomplete="given-name"
+      class="form-input sm:max-w-[11rem]" />
+    <input name="email" type="email" required placeholder="you@agency.com" aria-label="Email address" autocomplete="email"
+      class="form-input flex-1" />
+    <button type="submit" class="btn-primary px-6 py-2.5 text-sm whitespace-nowrap">{buttonLabel}</button>
+  </form>
+  <p data-ea-status class="text-sm mt-3" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[data-event-alert]').forEach((form) => {
+    const wrap = form.parentElement;
+    const statusEl = wrap?.querySelector<HTMLElement>('[data-ea-status]') || null;
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const invalid = ['ring-2', 'ring-red-400'];
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'text-sm mt-3'; }
+      form.querySelectorAll('[data-invalid]').forEach((el) => { el.classList.remove(...invalid); el.removeAttribute('data-invalid'); });
+      const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+      const original = btn?.textContent || 'Notify me';
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok) {
+          const first = (data.name || '').trim().split(/\s+/)[0];
+          form.reset();
+          if (statusEl) {
+            const base = form.getAttribute('data-success') || "You're on the list. We'll email you about new events and member offers.";
+            statusEl.textContent = first ? `You're on the list, ${first}. We'll email you about new events and member offers.` : base;
+            statusEl.className = 'text-sm mt-3 font-medium text-emerald-400';
+          }
+        } else {
+          (body.fields || []).forEach((n: string) => { const el = form.querySelector(`[name="${n}"]`); if (el) { el.classList.add(...invalid); el.setAttribute('data-invalid', 'true'); } });
+          if (statusEl) { statusEl.textContent = body.error || 'Something went wrong. Please try again.'; statusEl.className = 'text-sm mt-3 font-medium text-red-400'; }
+        }
+      } catch {
+        if (statusEl) { statusEl.textContent = 'Network error. Please try again.'; statusEl.className = 'text-sm mt-3 font-medium text-red-400'; }
+      } finally { if (btn) { btn.disabled = false; btn.textContent = original; } }
+    });
+  });
+</script>

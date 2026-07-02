@@ -7,6 +7,7 @@ export const prerender = false;
 
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
+import EventAlertSignup from '@/components/EventAlertSignup.astro';
 
 // ─── Eventbrite config ──────────────────────────────────────────────
 const EB_TOKEN = import.meta.env.EVENTBRITE_TOKEN || '';
@@ -560,50 +561,13 @@ function getPriceDisplay(event: EBEvent): string {
       <!-- Event alerts signup -->
       <div class="mt-12 pt-8 border-t border-white/10 max-w-md mx-auto">
         <p class="kicker text-primary text-[0.7rem] mb-3">Event alerts</p>
-        <p class="text-slate-400 text-sm mb-4">Not ready to join? Get an email when new events are announced.</p>
-        <form data-lead action="/api/submit" data-success="You're on the list. We'll email you about new events." novalidate class="flex flex-col sm:flex-row gap-3">
-          <input type="hidden" name="formType" value="event-alert" />
-          <div class="absolute -left-[9999px]" aria-hidden="true">
-            <label>Company website<input type="text" name="company_website" tabindex="-1" autocomplete="off" /></label>
-          </div>
-          <input name="email" type="email" required placeholder="you@agency.com" aria-label="Email address" class="form-input flex-1" />
-          <button type="submit" class="btn-primary px-6 py-2.5 text-sm whitespace-nowrap">Notify me</button>
-        </form>
-        <p data-status class="text-sm mt-3" role="status" aria-live="polite"></p>
+        <p class="text-slate-400 text-sm mb-4">Not ready to join? Get an email when new events and member offers are announced.</p>
+        <EventAlertSignup successText="You're on the list. We'll email you about new events." />
       </div>
     </div>
   </section>
 
 </BaseLayout>
-
-<script>
-  document.querySelectorAll<HTMLFormElement>('form[data-lead]').forEach((form) => {
-    const statusEl = form.querySelector<HTMLElement>('[data-status]');
-    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-    const invalid = ['ring-2', 'ring-red-400'];
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'text-sm mt-3'; }
-      form.querySelectorAll('[data-invalid]').forEach((el) => { el.classList.remove(...invalid); el.removeAttribute('data-invalid'); });
-      const data = Object.fromEntries(new FormData(form).entries());
-      const original = btn?.textContent || 'Send';
-      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
-      try {
-        const res = await fetch(form.getAttribute('action') || '/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-        const body = await res.json().catch(() => ({}));
-        if (res.ok && body.ok) {
-          form.reset();
-          if (statusEl) { statusEl.textContent = form.getAttribute('data-success') || 'Thanks, we will be in touch.'; statusEl.className = 'text-sm mt-3 font-medium text-emerald-400'; }
-        } else {
-          (body.fields || []).forEach((n: string) => { const el = form.querySelector(`[name="${n}"]`); if (el) { el.classList.add(...invalid); el.setAttribute('data-invalid', 'true'); } });
-          if (statusEl) { statusEl.textContent = body.error || 'Something went wrong. Please try again.'; statusEl.className = 'text-sm mt-3 font-medium text-red-400'; }
-        }
-      } catch {
-        if (statusEl) { statusEl.textContent = 'Network error. Please try again.'; statusEl.className = 'text-sm mt-3 font-medium text-red-400'; }
-      } finally { if (btn) { btn.disabled = false; btn.textContent = original; } }
-    });
-  });
-</script>
 
 <style>
   .line-clamp-3 {

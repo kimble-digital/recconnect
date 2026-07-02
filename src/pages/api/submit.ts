@@ -105,16 +105,24 @@ const confirmationInner = (firstName: string, formType: FormType) => {
   const intro =
     formType === "partner"
       ? "Thanks for your interest in partnering with RecConnect. I have your details in front of me."
-      : "Thanks for getting in touch. Your message has reached the RecConnect team.";
+      : formType === "event-alert"
+        ? "Thanks for signing up for RecConnect event alerts."
+        : "Thanks for getting in touch. Your message has reached the RecConnect team.";
   const next =
     formType === "partner"
       ? "One of us will come back to you within one working day to walk you through the audience, the packages, and what would work best for your business."
-      : "We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.";
+      : formType === "event-alert"
+        ? "You will be first to hear when we announce new events and member-only offers. No spam, just the good stuff, and you can unsubscribe any time."
+        : "We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.";
+  const closing =
+    formType === "event-alert"
+      ? "See you in the room soon."
+      : "If anything is urgent in the meantime, just reply to this email and it will come straight to us.";
   return `
   <h1 style="margin:0 0 18px;font-size:22px;line-height:1.3;color:${BRAND_NAVY};">Thanks, ${esc(firstName)}.</h1>
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3a3f47;">${intro}</p>
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3a3f47;">${next}</p>
-  <p style="margin:0 0 26px;font-size:15px;line-height:1.6;color:#3a3f47;">If anything is urgent in the meantime, just reply to this email and it will come straight to us.</p>
+  <p style="margin:0 0 26px;font-size:15px;line-height:1.6;color:#3a3f47;">${closing}</p>
   <p style="margin:0;font-size:15px;line-height:1.5;color:${BRAND_NAVY};">Simon Lewis<br>
   <span style="color:#9aa1ab;font-size:13px;">Founder, RecConnect</span></p>`;
 };
@@ -132,8 +140,11 @@ export const POST: APIRoute = async ({ request }) => {
       : Object.fromEntries((await request.formData()).entries());
     const data = raw as Record<string, string>;
 
-    // Honeypot: real users never fill this hidden field
-    if ((data.company_website || "").trim()) {
+    // Honeypot: real users never fill this hidden field. Field name is
+    // deliberately unrecognisable so browser autofill / password managers
+    // leave it empty (a recognisable name like "company_website" gets
+    // autofilled and drops legitimate submissions).
+    if ((data.rc_hp || "").trim()) {
       log("warn", "honeypot triggered");
       return json({ ok: true, ref });
     }
@@ -150,16 +161,25 @@ export const POST: APIRoute = async ({ request }) => {
     const message = (data.message || "").trim();
     const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
 
-    // Per-type validation
+    // Per-type validation. Every visible field is required.
     const fields: string[] = [];
     if (!emailOk) fields.push("email");
     if (formType === "enquiry") {
       if (name.length < 2) fields.push("name");
+      if (phone.length < 5) fields.push("phone");
+      if (company.length < 2) fields.push("company");
+      if (role.length < 2) fields.push("role");
       if (message.length < 5) fields.push("message");
     }
     if (formType === "partner") {
       if (name.length < 2) fields.push("name");
       if (company.length < 2) fields.push("company");
+      if (role.length < 2) fields.push("role");
+      if (interest.length < 1) fields.push("interest");
+      if (message.length < 5) fields.push("message");
+    }
+    if (formType === "event-alert") {
+      if (name.length < 1) fields.push("name");
     }
     if (fields.length) {
       log("warn", "validation failed", { fields });
@@ -240,20 +260,23 @@ export const POST: APIRoute = async ({ request }) => {
         "notification"
       );
 
-      // Warm auto-confirmation back to the submitter (enquiry + partner only).
+      // Warm, personalised auto-confirmation back to the submitter.
       // Delayed slightly so we stay under Resend's free-tier rate limit.
-      if (emailOk && (formType === "enquiry" || formType === "partner")) {
+      if (emailOk) {
         const first = firstNameOf(name);
         const confSubject =
           formType === "partner"
             ? "Thanks for your interest in RecConnect"
-            : `Thanks for getting in touch, ${first}`;
-        const confText =
-          `Thanks, ${first}.\n\n` +
-          (formType === "partner"
-            ? "Thanks for your interest in partnering with RecConnect. I have your details in front of me. One of us will come back to you within one working day to walk you through the audience, the packages, and what would work best for your business."
-            : "Thanks for getting in touch. Your message has reached the RecConnect team. We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.") +
-          "\n\nIf anything is urgent in the meantime, just reply to this email and it will come straight to us.\n\nSimon Lewis\nFounder, RecConnect";
+            : formType === "event-alert"
+              ? `You're on the list, ${first}`
+              : `Thanks for getting in touch, ${first}`;
+        const confBody =
+          formType === "partner"
+            ? "Thanks for your interest in partnering with RecConnect. I have your details in front of me. One of us will come back to you within one working day to walk you through the audience, the packages, and what would work best for your business.\n\nIf anything is urgent in the meantime, just reply to this email and it will come straight to us."
+            : formType === "event-alert"
+              ? "Thanks for signing up for RecConnect event alerts. You will be first to hear when we announce new events and member-only offers. No spam, just the good stuff, and you can unsubscribe any time.\n\nSee you in the room soon."
+              : "Thanks for getting in touch. Your message has reached the RecConnect team. We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.\n\nIf anything is urgent in the meantime, just reply to this email and it will come straight to us.";
+        const confText = `Thanks, ${first}.\n\n${confBody}\n\nSimon Lewis\nFounder, RecConnect`;
         await sleep(700);
         const confOk = await sendResend(
           {

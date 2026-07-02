@@ -78,10 +78,10 @@ import PageHero from '@/components/PageHero.astro';
 
             <form id="contact-form" novalidate>
               <input type="hidden" name="formType" value="enquiry" />
-              <!-- Honeypot: positioned off-screen; real users never see or fill it -->
+              <!-- Honeypot: off-screen, unrecognisable name so autofill leaves it empty -->
               <div class="absolute -left-[9999px]" aria-hidden="true">
-                <label>Company website
-                  <input type="text" name="company_website" tabindex="-1" autocomplete="off" />
+                <label>Leave this field empty
+                  <input type="text" name="rc_hp" tabindex="-1" autocomplete="off" data-1p-ignore="true" data-lpignore="true" />
                 </label>
               </div>
 
@@ -102,18 +102,26 @@ import PageHero from '@/components/PageHero.astro';
                 </div>
                 <div>
                   <label for="cf-phone" class="mb-1.5 block text-sm font-medium text-brand-navy">
-                    Phone
+                    Phone <span class="text-primary-dark">*</span>
                   </label>
-                  <input id="cf-phone" name="phone" type="tel" autocomplete="tel"
+                  <input id="cf-phone" name="phone" type="tel" required autocomplete="tel"
                     class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
                 </div>
                 <div>
                   <label for="cf-company" class="mb-1.5 block text-sm font-medium text-brand-navy">
-                    Company
+                    Company <span class="text-primary-dark">*</span>
                   </label>
-                  <input id="cf-company" name="company" type="text" autocomplete="organization"
+                  <input id="cf-company" name="company" type="text" required autocomplete="organization"
                     class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
                 </div>
+              </div>
+
+              <div class="mt-5">
+                <label for="cf-role" class="mb-1.5 block text-sm font-medium text-brand-navy">
+                  Job title <span class="text-primary-dark">*</span>
+                </label>
+                <input id="cf-role" name="role" type="text" required autocomplete="organization-title"
+                  class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
               </div>
 
               <div class="mt-5">
