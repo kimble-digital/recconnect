@@ -13,6 +13,8 @@
   header{position:sticky;top:0;z-index:50;background:rgba(10,11,15,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(45,212,191,.25);padding:30px 0 18px;margin-bottom:8px;}
   header h1{font-family:'Anton';text-transform:uppercase;letter-spacing:.01em;font-size:40px;font-weight:400;}
   header p{color:#9aa3b2;font-size:13px;margin-top:6px;max-width:680px;line-height:1.5;}
+  .studio-link{position:absolute;top:34px;right:0;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;color:var(--acc);text-decoration:none;border:1px solid rgba(45,212,191,.4);border-radius:8px;padding:8px 16px;transition:all .15s;}
+  .studio-link:hover{background:var(--acc);color:#08322c;border-color:var(--acc);}
   .filter{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
   .chip{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:7px 18px;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;cursor:pointer;transition:all .15s;}
   .chip:hover{border-color:var(--acc);color:#fff;}
@@ -81,6 +83,7 @@
 </head>
 <body>
   <header>
+    <a href="/brand.html" class="studio-link">Brand assets &rarr;</a>
     <h1>RecConnect · Social studio</h1>
     <p>Click any card to preview it, download the image, and copy its caption. Then paste both into your LinkedIn post. The logo and event details are pulled live from the site.</p>
     <div class="filter" id="chips"></div>
