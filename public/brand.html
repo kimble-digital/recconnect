@@ -24,10 +24,10 @@
   .prev.dark{background:#0a0b0f;background-image:radial-gradient(circle at 50% 40%, #14171d, #0a0b0f 70%);}
   .prev img{max-width:100%;max-height:96px;height:auto;}
   .card.icon .prev img{max-height:120px;}
-  .meta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);}
+  .meta{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);}
   .meta .name{font-size:14px;font-weight:500;}
   .meta .bg{font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:11px;color:#7c8694;margin-top:2px;}
-  .dl{display:flex;gap:8px;flex-shrink:0;}
+  .dl{display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;max-width:190px;}
   .dl a{font-family:'Bebas Neue';letter-spacing:.06em;text-transform:uppercase;font-size:14px;color:var(--acc);text-decoration:none;border:1px solid rgba(45,212,191,.4);border-radius:7px;padding:6px 12px;transition:all .15s;}
   .dl a:hover{background:var(--acc);color:#08322c;border-color:var(--acc);}
 </style>
@@ -51,13 +51,13 @@
     const CARDS = [
       { group:'full', file:'recconnect-full-colour',     name:'Colour',            bg:'light' },
       { group:'full', file:'recconnect-full-black',      name:'Black',             bg:'light' },
-      { group:'full', file:'recconnect-full-white',      name:'White (reversed)',  bg:'dark'  },
-      { group:'full', file:'recconnect-full-colour-rev', name:'Colour (reversed)', bg:'dark'  },
+      { group:'full', file:'recconnect-full-white',      name:'White (reversed)',  bg:'dark', avatar:true },
+      { group:'full', file:'recconnect-full-colour-rev', name:'Colour (reversed)', bg:'dark', avatar:true },
 
       { group:'icon', file:'recconnect-mark-colour',     name:'Colour',            bg:'light' },
       { group:'icon', file:'recconnect-mark-black',      name:'Black',             bg:'light' },
-      { group:'icon', file:'recconnect-mark-white',      name:'White (reversed)',  bg:'dark'  },
-      { group:'icon', file:'recconnect-mark-colour-rev', name:'Colour (reversed)', bg:'dark'  },
+      { group:'icon', file:'recconnect-mark-white',      name:'White (reversed)',  bg:'dark', avatar:true },
+      { group:'icon', file:'recconnect-mark-colour-rev', name:'Colour (reversed)', bg:'dark', avatar:true },
     ];
 
     document.getElementById('grid').innerHTML = GROUPS.map(g => {
@@ -73,6 +73,8 @@
             <div class="dl">
               <a href="${BASE}${c.file}.svg" download>SVG</a>
               <a href="${BASE}${c.file}.png" download>PNG</a>
+              ${c.avatar ? `<a href="${BASE}${c.file}-square.png" download title="On a black square">Square</a>
+              <a href="${BASE}${c.file}-circle.png" download title="On a black circle">Circle</a>` : ''}
             </div>
           </div>
         </figure>`).join('');
