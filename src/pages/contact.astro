@@ -9,7 +9,7 @@ const showEnquiryForm = true;
 
 <BaseLayout
   title="Contact"
-  description="Get in touch with RecConnect. Reach us via WhatsApp, email, or LinkedIn — we'd love to hear from you."
+  description="Get in touch with RecConnect. Reach us via WhatsApp, email, or LinkedIn. We'd love to hear from you."
 >
 
   <!-- ═══ HERO ═══ -->
@@ -184,7 +184,7 @@ const showEnquiryForm = true;
             <p class="text-sm font-medium text-primary mb-1">Founder, RecConnect</p>
             <h2 class="text-2xl font-bold text-brand-navy mb-3">Simon Lewis</h2>
             <p class="text-slate-600 leading-relaxed mb-5">
-              With over 20 years in the recruitment industry, Simon founded RecConnect to bring recruitment leaders together. Whether you want to chat about membership, events, partnerships, or just the state of the market — his door is always open.
+              With over 20 years in the recruitment industry, Simon founded RecConnect to bring recruitment leaders together. Whether you want to chat about membership, events, partnerships, or just the state of the market, his door is always open.
             </p>
             <div class="flex flex-wrap items-center gap-4">
               <a
@@ -310,7 +310,7 @@ const showEnquiryForm = true;
 
           if (res.ok && body.ok) {
             form.reset();
-            statusEl.textContent = 'Thanks — your message is on its way' + (body.ref ? ` (ref ${body.ref}).` : '.');
+            statusEl.textContent = 'Thanks, your message is on its way' + (body.ref ? ` (ref ${body.ref}).` : '.');
             statusEl.className = 'text-sm font-medium text-emerald-600';
           } else {
             (body.fields || []).forEach((name: string) => {
@@ -324,7 +324,7 @@ const showEnquiryForm = true;
             statusEl.className = 'text-sm font-medium text-red-600';
           }
         } catch {
-          statusEl.textContent = 'Network error — please try again, or email hello@recconnect.co.';
+          statusEl.textContent = 'Network error. Please try again, or email hello@recconnect.co.';
           statusEl.className = 'text-sm font-medium text-red-600';
         } finally {
           btn.disabled = false;
