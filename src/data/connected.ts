@@ -48,11 +48,12 @@ export interface Speaker {
   role?: string;
 }
 export const speakers: Speaker[] = [
+  { name: 'Simon Lewis', role: 'Founder, RecConnect', img: '/images/box/simon-lewis.png' },
   { name: 'Adam Oldfield', role: 'CEO, Fortitude Labs', img: '/images/box/speakers/Adam-Oldfield.jpeg' },
   { name: 'Amy Bathie', role: 'Head of Talent, Gattaca', img: '/images/box/speakers/Amy-Bathie.jpeg' },
   { name: 'Barum Jeffries', role: 'Chief Ideas Officer, reclearn', img: '/images/box/Barum-Jeffries.jpeg' },
   { name: 'Ellie Hibberd', role: 'Tech Specialist, Keybridge', img: '/images/box/speakers/Ellie-Hibberd.jpeg' },
-  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/HarKaye.png' },
+  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/box/HarKaye.png' },
   { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg' },
   { name: 'Rohan Shah', role: 'Co-founder, Reuben Sinclair', img: '/images/box/speakers/rohan-shah.webp' },
 ];
