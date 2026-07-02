@@ -17,7 +17,8 @@
   .grain{position:absolute;inset:0;opacity:0.08;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
   .row{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;}
-  .lockup{display:flex;align-items:center;gap:18px;}
+  .lockup{display:flex;align-items:center;gap:16px;}
+  .cobrand{height:30px;width:auto;}
   .boxtag{font-family:'Bebas Neue';font-size:34px;letter-spacing:0.04em;background:#ff6a13;color:#0a0a0a;padding:2px 14px;border-radius:6px;}
   .lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.26em;font-size:26px;color:rgba(255,255,255,0.62);}
   .spon{display:flex;flex-direction:column;align-items:flex-end;gap:9px;}
@@ -44,7 +45,7 @@
       <div class="grain"></div>
 
       <div class="row">
-        <div class="lockup"><span class="boxtag">BOX</span><span class="lbl">× RecConnect</span></div>
+        <div class="lockup"><span class="boxtag">BOX</span><span class="lbl">×</span><img class="cobrand" src="/images/logos/recconnect-full-white.svg" alt="RecConnect" /></div>
         <div class="spon">
           <span class="spon-lbl">Headline Sponsor</span>
           <img class="spon-logo" src="/images/keybridge-logo-col-white.svg" alt="Keybridge IT" />
