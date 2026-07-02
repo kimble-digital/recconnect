@@ -50,8 +50,9 @@ export interface Speaker {
 export const speakers: Speaker[] = [
   { name: 'Adam Oldfield', role: 'CEO, Fortitude Labs', img: '/images/box/speakers/Adam-Oldfield.jpeg' },
   { name: 'Amy Bathie', role: 'Head of Talent, Gattaca', img: '/images/box/speakers/Amy-Bathie.jpeg' },
+  { name: 'Barum Jeffries', role: 'Chief Ideas Officer, reclearn', img: '/images/box/Barum-Jeffries.jpeg' },
   { name: 'Ellie Hibberd', role: 'Tech Specialist, Keybridge', img: '/images/box/speakers/Ellie-Hibberd.jpeg' },
-  { name: 'Louise Wrench', role: 'COO, HarKaye Core Talent', img: '/images/box/speakers/Louise-Wrench.jpeg' },
+  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/HarKaye.png' },
   { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg' },
   { name: 'Rohan Shah', role: 'Co-founder, Reuben Sinclair', img: '/images/box/speakers/rohan-shah.webp' },
 ];
@@ -67,19 +68,21 @@ export const agenda: AgendaItem[] = [
   { time: '11:00', label: 'PechaKucha', note: 'Fast, punchy ideas, no waffle' },
   { time: '12:30', label: 'Collaboration', note: 'Heads together, problems cracked' },
   { time: '13:00', label: 'Lunch', note: 'A proper, varied spread' },
-  { time: '14:00', label: 'Entertainment', note: 'Live music, DJ, magic, through to 5pm' },
+  { time: '14:00', label: 'Entertainment', note: 'Live band, DJ, magician and games, through to 5pm' },
 ];
 
 export interface Highlight {
   title: string;
   body: string;
+  logo?: string;
 }
 export const highlights: Highlight[] = [
   { title: 'Powerful stories', body: 'Real moments from people who have been there, told properly.' },
   { title: 'Impactful networking', body: 'The kind of room where the right conversation finds you.' },
   { title: 'Unique insights', body: 'Fresh thinking you cannot get from another slide deck.' },
   { title: 'Lasting connections', body: 'Relationships that keep paying off long after you leave.' },
-  { title: 'Live entertainment', body: 'Live music, a DJ and close-up magic woven through the day.' },
+  { title: 'Live entertainment', body: 'A live band, a DJ, a magician and games running right through the afternoon.' },
+  { title: 'Live KOSI podcast', body: 'Kate O\'Neill and Saeed Bor recording live KOSI sessions on the day. Recruitment chat, no corporate waffle.', logo: '/images/box/kosipodcast_logo.jpeg' },
   { title: 'Pure energy', body: 'High tempo from the first handshake to the last track.' },
 ];
 
