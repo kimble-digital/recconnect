@@ -16,16 +16,16 @@ const {
 ---
 
 <div class={className}>
-  <form data-event-alert data-success={successText} action="/api/submit" novalidate class="flex flex-col sm:flex-row gap-3">
+  <form data-event-alert data-success={successText} action="/api/submit" novalidate class="flex flex-col gap-3 w-full sm:max-w-sm">
     <input type="hidden" name="formType" value="event-alert" />
     <div class="absolute -left-[9999px]" aria-hidden="true">
       <label>Leave this field empty<input type="text" name="rc_hp" tabindex="-1" autocomplete="off" data-1p-ignore="true" data-lpignore="true" /></label>
     </div>
     <input name="name" type="text" required placeholder="First name" aria-label="First name" autocomplete="given-name"
-      class="form-input sm:max-w-[11rem]" />
+      class="form-input w-full" />
     <input name="email" type="email" required placeholder="you@agency.com" aria-label="Email address" autocomplete="email"
-      class="form-input flex-1" />
-    <button type="submit" class="btn-primary px-6 py-2.5 text-sm whitespace-nowrap">{buttonLabel}</button>
+      class="form-input w-full" />
+    <button type="submit" class="btn-primary w-full px-6 py-3 text-sm">{buttonLabel}</button>
   </form>
   <p data-ea-status class="text-sm mt-3" role="status" aria-live="polite"></p>
 </div>
