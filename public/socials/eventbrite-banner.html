@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RecConnect · Eventbrite banner</title>
+<title>RecConnect · Eventbrite company banner</title>
 <meta name="robots" content="noindex" />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -11,22 +11,19 @@
   html,body{background:#16181d;height:100%;overflow:hidden;}
   body{display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',system-ui,sans-serif;}
   #stage{transform-origin:center center;}
-  /* Eventbrite event banner: 960x350 base, export 2x -> 1920x700. */
+  /* Eventbrite organiser/company banner: 960x350 base, export 2x -> 1920x700. */
   .card{--acc:#2dd4bf;width:960px;height:350px;position:relative;overflow:hidden;background:#0a0b0f;color:#fff;}
-  .card.orange{--acc:#ff6a13;}
-  .bg{position:absolute;inset:0;background-size:cover;background-position:center;}
-  .tint{position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,9,12,0.92) 0%,rgba(8,9,12,0.72) 46%,rgba(8,9,12,0.4) 100%);}
+  .bg{position:absolute;inset:0;background-size:cover;background-position:center 30%;}
+  .tint{position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,9,12,0.94) 0%,rgba(8,9,12,0.78) 44%,rgba(8,9,12,0.55) 100%);}
+  .glow{position:absolute;right:-6%;bottom:-40%;width:460px;height:360px;border-radius:50%;background:rgba(45,212,191,0.20);filter:blur(140px);}
   .accentbar{position:absolute;left:0;top:0;width:100%;height:6px;background:var(--acc);}
-  .inner{position:absolute;inset:0;z-index:2;padding:40px 48px;display:flex;flex-direction:column;justify-content:space-between;}
-  .top{display:flex;align-items:flex-start;justify-content:space-between;}
-  .brandlogo{height:34px;width:auto;filter:drop-shadow(0 3px 12px rgba(0,0,0,0.6));}
-  .spon{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
-  .spon-lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.2em;font-size:13px;color:rgba(255,255,255,0.6);}
-  .spon-logos{display:flex;align-items:center;gap:14px;}
-  .spon-logo{height:28px;width:auto;max-width:150px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.92;}
+  .inner{position:absolute;inset:0;z-index:2;padding:44px 52px;display:flex;flex-direction:column;justify-content:space-between;}
+  .brandlogo{height:46px;width:auto;filter:drop-shadow(0 3px 12px rgba(0,0,0,0.6));}
+  .tagline{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.08em;font-size:40px;line-height:0.98;color:#fff;max-width:660px;}
+  .tagline .acc{color:var(--acc);}
   .bottom{display:flex;align-items:flex-end;justify-content:space-between;}
-  .kicker{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.14em;font-size:30px;color:#fff;line-height:1.05;max-width:600px;}
-  .url{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.18em;font-size:18px;color:var(--acc);text-shadow:0 2px 10px rgba(0,0,0,0.6);}
+  .sub{font-family:'Inter',sans-serif;font-weight:300;font-size:18px;color:rgba(255,255,255,0.7);max-width:560px;line-height:1.4;}
+  .url{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.18em;font-size:20px;color:var(--acc);text-shadow:0 2px 10px rgba(0,0,0,0.6);}
   #exportbar{position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px;}
   #exportbar button{background:#2dd4bf;color:#08322c;border:0;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;}
   #exportbar button:hover{background:#5fe3d3;}
@@ -34,57 +31,37 @@
 </style>
 </head>
 <body>
-  <div id="stage"><div class="card" id="card"></div></div>
+  <div id="stage"><div class="card" id="card">
+    <div class="bg" style="background-image:url('/images/box/people1.jpg')"></div>
+    <div class="tint"></div>
+    <div class="glow"></div>
+    <div class="accentbar"></div>
+    <div class="inner">
+      <img class="brandlogo" src="/images/logos/recconnect-full-colour-rev.svg" alt="RecConnect" />
+      <p class="tagline">Connect. Grow. <span class="acc">Get results.</span></p>
+      <div class="bottom">
+        <p class="sub">The community where established recruitment leaders meet, learn and actually grow.</p>
+        <span class="url">recconnect.co</span>
+      </div>
+    </div>
+  </div></div>
   <div id="exportbar">
     <button data-scale="1">&#8595; 960×350</button>
     <button data-scale="2">&#8595; 2× (1920×700)</button>
   </div>
   <script type="module">
     import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
-    const LOGO = '/images/logos/recconnect-full-colour-rev.svg';
-    const KEYBRIDGE = '/images/keybridge-logo-col-white.svg';
-    const SHAZAMME = '/images/box/Shazamme-MONO.png';
-    const BULLHORN = 'https://images.ctfassets.net/ufi217awi1jo/4HTx7MBUrwLb5KYr6E4NF6/e83274c43db817b08b7a146a252f4b22/Bullhorn_logo.png';
-
-    const EVENTS = {
-      connected:        { theme:'orange', kicker:'The immersive recruitment experience', bg:'/images/events/connected.jpg', spon:{ lbl:'Headline sponsor', logos:[KEYBRIDGE] } },
-      manchester:       { kicker:'Manchester Recruitment Leader Experience', bg:'/images/events/manchester.jpg', spon:{ lbl:'In partnership with', logos:[KEYBRIDGE, SHAZAMME] } },
-      cambridge:        { kicker:'Cambridge Recruitment Leader Experience', bg:'/images/events/cambridge.jpg', spon:{ lbl:'In partnership with', logos:[KEYBRIDGE] } },
-      'digital-workers':{ kicker:'The Rise of Digital Workers', bg:'/images/events/digital-workers.jpg', spon:{ lbl:'In partnership with', logos:[BULLHORN] } },
-    };
-
     const params = new URLSearchParams(location.search);
-    const id = params.get('id') || 'connected';
-    const e = EVENTS[id] || EVENTS.connected;
-
-    const cardEl = document.getElementById('card');
-    cardEl.className = 'card' + (e.theme ? ' ' + e.theme : '');
-    cardEl.innerHTML = `
-      <div class="bg" style="background-image:url('${e.bg}')"></div>
-      <div class="tint"></div>
-      <div class="accentbar"></div>
-      <div class="inner">
-        <div class="top">
-          <img class="brandlogo" src="${LOGO}" alt="RecConnect" />
-          ${e.spon ? `<div class="spon"><span class="spon-lbl">${e.spon.lbl}</span><div class="spon-logos">${e.spon.logos.map(l=>`<img class="spon-logo" src="${l}" alt="sponsor" crossorigin="anonymous" />`).join('')}</div></div>` : ''}
-        </div>
-        <div class="bottom">
-          <span class="kicker">${e.kicker}</span>
-          <span class="url">recconnect.co</span>
-        </div>
-      </div>`;
-
     const embed = params.has('embed');
     const stage = document.getElementById('stage');
     const bar = document.getElementById('exportbar');
     if(embed && bar) bar.style.display='none';
     function fit(){ const s = embed ? 1 : Math.min(1,(innerWidth-40)/960,(innerHeight-110)/350); stage.style.transform='scale('+s+')'; }
     addEventListener('resize', fit); fit();
-
     async function exportPng(scale){
       if(stage) stage.style.transform='none'; await document.fonts.ready;
       const r = await snapdom(document.getElementById('card'), { scale, embedFonts:true }); fit();
-      await r.download({ format:'png', filename:'eventbrite-banner-'+id });
+      await r.download({ format:'png', filename:'recconnect-eventbrite-banner' });
     }
     document.querySelectorAll('#exportbar button').forEach(b=>b.addEventListener('click', async ()=>{
       const o=b.textContent;b.disabled=true;b.textContent='Rendering…';
