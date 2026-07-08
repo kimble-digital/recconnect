@@ -6,7 +6,7 @@
 // Left: messaging + countdown + CTAs + headline sponsor.
 // Right: the speaker line-up.
 // ───────────────────────────────────────────────────────────────────
-import { speakers } from '@/data/connected';
+import { speakers, mc } from '@/data/connected';
 import EventSponsor from '@/components/home/EventSponsor.astro';
 const EVENT_HREF = '/connected-2026';
 const ticker = ['Powerful stories', 'Impactful networking', 'Live music, DJ, magic', 'Lasting connections', 'Adios, PowerPoint'];
@@ -47,7 +47,7 @@ const ticker = ['Powerful stories', 'Impactful networking', 'Live music, DJ, mag
     <div class="es-speakers">
       <p class="es-sp-lead">On the bill</p>
       <div class="es-sp-grid">
-        {speakers.map((s) => (
+        {[mc, ...speakers].map((s) => (
           <a href={EVENT_HREF} class="es-sp">
             <span class="es-sp-img"><img src={s.img} alt={s.name} loading="lazy" /></span>
             <span class="es-sp-name">{s.name}</span>
