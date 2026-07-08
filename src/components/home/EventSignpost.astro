@@ -10,6 +10,20 @@ import { speakers, mc } from '@/data/connected';
 import EventSponsor from '@/components/home/EventSponsor.astro';
 const EVENT_HREF = '/connected-2026';
 const ticker = ['Powerful stories', 'Impactful networking', 'Live music, DJ, magic', 'Lasting connections', 'Adios, PowerPoint'];
+
+// Home row line-up: alternate man/woman starting with a man, and rank Mike above Adam.
+const pick = (n: string) => speakers.find((s) => s.name === n);
+const homeLineup = [
+  mc,
+  pick('Amy Bathie'),
+  pick('Mike Ames'),
+  pick('Ellie Hibberd'),
+  pick('Adam Oldfield'),
+  pick('Michelle Flynn'),
+  pick('Barum Jeffries'),
+  pick('Jaye Haynes & Louise Wrench'),
+  pick('Rohan Shah'),
+].filter(Boolean) as typeof speakers;
 ---
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" />
@@ -47,7 +61,7 @@ const ticker = ['Powerful stories', 'Impactful networking', 'Live music, DJ, mag
     <div class="es-speakers">
       <p class="es-sp-lead">On the bill</p>
       <div class="es-sp-grid">
-        {[mc, ...speakers].map((s) => (
+        {homeLineup.map((s) => (
           <a href={EVENT_HREF} class="es-sp">
             <span class="es-sp-img"><img src={s.img} alt={s.name} loading="lazy" /></span>
             <span class="es-sp-name">{s.name}</span>
