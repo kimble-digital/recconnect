@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RecConnect · LinkedIn company banner</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  @font-face{font-family:'Reissue';src:url('/fonts/ReissueRegular.otf') format('opentype');font-weight:400;font-style:normal;font-display:block;}
+  :root{ --acc:#2dd4bf; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#0a0a0a;height:100%;overflow:hidden;}
+  body{display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',system-ui,sans-serif;}
+  #stage{transform-origin:center center;}
+
+  /* 6:1 LinkedIn company banner. Design 1200x200, export x3.5 -> 4200x700. */
+  .card{ width:1200px;height:200px;position:relative;overflow:hidden;background:#0a0a0a;color:#fff;}
+  .bg-glow-1{position:absolute;right:-2%;top:50%;transform:translateY(-50%);width:660px;height:520px;border-radius:50%;background:rgba(45,212,191,0.34);filter:blur(155px);}
+  .bg-glow-2{position:absolute;left:-8%;top:50%;transform:translateY(-50%);width:460px;height:360px;border-radius:50%;background:rgba(45,212,191,0.08);filter:blur(140px);}
+  .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 42%,rgba(0,0,0,0.55) 100%);}
+  .grain{position:absolute;inset:0;opacity:0.07;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .hairline{position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.10) 30%,rgba(255,255,255,0.10) 70%,transparent);}
+
+  /* Full logo sits UPPER-LEFT (kept small); the message is on the RIGHT. The
+     company icon overlays the lower-left, so that corner stays clear. */
+  .logo{position:absolute;top:34px;left:74px;z-index:3;height:38px;width:auto;}
+  .band{position:absolute;top:0;bottom:0;right:80px;z-index:3;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right;gap:9px;}
+  .kicker{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.22em;font-size:16px;color:var(--acc);}
+  .headline{font-family:'Anton';text-transform:uppercase;line-height:0.9;letter-spacing:0.012em;font-size:44px;color:#fff;}
+  .script{display:block;font-family:'Reissue',cursive;text-transform:none;color:var(--acc);font-size:60px;line-height:0.78;margin-top:4px;text-shadow:0 0 34px rgba(45,212,191,0.35);}
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="card" id="card">
+      <div class="bg-glow-1"></div>
+      <div class="bg-glow-2"></div>
+      <div class="hairline"></div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <img class="logo" src="/images/logos/Rc%20logo%20Col%20rev.svg" alt="RecConnect" />
+      <div class="band">
+        <p class="kicker">The UK community for recruitment leaders</p>
+        <h1 class="headline">Connect. Grow.<span class="script">Get Results.</span></h1>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportbar">
+    <button data-scale="3.5">⬇ PNG 4200×700 (LinkedIn)</button>
+    <button data-scale="1">⬇ PNG 1200</button>
+  </div>
+  <style>
+    #exportbar{position:fixed;top:14px;left:14px;z-index:9999;display:flex;gap:8px;font-family:'Inter',system-ui,sans-serif;}
+    #exportbar button{background:#2dd4bf;color:#08322c;border:0;border-radius:6px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+    #exportbar button:hover{background:#5fe3d3;}
+    #exportbar button:disabled{opacity:.6;cursor:default;}
+    @media print{#exportbar{display:none;}}
+  </style>
+  <script type="module">
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    const embed = new URLSearchParams(location.search).has('embed');
+    const stage = document.getElementById('stage');
+    const bar = document.getElementById('exportbar');
+    if(embed && bar) bar.style.display='none';
+    function fit(){ if(!stage) return; const s = embed ? 1 : Math.min(1,(innerWidth-48)/1200,(innerHeight-48)/200); stage.style.transform='scale('+s+')'; }
+    addEventListener('resize', fit); fit();
+    const fname = 'recconnect-linkedin-banner';
+    async function exportPng(scale){ const card=document.getElementById('card'); if(stage) stage.style.transform='none'; await document.fonts.ready; const result=await snapdom(card,{scale,embedFonts:true}); fit(); await result.download({format:'png',filename:fname}); }
+    document.querySelectorAll('#exportbar button').forEach(b=>{ b.addEventListener('click', async ()=>{ const o=b.textContent;b.disabled=true;b.textContent='Rendering…'; try{await exportPng(+b.dataset.scale);}catch(e){alert('Export failed: '+e.message);} b.disabled=false;b.textContent=o; }); });
+    const dl=new URLSearchParams(location.search).get('dl'); if(dl){ addEventListener('load',()=>setTimeout(()=>exportPng(+dl||3.5),500)); }
+  </script>
+</body>
+</html>
