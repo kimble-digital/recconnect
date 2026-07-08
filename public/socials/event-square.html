@@ -26,7 +26,8 @@
   .brandlogo{height:40px;width:auto;}
   .spon{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
   .spon-lbl{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.22em;font-size:18px;color:rgba(255,255,255,0.55);}
-  .spon-logo{height:54px;width:auto;filter:brightness(0) invert(1);opacity:0.95;}
+  .spon-logos{display:flex;align-items:center;gap:18px;}
+  .spon-logo{height:54px;width:auto;max-width:230px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.95;}
   .mid{margin-top:auto;margin-bottom:auto;}
   .kicker{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:0.28em;font-size:26px;color:var(--acc);margin-bottom:24px;}
   .rule{width:64px;height:5px;background:var(--acc);border-radius:3px;margin-bottom:28px;}
@@ -51,20 +52,22 @@
     import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
     const LOGO = '/images/logos/recconnect-full-colour-rev.svg';
     const KEYBRIDGE = '/images/keybridge-logo-col-white.svg';
+    const SHAZAMME = 'https://images.ctfassets.net/ufi217awi1jo/aH9PSbKeb33hMGlIcJMxo/428ec4d7a2f1cc94488cf3540cd1879f/image__69_.png';
+    const BULLHORN = 'https://images.ctfassets.net/ufi217awi1jo/4HTx7MBUrwLb5KYr6E4NF6/e83274c43db817b08b7a146a252f4b22/Bullhorn_logo.png';
 
     const EVENTS = {
       connected: { theme:'orange', kicker:'The immersive recruitment experience', title:'CONNECTED', year:'2026', size:150,
         meta:'Thu 12 Nov 2026 &nbsp;&middot;&nbsp; BOX Piccadilly, London', bg:'/images/events/connected.jpg',
-        spon:{ lbl:'Headline sponsor', logo:KEYBRIDGE } },
+        spon:{ lbl:'Headline sponsor', logos:[KEYBRIDGE] } },
       manchester: { kicker:'Recruitment Leader Experience', title:'Manchester', size:132, accent:'Leader Experience', accentSize:92,
         meta:'Wed 22 Oct 2026 &nbsp;&middot;&nbsp; JMW Solicitors, Manchester', bg:'/images/events/manchester.jpg',
-        spon:{ lbl:'In partnership with', logo:KEYBRIDGE } },
+        spon:{ lbl:'In partnership with', logos:[KEYBRIDGE, SHAZAMME] } },
       cambridge: { kicker:'Recruitment Leader Experience', title:'Cambridge', size:132, accent:'Leader Experience', accentSize:92,
         meta:'Thu 24 Sep 2026 &nbsp;&middot;&nbsp; Gonville Hotel, Cambridge', bg:'/images/events/cambridge.jpg',
-        spon:{ lbl:'In partnership with', logo:KEYBRIDGE } },
+        spon:{ lbl:'In partnership with', logos:[KEYBRIDGE] } },
       'digital-workers': { kicker:'A RecConnect event', title:'The Rise of', size:78, accent:'Digital Workers', accentSize:112,
         meta:'Thu 10 Sep 2026 &nbsp;&middot;&nbsp; 80 Strand, London', bg:'/images/events/digital-workers.jpg',
-        spon:null },
+        spon:{ lbl:'In partnership with', logos:[BULLHORN] } },
     };
 
     const params = new URLSearchParams(location.search);
@@ -79,7 +82,7 @@
       <div class="inner">
         <div class="toprow">
           <img class="brandlogo" src="${LOGO}" alt="RecConnect" />
-          ${e.spon ? `<div class="spon"><span class="spon-lbl">${e.spon.lbl}</span><img class="spon-logo" src="${e.spon.logo}" alt="sponsor" /></div>` : ''}
+          ${e.spon ? `<div class="spon"><span class="spon-lbl">${e.spon.lbl}</span><div class="spon-logos">${e.spon.logos.map(l=>`<img class="spon-logo" src="${l}" alt="sponsor" crossorigin="anonymous" />`).join('')}</div></div>` : ''}
         </div>
         <div class="mid">
           <p class="kicker">${e.kicker}</p><div class="rule"></div>
