@@ -1,5 +1,5 @@
 ---
-import { speakers } from '@/data/connected';
+import { speakers, mc } from '@/data/connected';
 ---
 
 <section class="relative bg-black py-20 md:py-28 overflow-hidden">
@@ -8,7 +8,15 @@ import { speakers } from '@/data/connected';
     <div class="max-w-2xl mb-14 reveal">
       <p class="c-kicker">On the bill</p>
       <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95] mb-4">Your speakers</h2>
-      <p class="text-lg text-white/65 font-light">A line-up of voices worth clearing your diary for. More names to be announced.</p>
+      <p class="text-lg text-white/65 font-light">A line-up of recognised and fresh voices worth clearing your diary for.</p>
+    </div>
+
+    <div class="flex items-center gap-4 mb-10 reveal">
+      <img src={mc.img} alt={mc.name} loading="lazy" class="w-14 h-14 rounded-full object-cover grayscale ring-2 ring-[#ff6a13]/60" />
+      <div>
+        <p class="c-kicker" style="margin:0;">MC for the day</p>
+        <p class="text-white font-bold leading-tight">{mc.name}</p>
+      </div>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-5">

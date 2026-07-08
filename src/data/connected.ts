@@ -48,15 +48,18 @@ export interface Speaker {
   role?: string;
 }
 export const speakers: Speaker[] = [
-  { name: 'Simon Lewis', role: 'Founder, RecConnect', img: '/images/box/simon-lewis.png' },
   { name: 'Adam Oldfield', role: 'CEO, Fortitude Labs', img: '/images/box/speakers/Adam-Oldfield.jpeg' },
   { name: 'Amy Bathie', role: 'Head of Talent, Gattaca', img: '/images/box/speakers/Amy-Bathie.jpeg' },
   { name: 'Barum Jeffries', role: 'Chief Ideas Officer, reclearn', img: '/images/box/Barum-Jeffries.jpeg' },
   { name: 'Ellie Hibberd', role: 'Tech Specialist, Keybridge', img: '/images/box/speakers/Ellie-Hibberd.jpeg' },
-  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/box/HarKaye.png' },
-  { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg' },
   { name: 'Rohan Shah', role: 'Co-founder, Reuben Sinclair', img: '/images/box/speakers/rohan-shah.webp' },
+  { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg' },
+  { name: 'Mike Ames', role: 'Recruitment Legend', img: '/images/box/mike-ames.jpg' },
+  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/box/HarKaye.png' },
 ];
+
+// Master of ceremonies (hosts the day, not a speaker).
+export const mc: Speaker = { name: 'Simon Lewis', role: 'Your MC for the day', img: '/images/box/simon-lewis.png' };
 
 export interface AgendaItem {
   time: string;
@@ -66,8 +69,8 @@ export interface AgendaItem {
 export const agenda: AgendaItem[] = [
   { time: '09:30', label: 'Arrival', note: 'Doors open, coffee, first connections' },
   { time: '10:00', label: 'Kick-off & Keynote', note: 'The big opening to set the tone' },
-  { time: '11:00', label: 'PechaKucha', note: 'Fast, punchy ideas, no waffle' },
-  { time: '12:30', label: 'Collaboration', note: 'Heads together, problems cracked' },
+  { time: '10:30', label: 'PechaKucha', note: 'Fast, punchy ideas, no PowerPoint!' },
+  { time: '12:00', label: 'Collaboration', note: 'Heads together, challenges cracked' },
   { time: '13:00', label: 'Lunch', note: 'A proper, varied spread' },
   { time: '14:00', label: 'Entertainment', note: 'Live band, DJ, magician and games, through to 5pm' },
 ];
