@@ -1,0 +1,95 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// CONNECTED 2026 - live KOSI podcast section (sits below Speakers).
+// Kate O'Neill and Si Bor record KOSI, "the real recruitment show",
+// live with attendees through the afternoon.
+// Channel: https://www.youtube.com/@KOSIshow
+// ───────────────────────────────────────────────────────────────────
+const KOSI_YOUTUBE = 'https://www.youtube.com/@KOSIshow';
+---
+
+<section id="podcast" class="relative bg-[#0a0a0a] py-20 md:py-28 overflow-hidden">
+  <div class="absolute bottom-0 -left-32 w-[500px] h-[500px] rounded-full bg-[#ff6a13]/10 blur-[150px]"></div>
+  <div class="container-wide relative z-10">
+    <div class="p-row">
+
+      <div class="p-copy reveal">
+        <p class="c-kicker">Live on the mic</p>
+        <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95] mb-8">
+          KOSI, <span class="c-title-grad">recorded live in the room.</span>
+        </h2>
+        <div class="space-y-5 text-lg text-white/75 font-light leading-relaxed">
+          <p>
+            Kate O'Neill and Si Bor host KOSI, the real recruitment show. Honest, funny conversations about the industry, with none of the LinkedIn gloss.
+          </p>
+          <p>
+            Through the afternoon they are recording live at CONNECTED, with attendees on the mic. Watch it happen, grab a seat, and say the things recruiters usually save for after the third coffee.
+          </p>
+          <p class="text-white/90 font-normal">
+            If you know the show, you already know. If you don't, you are about to.
+          </p>
+        </div>
+        <a href={KOSI_YOUTUBE} target="_blank" rel="noopener" class="c-btn-outline-sm mt-8">
+          Watch KOSI on YouTube
+          <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8m9 0v9"/></svg>
+        </a>
+      </div>
+
+      <div class="p-card reveal" style="--d:120ms">
+        <div class="p-onair c-flicker"><span class="p-onair-dot" aria-hidden="true"></span>On air</div>
+        <img src="/images/box/kosipodcast_logo.jpeg" alt="KOSI, the real recruitment show" loading="lazy" class="p-logo" />
+        <p class="text-white font-bold text-xl leading-tight mb-1">The real recruitment show</p>
+        <p class="text-white/55 font-light">With Kate O'Neill and Si Bor, live with the CONNECTED crowd all afternoon</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .p-row { display: flex; align-items: center; gap: 3.5rem; }
+  /* Copy is the wider column, the on-air card narrower (mirrors Overview). */
+  .p-copy { flex: 3 1 0%; min-width: 0; max-width: 48rem; }
+  .p-card {
+    flex: 2 1 0%;
+    position: relative;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.02);
+    padding: 2.75rem 2.25rem;
+    text-align: center;
+    box-shadow: 0 40px 90px -45px rgba(255,106,19,0.45);
+  }
+  .p-onair {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Bebas Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--c-orange);
+    border: 1px solid rgba(255,106,19,0.5);
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem 0.4rem;
+    margin-bottom: 1.75rem;
+  }
+  .p-onair-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--c-orange);
+    box-shadow: 0 0 10px rgba(255,106,19,0.8);
+  }
+  .p-logo {
+    width: min(230px, 70%);
+    margin: 0 auto 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  @media (max-width: 1024px) {
+    .p-row { flex-direction: column; }
+    .p-copy { max-width: 100%; }
+    .p-card { width: 100%; }
+  }
+</style>

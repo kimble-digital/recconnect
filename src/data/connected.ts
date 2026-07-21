@@ -72,7 +72,7 @@ export const agenda: AgendaItem[] = [
   { time: '10:30', label: 'PechaKucha', note: 'Fast, punchy ideas, no PowerPoint!' },
   { time: '12:00', label: 'Collaboration', note: 'Heads together, challenges cracked' },
   { time: '13:00', label: 'Lunch', note: 'A proper, varied spread' },
-  { time: '14:00', label: 'Entertainment', note: 'Live band, DJ, magician and games, through to 5pm' },
+  { time: '14:00', label: 'Entertainment', note: 'Live KOSI podcast, band, DJ, magician and games, through to 5pm' },
 ];
 
 export interface Highlight {
