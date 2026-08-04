@@ -29,6 +29,7 @@ import { speakers, mc } from '@/data/connected';
           <div class="c-speaker-name">
             <p class="font-bold text-white leading-tight">{s.name}</p>
             {s.role && <p class="text-white/55 text-sm font-light leading-snug mt-1">{s.role}</p>}
+            {s.talk && <p class="text-[#ff6a13] text-sm font-medium leading-snug mt-2">“{s.talk}”</p>}
           </div>
         </div>
       ))}

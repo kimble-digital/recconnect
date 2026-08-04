@@ -46,16 +46,17 @@ export interface Speaker {
   name: string;
   img: string;
   role?: string;
+  talk?: string;
 }
 export const speakers: Speaker[] = [
-  { name: 'Adam Oldfield', role: 'CEO, Fortitude Labs', img: '/images/box/speakers/Adam-Oldfield.jpeg' },
+  { name: 'Adam Oldfield', role: 'CEO, Fortitude Labs', img: '/images/box/speakers/Adam-Oldfield.jpeg', talk: 'Recruiters’ Marketing Guide, Staying Relevant and Not Boring People' },
   { name: 'Amy Bathie', role: 'Head of Talent, Gattaca', img: '/images/box/speakers/Amy-Bathie.jpeg' },
-  { name: 'Barum Jeffries', role: 'Chief Ideas Officer, reclearn', img: '/images/box/Barum-Jeffries.jpeg' },
-  { name: 'Ellie Hibberd', role: 'Tech Specialist, Keybridge', img: '/images/box/speakers/Ellie-Hibberd.jpeg' },
-  { name: 'Rohan Shah', role: 'Co-founder, Reuben Sinclair', img: '/images/box/speakers/rohan-shah.webp' },
-  { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg' },
-  { name: 'Mike Ames', role: 'Recruitment Legend', img: '/images/box/mike-ames.jpg' },
-  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/box/HarKaye.png' },
+  { name: 'Barum Jeffries', role: 'Chief Ideas Officer, reclearn', img: '/images/box/Barum-Jeffries.jpeg', talk: 'The Science of Curiosity' },
+  { name: 'Ellie Hibberd', role: 'Tech Specialist, Keybridge', img: '/images/box/speakers/Ellie-Hibberd.jpeg', talk: 'IT: You Can Run but You Can’t Hide' },
+  { name: 'Donna Kennedy', img: '/images/box/speakers/Donna-Kennedy.jpeg', talk: 'If You Got Hit by a Bus Tomorrow, What Would Your Agency Be Worth?' },
+  { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg', talk: 'I Don’t Have Time. Yes, You Do' },
+  { name: 'Mike Ames', role: 'Recruitment Legend', img: '/images/box/mike-ames.jpg', talk: 'Building to Sell is a Mug’s Game. Here’s the Alternative' },
+  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/box/HarKaye.png', talk: 'Crossing the Desk: Two Sides. One Truth' },
 ];
 
 // Master of ceremonies (hosts the day, not a speaker).
