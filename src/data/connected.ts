@@ -73,7 +73,7 @@ export const speakers: Speaker[] = [
   },
   {
     name: 'Ellie Hibberd',
-    role: 'Tech Specialist, Keybridge',
+    role: 'Tech Specialist, Keybridge IT Solutions',
     img: '/images/box/speakers/Ellie-Hibberd.jpeg',
     talk: 'IT: You Can Run but You Can’t Hide',
     bio: 'The new kid on the block. A dynamic, tech-savvy consultant who makes IT make sense: reliable support, straight-talking advice, zero jargon. Ellie reveals how rec tech stacks will evolve to meet what’s coming.',
