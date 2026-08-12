@@ -1,14 +1,23 @@
 ---
+// ───────────────────────────────────────────────────────────────────
+// Speakers grid + bio drawer.
+// Each card is a button. Tapping it opens a drawer: a bottom sheet on
+// mobile, a right-hand side panel on desktop. All bios are rendered
+// server-side as hidden panels (good for SEO), JS only toggles them.
+// Content lives in src/data/connected.ts (talk + bio per speaker).
+// ───────────────────────────────────────────────────────────────────
 import { speakers, mc } from '@/data/connected';
+
+const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
-<section class="relative bg-black py-20 md:py-28 overflow-hidden">
+<section id="speakers" class="relative bg-black py-20 md:py-28 overflow-hidden">
   <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-[#ff6a13]/10 blur-[150px]"></div>
   <div class="container-wide relative z-10">
     <div class="max-w-2xl mb-14 reveal">
       <p class="c-kicker">On the bill</p>
       <h2 class="c-display uppercase text-5xl md:text-7xl text-white leading-[0.95] mb-4">Your speakers</h2>
-      <p class="text-lg text-white/65 font-light">A line-up of recognised and fresh voices worth clearing your diary for.</p>
+      <p class="text-lg text-white/65 font-light">A line-up of recognised and fresh voices worth clearing your diary for. Tap a face for the full billing.</p>
     </div>
 
     <div class="flex items-center gap-4 mb-10 reveal">
@@ -21,18 +30,268 @@ import { speakers, mc } from '@/data/connected';
 
     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-5">
       {speakers.map((s, i) => (
-        <div class="c-speaker reveal" style={`--d:${i * 60}ms`}>
+        <button type="button" class="c-speaker spk-card reveal" style={`--d:${i * 60}ms`} data-spk-open={i} aria-haspopup="dialog" aria-label={`Read ${s.name}'s bio`}>
           <div class="c-speaker-img">
             <img src={s.img} alt={s.name} loading="lazy" />
             <div class="c-speaker-grade"></div>
+            <span class="spk-plus" aria-hidden="true">+</span>
           </div>
           <div class="c-speaker-name">
             <p class="font-bold text-white leading-tight">{s.name}</p>
             {s.role && <p class="text-white/55 text-sm font-light leading-snug mt-1">{s.role}</p>}
             {s.talk && <p class="text-[#ff6a13] text-sm font-medium leading-snug mt-2">“{s.talk}”</p>}
           </div>
-        </div>
+        </button>
       ))}
     </div>
   </div>
 </section>
+
+<!-- Bio drawer: bottom sheet on mobile, side panel on desktop -->
+<div class="spk-overlay" data-spk-overlay aria-hidden="true"></div>
+<aside class="spk-drawer" data-spk-drawer role="dialog" aria-modal="true" aria-label="Speaker bio" aria-hidden="true">
+  <div class="spk-handle" aria-hidden="true"></div>
+  <button type="button" class="spk-close" data-spk-close aria-label="Close bio">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+
+  <div class="spk-scroll">
+    {speakers.map((s, i) => (
+      <article class="spk-panel" data-spk-panel={i} hidden>
+        <div class="spk-photo">
+          <img src={s.img} alt={s.name} loading="lazy" />
+          <div class="spk-photo-grade" aria-hidden="true"></div>
+          <span class="spk-num c-display" aria-hidden="true">{pad(i)}</span>
+        </div>
+        <div class="spk-body">
+          <p class="c-kicker" style="margin-bottom:0.6rem;">Speaker {pad(i)}</p>
+          <h3 class="c-display uppercase text-4xl md:text-5xl text-white leading-[0.95] mb-1">{s.name}</h3>
+          {s.role && <p class="text-white/55 font-light mb-6">{s.role}</p>}
+          {s.talk && (
+            <div class="spk-talk">
+              <p class="c-label-xs" style="margin-bottom:0.5rem;">The session</p>
+              <p class="c-display uppercase text-2xl md:text-3xl leading-[1.05] c-title-grad">“{s.talk}”</p>
+            </div>
+          )}
+          {s.bio && <p class="text-white/75 font-light leading-relaxed">{s.bio}</p>}
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <footer class="spk-nav">
+    <button type="button" class="spk-nav-btn" data-spk-prev>&larr; Previous</button>
+    <span class="spk-count c-label-xs" data-spk-count></span>
+    <button type="button" class="spk-nav-btn" data-spk-next>Next &rarr;</button>
+  </footer>
+</aside>
+
+<style>
+  /* ── Cards become buttons: neutralise button chrome, add affordance ── */
+  .spk-card {
+    display: block;
+    text-align: left;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .spk-card:focus-visible { outline: 2px solid var(--c-orange); outline-offset: 4px; }
+  .spk-plus {
+    position: absolute;
+    right: 0.6rem; bottom: 0.6rem;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; line-height: 1;
+    color: #0a0a0a;
+    background: var(--c-orange);
+    border-radius: 50%;
+    box-shadow: 0 0 16px rgba(255,106,19,0.55);
+    transition: transform 0.25s ease;
+    z-index: 2;
+  }
+  .spk-card:hover .spk-plus { transform: rotate(90deg) scale(1.08); }
+
+  /* ── Overlay ── */
+  .spk-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 60; /* above the film grain (55) */
+  }
+  .spk-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+  /* ── Drawer shell: bottom sheet by default (mobile-first) ── */
+  .spk-drawer {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    max-height: 88dvh;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d0d;
+    border-top: 1px solid rgba(255,106,19,0.45);
+    border-radius: 1rem 1rem 0 0;
+    box-shadow: 0 -30px 80px -20px rgba(255,106,19,0.25), 0 -10px 60px rgba(0,0,0,0.8);
+    transform: translateY(105%);
+    transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.38s;
+    z-index: 61;
+    visibility: hidden;
+  }
+  .spk-drawer.is-open { transform: translateY(0); visibility: visible; }
+
+  .spk-handle {
+    width: 44px; height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.25);
+    margin: 0.7rem auto 0.2rem;
+    flex: 0 0 auto;
+  }
+  .spk-close {
+    position: absolute;
+    top: 0.9rem; right: 0.9rem;
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    z-index: 3;
+  }
+  .spk-close:hover { color: #fff; border-color: var(--c-orange); background: rgba(255,106,19,0.15); }
+
+  .spk-scroll { overflow-y: auto; overscroll-behavior: contain; flex: 1 1 auto; }
+
+  /* ── Panel content ── */
+  .spk-photo {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #141414;
+  }
+  .spk-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 22%;
+    filter: grayscale(1) contrast(1.05) brightness(0.85);
+  }
+  .spk-photo-grade {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, rgba(13,13,13,1) 0%, rgba(13,13,13,0) 45%),
+      radial-gradient(ellipse at 80% 100%, rgba(255,106,19,0.28), transparent 60%);
+  }
+  .spk-num {
+    position: absolute;
+    right: 1.1rem; top: 0.4rem;
+    font-size: 5rem; line-height: 1;
+    color: rgba(255,255,255,0.12);
+    -webkit-text-stroke: 1px rgba(255,106,19,0.4);
+  }
+  .spk-body { padding: 1.4rem 1.5rem 1.75rem; }
+  .spk-talk {
+    border-left: 3px solid var(--c-orange);
+    padding: 0.15rem 0 0.15rem 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── Prev / next ── */
+  .spk-nav {
+    flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.5rem;
+    padding-bottom: calc(0.9rem + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.02);
+  }
+  .spk-nav-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.75);
+    background: none; border: 0; padding: 0.4rem 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .spk-nav-btn:hover { color: var(--c-orange); }
+
+  /* ── Desktop: side panel sliding from the right ── */
+  @media (min-width: 768px) {
+    .spk-drawer {
+      left: auto; top: 0; bottom: 0;
+      width: min(480px, 92vw);
+      max-height: none;
+      border-radius: 0;
+      border-top: 0;
+      border-left: 1px solid rgba(255,106,19,0.45);
+      box-shadow: -30px 0 80px -20px rgba(255,106,19,0.2), -10px 0 60px rgba(0,0,0,0.8);
+      transform: translateX(105%);
+    }
+    .spk-drawer.is-open { transform: translateX(0); }
+    .spk-handle { display: none; }
+    .spk-body { padding: 1.75rem 2rem 2rem; }
+    .spk-nav { padding: 1rem 2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spk-drawer, .spk-overlay, .spk-plus { transition: none !important; }
+  }
+</style>
+
+<script>
+  const drawer = document.querySelector<HTMLElement>('[data-spk-drawer]');
+  const overlay = document.querySelector<HTMLElement>('[data-spk-overlay]');
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-spk-panel]'));
+  const counter = document.querySelector<HTMLElement>('[data-spk-count]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-spk-close]');
+  const scroller = drawer?.querySelector<HTMLElement>('.spk-scroll');
+  let current = 0;
+  let lastTrigger: HTMLElement | null = null;
+
+  const show = (i: number) => {
+    current = (i + panels.length) % panels.length;
+    panels.forEach((p, idx) => { p.hidden = idx !== current; });
+    if (counter) counter.textContent = `${current + 1} / ${panels.length}`;
+    scroller?.scrollTo({ top: 0 });
+  };
+
+  const open = (i: number, trigger: HTMLElement) => {
+    lastTrigger = trigger;
+    show(i);
+    drawer?.classList.add('is-open');
+    overlay?.classList.add('is-open');
+    drawer?.setAttribute('aria-hidden', 'false');
+    document.documentElement.style.overflow = 'hidden';
+    closeBtn?.focus();
+  };
+
+  const close = () => {
+    drawer?.classList.remove('is-open');
+    overlay?.classList.remove('is-open');
+    drawer?.setAttribute('aria-hidden', 'true');
+    document.documentElement.style.overflow = '';
+    lastTrigger?.focus();
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-spk-open]').forEach((btn) => {
+    btn.addEventListener('click', () => open(Number(btn.dataset.spkOpen), btn));
+  });
+  closeBtn?.addEventListener('click', close);
+  overlay?.addEventListener('click', close);
+  document.querySelector('[data-spk-prev]')?.addEventListener('click', () => show(current - 1));
+  document.querySelector('[data-spk-next]')?.addEventListener('click', () => show(current + 1));
+  document.addEventListener('keydown', (e) => {
+    if (!drawer?.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+</script>

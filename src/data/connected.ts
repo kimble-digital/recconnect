@@ -47,16 +47,65 @@ export interface Speaker {
   img: string;
   role?: string;
   talk?: string;
+  bio?: string;
 }
 export const speakers: Speaker[] = [
-  { name: 'Adam Oldfield', role: 'CEO, Fortitude Labs', img: '/images/box/speakers/Adam-Oldfield.jpeg', talk: 'Recruiters’ Marketing Guide, Staying Relevant and Not Boring People' },
-  { name: 'Amy Bathie', role: 'Head of Talent, Gattaca', img: '/images/box/speakers/Amy-Bathie.jpeg' },
-  { name: 'Barum Jeffries', role: 'Chief Ideas Officer, reclearn', img: '/images/box/Barum-Jeffries.jpeg', talk: 'The Science of Curiosity' },
-  { name: 'Ellie Hibberd', role: 'Tech Specialist, Keybridge', img: '/images/box/speakers/Ellie-Hibberd.jpeg', talk: 'IT: You Can Run but You Can’t Hide' },
-  { name: 'Donna Kennedy', img: '/images/box/speakers/Donna-Kennedy.jpeg', talk: 'If You Got Hit by a Bus Tomorrow, What Would Your Agency Be Worth?' },
-  { name: 'Michelle Flynn', role: 'Health & Performance Coach', img: '/images/box/speakers/Michelle-Flynn.jpg', talk: 'I Don’t Have Time. Yes, You Do' },
-  { name: 'Mike Ames', role: 'Recruitment Legend', img: '/images/box/mike-ames.jpg', talk: 'Building to Sell is a Mug’s Game. Here’s the Alternative' },
-  { name: 'Jaye Haynes & Louise Wrench', role: 'Co-founders, HarKaye Core Talent', img: '/images/box/HarKaye.png', talk: 'Crossing the Desk: Two Sides. One Truth' },
+  {
+    name: 'Adam Oldfield',
+    role: 'CEO, Fortitude Labs',
+    img: '/images/box/speakers/Adam-Oldfield.jpeg',
+    talk: 'Recruiters’ Marketing Guide, Staying Relevant and Not Boring People',
+    bio: 'A bombastic marketing automation expert whose keynotes leave audiences motivated and ready to act. Widely regarded as one of the best new business minds in the industry, with digital marketing knowledge second to none, Adam delivers exactly what the title promises.',
+  },
+  {
+    name: 'Amy Bathie',
+    role: 'Head of Talent Management, Gattaca',
+    img: '/images/box/speakers/Amy-Bathie.jpeg',
+    talk: 'CTRL+ALT+CREATE',
+    bio: 'A powerhouse Head of Talent Management at Gattaca, following roles at Morgan Hunt and Adecco, Amy has built her career shaping L&D that sticks in recruitment. Her session shows you how to reboot the way your business grows talent.',
+  },
+  {
+    name: 'Barum Jeffries',
+    role: 'Chief Ideas Officer, reclearn',
+    img: '/images/box/Barum-Jeffries.jpeg',
+    talk: 'The Science of Curiosity',
+    bio: 'A gregarious trainer and consultant with 19 years in recruitment, Barum has trained 12,500+ consultants and 1,500+ managers across 60 recruitment businesses, turning good instincts into great questions. He brings his ICF coaching craft to the one skill that changes everything.',
+  },
+  {
+    name: 'Ellie Hibberd',
+    role: 'Tech Specialist, Keybridge',
+    img: '/images/box/speakers/Ellie-Hibberd.jpeg',
+    talk: 'IT: You Can Run but You Can’t Hide',
+    bio: 'The new kid on the block. A dynamic, tech-savvy consultant who makes IT make sense: reliable support, straight-talking advice, zero jargon. Ellie reveals how rec tech stacks will evolve to meet what’s coming.',
+  },
+  {
+    name: 'Donna Kennedy',
+    role: 'Fractional CPO & M&A Integration Specialist',
+    img: '/images/box/speakers/Donna-Kennedy.jpeg',
+    talk: 'If You Got Hit by a Bus Tomorrow, What Would Your Agency Be Worth?',
+    bio: 'An astute Fractional CPO and M&A integration specialist with 17 years’ board-level HR experience across 10+ acquisitions, Donna helps SMEs build the people infrastructure that drives valuation premiums pre-exit. She asks the question every owner avoids.',
+  },
+  {
+    name: 'Michelle Flynn',
+    role: 'Health & Performance Coach',
+    img: '/images/box/speakers/Michelle-Flynn.jpg',
+    talk: 'I Don’t Have Time. Yes, You Do',
+    bio: 'An effervescent Health and Performance Coach and Breathwork Instructor, following 20 years in HR and recruitment. Trusted by Google, YouTube and Dell across 450+ talks, Michelle reveals the hidden levers behind sustainable high performance, minus the burnout.',
+  },
+  {
+    name: 'Mike Ames',
+    role: 'Recruitment Legend',
+    img: '/images/box/mike-ames.jpg',
+    talk: 'Building to Sell is a Mug’s Game. Here’s the Alternative',
+    bio: 'A titan of recruitment, having grown and sold two multi-million-pound firms, Mike now helps SME owners build businesses that make them wealthy without ever having to sell, the alternative to the exit-or-bust mindset. He shares how.',
+  },
+  {
+    name: 'Jaye Haynes & Louise Wrench',
+    role: 'Co-founders, HarKaye Core Talent',
+    img: '/images/box/HarKaye.png',
+    talk: 'Crossing the Desk: Two Sides. One Truth',
+    bio: 'Sagacious People Leaders with vast experience across Talent Acquisition, L&D and Talent Strategy in complex, international organisations. Both drive transformational people agendas and high-performing teams. On stage, they meet in the middle.',
+  },
 ];
 
 // Master of ceremonies (hosts the day, not a speaker).
