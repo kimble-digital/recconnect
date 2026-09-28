@@ -27,12 +27,13 @@ export const prerender = false;
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
-type FormType = "enquiry" | "partner" | "event-alert";
+type FormType = "enquiry" | "partner" | "event-alert" | "subscribe";
 
 const LABELS: Record<FormType, string> = {
   enquiry: "Website enquiry",
   partner: "Partner enquiry",
   "event-alert": "Event alerts signup",
+  subscribe: "Subscriber signup (weekly briefing)",
 };
 
 const json = (data: unknown, status = 200) =>
@@ -107,15 +108,19 @@ const confirmationInner = (firstName: string, formType: FormType) => {
       ? "Thanks for your interest in partnering with RecConnect. I have your details in front of me."
       : formType === "event-alert"
         ? "Thanks for signing up for RecConnect event alerts."
-        : "Thanks for getting in touch. Your message has reached the RecConnect team.";
+        : formType === "subscribe"
+          ? "Thanks for subscribing to RecConnect."
+          : "Thanks for getting in touch. Your message has reached the RecConnect team.";
   const next =
     formType === "partner"
       ? "One of us will come back to you within one working day to walk you through the audience, the packages, and what would work best for your business."
       : formType === "event-alert"
         ? "You will be first to hear when we announce new events and member-only offers. No spam, just the good stuff, and you can unsubscribe any time."
-        : "We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.";
+        : formType === "subscribe"
+          ? "Every week you will get the RecConnect briefing: curated news, market insights and event updates for recruitment leaders. No spam, and you can unsubscribe any time."
+          : "We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.";
   const closing =
-    formType === "event-alert"
+    formType === "event-alert" || formType === "subscribe"
       ? "See you in the room soon."
       : "If anything is urgent in the meantime, just reply to this email and it will come straight to us.";
   return `
@@ -178,7 +183,7 @@ export const POST: APIRoute = async ({ request }) => {
       if (interest.length < 1) fields.push("interest");
       if (message.length < 5) fields.push("message");
     }
-    if (formType === "event-alert") {
+    if (formType === "event-alert" || formType === "subscribe") {
       if (name.length < 1) fields.push("name");
     }
     if (fields.length) {
@@ -269,13 +274,17 @@ export const POST: APIRoute = async ({ request }) => {
             ? "Thanks for your interest in RecConnect"
             : formType === "event-alert"
               ? `You're on the list, ${first}`
-              : `Thanks for getting in touch, ${first}`;
+              : formType === "subscribe"
+                ? `You're subscribed, ${first}`
+                : `Thanks for getting in touch, ${first}`;
         const confBody =
           formType === "partner"
             ? "Thanks for your interest in partnering with RecConnect. I have your details in front of me. One of us will come back to you within one working day to walk you through the audience, the packages, and what would work best for your business.\n\nIf anything is urgent in the meantime, just reply to this email and it will come straight to us."
             : formType === "event-alert"
               ? "Thanks for signing up for RecConnect event alerts. You will be first to hear when we announce new events and member-only offers. No spam, just the good stuff, and you can unsubscribe any time.\n\nSee you in the room soon."
-              : "Thanks for getting in touch. Your message has reached the RecConnect team. We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.\n\nIf anything is urgent in the meantime, just reply to this email and it will come straight to us.";
+              : formType === "subscribe"
+                ? "Thanks for subscribing to RecConnect. Every week you will get the RecConnect briefing: curated news, market insights and event updates for recruitment leaders. No spam, and you can unsubscribe any time.\n\nSee you in the room soon."
+                : "Thanks for getting in touch. Your message has reached the RecConnect team. We reply to everything within one working day, usually much sooner, so you will hear from a real person shortly.\n\nIf anything is urgent in the meantime, just reply to this email and it will come straight to us.";
         const confText = `Thanks, ${first}.\n\n${confBody}\n\nSimon Lewis\nFounder, RecConnect`;
         await sleep(700);
         const confOk = await sendResend(

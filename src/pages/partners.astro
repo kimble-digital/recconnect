@@ -50,9 +50,9 @@ const activations = [
 const tiers = [
   {
     name: 'Category Partner',
-    price: '£500',
+    price: '£400',
     per: '/month',
-    year: '£6,000 / year',
+    year: '£4,800 / year',
     tagline: 'Maximum visibility and category exclusivity',
     featured: true,
     features: [
@@ -69,29 +69,29 @@ const tiers = [
     ],
   },
   {
-    name: 'Featured Supplier',
-    price: '£250',
+    name: 'Community Partner',
+    price: '£300',
     per: '/month',
-    year: '£3,000 / year',
-    tagline: 'Consistent visibility without full category ownership',
+    year: '£3,600 / year',
+    tagline: "Don't just reach the community. Be part of it.",
     featured: false,
     features: [
-      'Listing within relevant categories',
-      'Additional branding on selected category pages',
-      'Single business contact profile',
-      'Guest blog and webinar opportunities',
-      'Mentions and links from relevant editorial',
-      'Regular newsletter inclusion',
-      'Priority sponsorship of events and lunches',
+      'Everything included within Directory Partner',
+      'Access to the RecConnect WhatsApp community',
+      'Additional visibility across RecConnect channels',
+      'Opportunities to share content, insights and webinars',
+      'Relevant introductions to recruitment leaders',
+      'Access to event partnerships and sponsorships',
+      'Positioning as part of the RecConnect ecosystem, not just an advertiser',
       'Access to the community database and sales insights hub',
     ],
   },
   {
-    name: 'Listed Supplier',
+    name: 'Directory Partner',
     price: '£150',
     per: '/month',
     year: '£1,800 / year',
-    tagline: 'A credible, discoverable presence on the platform',
+    tagline: 'The starting point: be visible, credible and easy to find.',
     featured: false,
     features: [
       'Standard supplier profile (logo, overview, services)',
@@ -101,17 +101,18 @@ const tiers = [
     ],
   },
   {
-    name: 'Trainer Membership',
-    price: '£240',
+    name: 'Coaches Membership',
+    price: '£400',
     per: '/year',
     year: 'Billed annually',
-    tagline: 'For trainers and coaches in the network',
+    tagline: 'For coaches and trainers in the network',
     featured: false,
     features: [
       'Listed supplier profile',
-      'Inclusion in the trainer category',
-      'Discoverable by agencies seeking training',
+      'Inclusion in the coaches/trainer category',
+      'Discoverable by agencies seeking coaching',
       'Eligibility for referrals and event opportunities',
+      'WhatsApp community access',
     ],
   },
 ];
@@ -263,7 +264,7 @@ const tiers = [
       <div class="text-center max-w-2xl mx-auto mb-14">
         <p class="kicker text-primary-dark text-[0.8rem] mb-4">Partner packages</p>
         <h2 class="font-display uppercase text-brand-navy text-4xl md:text-6xl leading-[0.95] mb-4">Choose your level</h2>
-        <p class="text-lg text-slate-600">Every tier includes access to the community database and sales insights hub. The bigger the commitment, the deeper the access and visibility.</p>
+        <p class="text-lg text-slate-600">Be visible. Be credible. Be easy to find. Don't just reach the community, be part of it. Greater commitment brings greater access, visibility, and opportunity.</p>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
@@ -389,9 +390,9 @@ const tiers = [
                     <option value="" disabled selected>Please choose...</option>
                     <option>Not sure yet</option>
                     <option>Category Partner</option>
-                    <option>Featured Supplier</option>
-                    <option>Listed Supplier</option>
-                    <option>Trainer Membership</option>
+                    <option>Community Partner</option>
+                    <option>Directory Partner</option>
+                    <option>Coaches Membership</option>
                   </select>
                 </div>
                 <div class="mt-4">

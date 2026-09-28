@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import EventAlertSignup from '@/components/EventAlertSignup.astro';
 
 const STRIPE_CLUB = 'https://buy.stripe.com/3cI00lczo8Hk8QA3JY0kE06';
-const WHATSAPP = 'https://chat.whatsapp.com/B9IcWZkj7fIEU806wCpsnZ';
 
 const photos = [
   '/images/members/1764586220000.jpeg',
@@ -139,18 +139,19 @@ const pillars = [
       </div>
 
       <div class="grid md:grid-cols-3 gap-6 items-start">
-        <!-- Core -->
+        <!-- Subscriber -->
         <div class="rounded-xl p-7 flex flex-col h-full bg-white/[0.03] border border-white/10">
-          <h3 class="text-lg font-bold text-white mb-1">Core</h3>
+          <h3 class="text-lg font-bold text-white mb-1">Subscriber</h3>
           <p class="text-slate-400 text-sm mb-4">Get a taste of the community</p>
           <div class="text-4xl font-bold text-white mb-6">Free</div>
           <ul class="space-y-2.5 mb-7 flex-1 text-sm text-slate-300">
-            <li class="flex gap-2"><span class="text-primary">✓</span> Open WhatsApp community</li>
-            <li class="flex gap-2"><span class="text-primary">✓</span> Member directory listing</li>
-            <li class="flex gap-2"><span class="text-primary">✓</span> Industry insights & newsletter</li>
-            <li class="flex gap-2"><span class="text-primary">✓</span> Event invites, discounted entry</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Weekly briefing</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Curated news</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Market insights</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Event updates</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Invites to join Club</li>
           </ul>
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 px-6 rounded-lg border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors">Join free</a>
+          <a href="#subscribe" class="block w-full text-center py-3 px-6 rounded-lg border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors">Subscribe</a>
         </div>
 
         <!-- Club (featured) -->
@@ -160,29 +161,51 @@ const pillars = [
           </div>
           <h3 class="text-lg font-bold text-brand-navy mb-1">Club</h3>
           <p class="text-slate-500 text-sm mb-4">Where the real conversations happen</p>
-          <div class="flex items-baseline gap-1 mb-6"><span class="text-4xl font-bold text-brand-navy">£39</span><span class="text-slate-500">/mo</span></div>
+          <div class="flex items-baseline gap-1 mb-6"><span class="text-4xl font-bold text-brand-navy">£40</span><span class="text-slate-500">/mo</span></div>
           <ul class="space-y-2.5 mb-7 flex-1 text-sm text-slate-600">
-            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Everything in Core</li>
-            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Paying-member WhatsApp groups</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Everything in Subscriber</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Open WhatsApp community</li>
             <li class="flex gap-2"><span class="text-primary-dark">✓</span> Priority events & member pricing</li>
-            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Monthly insight drops</li>
             <li class="flex gap-2"><span class="text-primary-dark">✓</span> Exclusive supplier discounts</li>
+            <li class="flex gap-2"><span class="text-primary-dark">✓</span> Monthly online sessions</li>
           </ul>
-          <a href={STRIPE_CLUB} target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 px-6 rounded-lg bg-primary text-brand-navy font-semibold text-sm hover:bg-primary-dark transition-colors">Join the Club</a>
+          <a href={STRIPE_CLUB} target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 px-6 rounded-lg bg-primary text-brand-navy font-semibold text-sm hover:bg-primary-dark transition-colors">Join Club</a>
         </div>
 
-        <!-- Club+ -->
+        <!-- Pro -->
         <div class="rounded-xl p-7 flex flex-col h-full bg-white/[0.03] border border-white/10">
-          <h3 class="text-lg font-bold text-white mb-1">Club+</h3>
-          <p class="text-slate-400 text-sm mb-4">For leadership teams</p>
+          <h3 class="text-lg font-bold text-white mb-1">Pro</h3>
+          <p class="text-slate-400 text-sm mb-4">For serious operators</p>
           <div class="flex items-baseline gap-1 mb-6"><span class="text-4xl font-bold text-white">£100</span><span class="text-slate-400">/mo</span></div>
           <ul class="space-y-2.5 mb-7 flex-1 text-sm text-slate-300">
             <li class="flex gap-2"><span class="text-primary">✓</span> Everything in Club</li>
             <li class="flex gap-2"><span class="text-primary">✓</span> Two member seats</li>
-            <li class="flex gap-2"><span class="text-primary">✓</span> Exclusive lunches & roundtables</li>
-            <li class="flex gap-2"><span class="text-primary">✓</span> Priority networking</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Exclusive lunches and roundtables</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Benchmarking data</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Peer advisory</li>
           </ul>
           <a href="/contact" class="block w-full text-center py-3 px-6 rounded-lg border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors">Enquire</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SUBSCRIBE (free tier signup) ═══ -->
+  <section id="subscribe" class="relative overflow-hidden bg-brand-navy py-16 md:py-20 border-t border-white/10 scroll-mt-24">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div>
+          <p class="kicker text-primary text-[0.8rem] mb-3">Subscribe free</p>
+          <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-3">Get the weekly briefing.</h2>
+          <p class="text-slate-400 leading-relaxed">Curated news, market insights and event updates, straight to your inbox every week. No spam, unsubscribe any time.</p>
+        </div>
+        <div class="lg:pl-6">
+          <EventAlertSignup
+            formType="subscribe"
+            buttonLabel="Subscribe"
+            successText="You're subscribed. The weekly briefing will land in your inbox."
+            successTextNamed="You're subscribed, {first}. The weekly briefing will land in your inbox."
+          />
         </div>
       </div>
     </div>
