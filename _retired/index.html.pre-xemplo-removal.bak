@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RecConnect · Social studio</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{ --acc:#2dd4bf; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#0a0b0f;color:#fff;font-family:'Inter',system-ui,sans-serif;padding:0 56px 90px;}
+  header{position:sticky;top:0;z-index:50;background:rgba(10,11,15,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(45,212,191,.25);padding:30px 0 18px;margin-bottom:8px;}
+  header h1{font-family:'Anton';text-transform:uppercase;letter-spacing:.01em;font-size:40px;font-weight:400;}
+  header p{color:#9aa3b2;font-size:13px;margin-top:6px;max-width:680px;line-height:1.5;}
+  .studio-links{position:absolute;top:30px;right:0;display:flex;gap:8px;}
+  .studio-link{font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;color:var(--acc);text-decoration:none;border:1px solid rgba(45,212,191,.4);border-radius:8px;padding:8px 16px;transition:all .15s;}
+  .studio-link:hover{background:var(--acc);color:#08322c;border-color:var(--acc);}
+  .filter{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .chip{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:7px 18px;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:16px;cursor:pointer;transition:all .15s;}
+  .chip:hover{border-color:var(--acc);color:#fff;}
+  .chip.active{background:var(--acc);color:#08322c;border-color:var(--acc);}
+  section{margin-top:48px;}
+  section>h2{font-family:'Bebas Neue';text-transform:uppercase;letter-spacing:.14em;font-size:28px;color:var(--acc);border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:10px;margin-bottom:26px;}
+  .row{display:flex;flex-wrap:wrap;gap:24px;}
+  figure{cursor:pointer;}
+  .frame{position:relative;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 12px 34px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);transition:border-color .15s,transform .15s;}
+  figure:hover .frame{border-color:var(--acc);transform:translateY(-2px);}
+  .frame iframe{border:0;transform-origin:top left;pointer-events:none;}
+  .hover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(8,9,12,.55);opacity:0;transition:opacity .15s;font-family:'Bebas Neue';letter-spacing:.12em;text-transform:uppercase;font-size:17px;color:#fff;}
+  figure:hover .hover{opacity:1;}
+  .hover .pill{background:var(--acc);color:#08322c;padding:8px 18px;border-radius:8px;}
+  figcaption{display:flex;justify-content:space-between;align-items:center;margin-top:11px;font-size:13px;gap:10px;}
+  figcaption .t{color:rgba(255,255,255,.7);}
+  figcaption .tag{font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--acc);border:1px solid rgba(45,212,191,.4);border-radius:999px;padding:2px 9px;white-space:nowrap;}
+  .hidden{display:none!important;}
+
+  /* lightbox */
+  #lb{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:32px;}
+  #lb.show{display:flex;}
+  .lb-bg{position:absolute;inset:0;background:rgba(4,5,7,.82);backdrop-filter:blur(6px);}
+  .lb-panel{position:relative;z-index:2;display:flex;gap:30px;background:#101216;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;max-width:980px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 30px 90px rgba(0,0,0,.6);}
+  .lb-close{position:absolute;top:14px;right:16px;z-index:5;background:rgba(255,255,255,.08);border:0;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;line-height:1;}
+  .lb-close:hover{background:rgba(255,255,255,.18);}
+  .lb-prev{flex:0 0 auto;}
+  .lb-prev .frame{cursor:default;}
+  .lb-prev .frame:hover{transform:none;border-color:rgba(255,255,255,.1);}
+  .lb-side{flex:1 1 320px;min-width:280px;display:flex;flex-direction:column;}
+  .lb-kicker{font-family:'Bebas Neue';letter-spacing:.18em;text-transform:uppercase;font-size:14px;color:var(--acc);}
+  .lb-title{font-family:'Anton';text-transform:uppercase;font-size:30px;margin:4px 0 18px;line-height:1;}
+  .steps{display:flex;flex-direction:column;gap:18px;}
+  .step .lab{font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:14px;color:rgba(255,255,255,.55);margin-bottom:8px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Bebas Neue';letter-spacing:.06em;text-transform:uppercase;font-size:19px;background:var(--acc);color:#08322c;border:0;border-radius:10px;padding:13px 24px;cursor:pointer;}
+  .btn:hover{background:#5fe3d3;}
+  .btn.ghost{background:transparent;color:var(--acc);border:1px solid rgba(45,212,191,.5);}
+  .btn.ghost:hover{background:rgba(45,212,191,.12);}
+  .btn.share{background:#0a66c2;color:#fff;width:100%;justify-content:center;font-size:21px;padding:15px;}
+  .btn.share:hover{background:#0b5cab;}
+  .orline{font-family:'Bebas Neue';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#6b7480;margin:22px 0 12px;}
+  .copied{font-family:'Bebas Neue';letter-spacing:.08em;font-size:15px;color:#5fe3d3;}
+  .step{margin-bottom:22px;}
+  .divider{font-family:'Bebas Neue';letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#6b7480;margin:4px 0 12px;display:flex;align-items:center;gap:10px;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1);}
+  .guide{margin-top:14px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#0c0e12;}
+  .guide>summary{cursor:pointer;list-style:none;padding:11px 14px;font-family:'Bebas Neue';letter-spacing:.1em;text-transform:uppercase;font-size:15px;color:var(--acc);}
+  .guide>summary::-webkit-details-marker{display:none;}
+  .guide>summary::before{content:'+  ';}
+  .guide[open]>summary::before{content:'\2013  ';}
+  .guide ol{margin:0;padding:2px 18px 16px 36px;display:flex;flex-direction:column;gap:10px;}
+  .guide li{font-size:13px;line-height:1.5;color:#c2c9d2;}
+  .guide li b{color:#fff;}
+  .smallnote.lb-callout{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:11px 13px;color:#cfe8df;}
+  @keyframes capflash{0%{border-color:var(--acc);box-shadow:0 0 0 3px rgba(45,212,191,.3);}100%{border-color:rgba(255,255,255,.15);box-shadow:none;}}
+  .cap-box.flash{animation:capflash 1.7s ease;}
+  .cap-box{width:100%;height:150px;resize:vertical;background:#0a0b0f;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#d7dde6;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;padding:12px 14px;}
+  .cap-box:focus{outline:none;border-color:var(--acc);}
+  .row-btns{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap;}
+  .smallnote{font-size:12px;color:#7c8694;margin-top:6px;}
+  .dlfallback{font-size:12px;color:#7c8694;margin-top:8px;}
+  .dlfallback a{color:var(--acc);}
+  .tip{margin-top:auto;padding-top:20px;font-size:12.5px;color:#9aa3b2;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);}
+  @media(max-width:760px){ .lb-panel{flex-direction:column;} }
+</style>
+</head>
+<body>
+  <header>
+    <div class="studio-links">
+      <a href="/socials/email-signature.html" class="studio-link">Email signature</a>
+      <a href="/brand.html" class="studio-link">Brand assets &rarr;</a>
+    </div>
+    <h1>RecConnect · Social studio</h1>
+    <p>Click any card to preview it, download the image, and copy its caption. Then paste both into your LinkedIn post. The logo and event details are pulled live from the site.</p>
+    <div class="filter" id="chips"></div>
+  </header>
+
+  <div id="grid"></div>
+
+  <!-- in-page preview -->
+  <div id="lb" aria-hidden="true">
+    <div class="lb-bg" data-close></div>
+    <div class="lb-panel">
+      <button class="lb-close" data-close aria-label="Close">&times;</button>
+      <div class="lb-prev"><div class="frame" id="lbFrame"></div></div>
+      <div class="lb-side">
+        <p class="lb-kicker" id="lbKicker">RecConnect</p>
+        <h3 class="lb-title" id="lbTitle"></h3>
+
+        <div class="step" id="lbCapStep">
+          <p class="lab">The post</p>
+          <textarea class="cap-box" id="lbCap" readonly></textarea>
+          <div class="row-btns"><button class="btn" id="lbCopy">&#128203; Copy post</button><span class="copied" id="lbCopied"></span></div>
+        </div>
+
+        <div class="step">
+          <p class="lab">The image</p>
+          <button class="btn ghost" id="lbDownload">&#8595; Download image (PNG)</button>
+          <p class="dlfallback" id="lbFallback"></p>
+        </div>
+
+        <div class="divider">Or in one go</div>
+        <button class="btn share" id="lbShare">Share to LinkedIn</button>
+        <p class="smallnote" id="lbShareNote"></p>
+
+        <details class="guide">
+          <summary>New to this? Step-by-step guide</summary>
+          <ol>
+            <li><b>Copy post</b>: click the Copy post button above. Your words are now saved, ready to paste.</li>
+            <li><b>Download image</b>: click Download image. The picture saves to your Downloads folder.</li>
+            <li><b>Share to LinkedIn</b>: click the blue button. LinkedIn opens in a new tab.</li>
+            <li>In LinkedIn, click <b>Start a post</b> (the box near the top that says "Start a post").</li>
+            <li>Click the <b>photo icon</b>, then pick the image you just downloaded.</li>
+            <li>Click into the text box and <b>paste</b>: Ctrl + V on Windows, Cmd + V on Mac.</li>
+            <li>Give it a quick read, then click <b>Post</b>. That's it.</li>
+          </ol>
+        </details>
+
+        <p class="tip" id="lbTip"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BASE = '/socials/';
+    const THUMB = 320;
+
+    const GROUPS = [
+      { key:'headers',  label:'Event headers' },
+      { key:'covers',   label:'Eventbrite covers' },
+      { key:'eventsq',  label:'Event squares' },
+      { key:'attending', label:"I'm attending" },
+      { key:'join',     label:'Membership' },
+      { key:'event',    label:'CONNECTED' },
+      { key:'speakers', label:'Speakers' },
+      { key:'sponsors', label:'Sponsors' },
+    ];
+    const CARDS = [
+      { group:'headers', file:'event-header.html?id=connected',       title:'CONNECTED 2026', w:1080, h:540, cap:`The standard conference is dead. This is what replaced it.
+
+CONNECTED 2026 is one immersive day at BOX, an iconic London venue, where the lights go down and the work gets done differently.
+
+Keynotes that land. PechaKucha with no waffle. Real networking, a live band, a DJ and a bit of magic to close. Insight, innovation and connection in one room.
+
+You will not have been to a recruitment event like it. Unless you were with us in 2025.
+
+Thursday 12 November 2026, 9:30 to 5pm, BOX Piccadilly.
+
+Come and be in the room.
+recconnect.co/events
+
+#recruitment #CONNECTED2026` },
+      { group:'headers', file:'event-header.html?id=manchester',      title:'Manchester',     w:1080, h:540, cap:`The Manchester Recruitment Leader Experience is back.
+
+A room full of agency leaders. Real talk. Zero fluff.
+
+The honest conversations you can't have anywhere else, with people who actually get the business you're building.
+
+Wednesday 22 October, JMW Solicitors.
+
+Save your seat.
+recconnect.co/events
+
+#recruitment #recruitmentleaders` },
+      { group:'headers', file:'event-header.html?id=cambridge',       title:'Cambridge',      w:1080, h:540, cap:`Senior recruitment leaders. One table. The conversations that actually move your business.
+
+That's the Recruitment Executive Lunch in Cambridge. No theory for theory's sake. No slide decks. Just leaders thinking bigger over a long lunch, swapping what's really working.
+
+Thursday 24 September, Gonville Hotel.
+
+Pull up a chair.
+recconnect.co/events
+
+#recruitment #recruitmentleaders` },
+      { group:'headers', file:'event-header.html?id=digital-workers', title:'Digital Workers',w:1080, h:540, cap:`AI agents are coming for recruitment.
+
+The question is simple. Will they work for you, or replace you?
+
+The Rise of Digital Workers cuts through the noise on what AI agents really mean for your business, and how to stay ahead of them.
+
+Thursday 10 September, 80 Strand, London.
+
+Get ahead of it.
+recconnect.co/events
+
+#recruitment #AI` },
+
+      { group:'covers', file:'eventbrite-cover.html?id=connected',       title:'CONNECTED 2026', w:1080, h:540 },
+      { group:'covers', file:'eventbrite-cover.html?id=manchester',      title:'Manchester',     w:1080, h:540 },
+      { group:'covers', file:'eventbrite-cover.html?id=cambridge',       title:'Cambridge',      w:1080, h:540 },
+      { group:'covers', file:'eventbrite-cover.html?id=digital-workers', title:'Digital Workers',w:1080, h:540 },
+
+      { group:'eventsq', file:'event-square.html?id=connected',       title:'CONNECTED 2026', w:1080, h:1080, cap:`The standard conference is dead.
+
+CONNECTED 2026 is one immersive day in the heart of London. The lights go down. The industry comes together. And the work gets done differently.
+
+No grey hotel. No death by slides. Just the people, the energy and the ideas that actually move your business.
+
+Thursday 12 November, BOX Piccadilly.
+
+Come and be in the room.
+recconnect.co/events
+
+#recruitment #CONNECTED2026` },
+      { group:'eventsq', file:'event-square.html?id=manchester',      title:'Manchester',     w:1080, h:1080, cap:`The Manchester Recruitment Leader Experience is back.
+
+A room full of agency leaders. Real talk. Zero fluff.
+
+The honest conversations you can't have anywhere else, with people who actually get the business you're building.
+
+Wednesday 22 October, JMW Solicitors.
+
+Save your seat.
+recconnect.co/events
+
+#recruitment #recruitmentleaders` },
+      { group:'eventsq', file:'event-square.html?id=cambridge',       title:'Cambridge',      w:1080, h:1080, cap:`Senior recruitment leaders. One table. The conversations that actually move your business.
+
+That's the Recruitment Executive Lunch in Cambridge. No theory for theory's sake. No slide decks. Just leaders thinking bigger over a long lunch, swapping what's really working.
+
+Thursday 24 September, Gonville Hotel.
+
+Pull up a chair.
+recconnect.co/events
+
+#recruitment #recruitmentleaders` },
+      { group:'eventsq', file:'event-square.html?id=digital-workers', title:'Digital Workers',w:1080, h:1080, cap:`AI agents are coming for recruitment.
+
+The question is simple. Will they work for you, or replace you?
+
+The Rise of Digital Workers cuts through the noise on what AI agents really mean for your business, and how to stay ahead of them.
+
+Thursday 10 September, 80 Strand, London.
+
+Get ahead of it.
+recconnect.co/events
+
+#recruitment #AI` },
+
+      { group:'attending', file:'im-attending.html?id=connected',       title:'CONNECTED 2026', w:1080, h:1080, cap:`I'm going to CONNECTED 2026.
+
+One immersive day where the standard conference gets torn up, right in the heart of London. Thursday 12 November, BOX Piccadilly.
+
+If you are in recruitment, come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'attending', file:'im-attending.html?id=manchester',      title:'Manchester', w:1080, h:1080, cap:`I'm attending the Manchester Recruitment Leader Experience.
+
+A room of agency leaders, real talk and zero fluff. Wednesday 22 October, JMW Solicitors.
+
+Come and be in the room.
+recconnect.co/events
+
+#recruitment #recruitmentleaders` },
+      { group:'attending', file:'im-attending.html?id=cambridge',       title:'Cambridge', w:1080, h:1080, cap:`I'm attending the Recruitment Executive Lunch in Cambridge.
+
+Senior recruitment leaders, honest conversations and the ideas that actually move your business. Thursday 24 September, Gonville Hotel.
+
+Pull up a chair.
+recconnect.co/events
+
+#recruitment #recruitmentleaders` },
+      { group:'attending', file:'im-attending.html?id=digital-workers', title:'Digital Workers', w:1080, h:1080, cap:`I'm attending The Rise of Digital Workers.
+
+What AI agents really mean for recruitment, and how to stay ahead of it. Thursday 10 September, 80 Strand London.
+
+Come and be in the room.
+recconnect.co/events
+
+#recruitment #AI` },
+
+      { group:'join', file:'join-card.html?id=room',  title:'Statement', w:1080, h:1080, cap:`The room you want to be in.
+
+Not the one you hear about afterwards.
+
+RecConnect is where established recruitment leaders meet, learn and actually grow. Long lunches with people who get it. Events you clear your diary for. A community that has your back all year round.
+
+Find your people.
+recconnect.co/join
+
+#recruitment #recruitmentleaders` },
+      { group:'join', file:'join-card.html?id=grid',  title:'Grid', w:1080, h:1080, cap:`Lunches. Events. Your people.
+
+Leader lunches. Diary-clearing events. And a WhatsApp group that means you're never stuck on a problem alone.
+
+That's the whole thing, really.
+
+Join the Club.
+recconnect.co/join
+
+#recruitment #recruitmentcommunity` },
+      { group:'join', file:'join-card.html?id=quote', title:'Quote', w:1080, h:1080, cap:`"Revered." "SO good."
+
+That's not us talking. That's our members.
+
+Come and find out what they mean.
+recconnect.co/join
+
+#recruitment #recruitmentleaders` },
+      { group:'join', file:'join-card.html?id=gang',  title:'Join the gang', w:1080, h:1080, cap:`Recruitment is better with the right people around you.
+
+A gang of senior leaders who get it. War stories over long lunches. And you leave every event with three new contacts and a fresh idea.
+
+Find your people. Hold onto them.
+recconnect.co/join
+
+#recruitment` },
+      { group:'join', file:'join-card.html?id=fomo',  title:'Be in the room', w:1080, h:1080, cap:`Tired of hearing about the event you missed?
+
+Be in the room next time.
+
+Members get priority access, member pricing and a community that has their back all year round.
+
+Stop watching from the outside.
+recconnect.co/join
+
+#recruitment` },
+      { group:'join', file:'join-card.html?id=free',  title:'Start free', w:1080, h:1080, cap:`Not ready to commit? Start free.
+
+Join the open RecConnect community. The member directory, the industry insights, the event invites. Then upgrade when you're ready.
+
+No catch. Just start.
+recconnect.co/join
+
+#recruitment` },
+
+      { group:'event', file:'connected-card-1-announce.html',   title:'Announce',   w:1280, h:1280, cap:`The standard conference is dead. This is what replaced it.
+
+CONNECTED 2026 is one immersive day where the lights go down and the work gets done differently. We threw a grenade into the tired old event format and built something that changes how you think about industry days.
+
+Keynotes, PechaKucha, real networking, live music, a DJ and magic. All under one roof at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Get your tickets.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'event', file:'connected-card-2-statement.html',  title:'Statement',  w:1280, h:1280, cap:`Recruitment leaders, block out 12 November.
+
+CONNECTED 2026 brings the industry together for one unforgettable day at BOX, an iconic London venue. Insight, innovation, connection and entertainment, fused into a single immersive experience.
+
+No theatre seating. No being talked at for hours. Just the room you actually want to be in.
+
+Thursday 12 November 2026, 9:30 to 5pm, BOX Piccadilly.
+
+Be there.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'event', file:'connected-card-3-experience.html', title:'Experience', w:1280, h:1280, cap:`This isn't another day of slides in a grey hotel.
+
+CONNECTED 2026 is an experience, built for recruitment leaders who want to think bigger. The morning feeds your head. The afternoon lifts the roof.
+
+Keynotes and PechaKucha, then a live band, a DJ, a magician, games and the KOSI podcast recording live. Powerful stories, real connections, pure energy.
+
+Thursday 12 November 2026, 9:30 to 5pm, BOX Piccadilly.
+
+Come and see for yourself.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+
+      { group:'speakers', file:'speaker-adam-oldfield.html',  title:'Adam Oldfield',  w:1280, h:1280, cap:`Meet your CONNECTED 2026 lineup: Adam Oldfield, CEO of Fortitude Labs.
+
+Real lessons from building and leading a modern recruitment business, from someone actually doing it.
+
+He joins a stacked bill including Amy Bathie, Rohan Shah, Michelle Flynn and RecConnect founder Simon Lewis. One immersive day of ideas at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'speakers', file:'speaker-amy-bathie.html',     title:'Amy Bathie',     w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Amy Bathie, Head of Talent at Gattaca.
+
+How the best teams attract and keep the talent everyone else is chasing.
+
+Catch her in a morning built to make you think: a big opening keynote, then PechaKucha, fast and punchy with no waffle. All at BOX, an iconic London venue.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Grab your ticket.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'speakers', file:'speaker-barum-jeffries.html', title:'Barum Jeffries', w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Barum Jeffries, Chief Ideas Officer at reclearn.
+
+Why most training doesn't stick, and how neuroscience and design thinking fix that.
+
+This is the kind of fresh thinking you cannot get from another slide deck. One immersive day at BOX Piccadilly, built to reward curiosity.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'speakers', file:'speaker-ellie-hibberd.html',  title:'Ellie Hibberd',  w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Ellie Hibberd, Tech Specialist at Keybridge.
+
+The tech that actually moves the needle for recruitment agencies. No hype.
+
+Sharp insight by day, then a live band, a DJ and a bit of magic to close it out. That is CONNECTED, one immersive day at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'speakers', file:'speaker-harkaye.html',        title:'Jaye Haynes & Louise Wrench', w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Jaye Haynes and Louise Wrench, Co-founders of HarKaye Core Talent.
+
+Two leaders, one honest take on building a recruitment business that lasts.
+
+Powerful stories, told properly, from people who have been there. That is the heart of CONNECTED, one immersive day at BOX, an iconic London venue.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'speakers', file:'speaker-michelle-flynn.html', title:'Michelle Flynn', w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Michelle Flynn, Health and Performance Coach.
+
+How top performers protect their energy and stay sharp when the pressure's on. Because wellbeing isn't a nice-to-have. It's an edge.
+
+Fitting, for a day that runs on pure energy from the first handshake to the last track. One immersive day at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'speakers', file:'speaker-donna-kennedy.html', title:'Donna Kennedy',  w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Donna Kennedy, Fractional People and Culture Director.
+
+If you got hit by a bus tomorrow, what would your agency be worth? Seventeen years of building leadership teams that drive premium valuations, and de-risking deals for PE-backed firms.
+
+The kind of session that changes what you do on Monday. One immersive day at BOX Piccadilly, built for real connection.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+
+      { group:'speakers', file:'speaker-mike-ames.html',     title:'Mike Ames',      w:1280, h:1280, cap:`On the CONNECTED 2026 stage: Mike Ames, Recruitment Legend.
+
+Decades of hard-won wisdom on building, scaling and future-proofing a recruitment business, delivered straight and without the fluff.
+
+One immersive day at BOX Piccadilly, built for real connection and the kind of insight you cannot get from a slide deck.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+
+      { group:'sponsors', file:'sponsor-keybridge.html', title:'Keybridge IT (Headline)', w:1280, h:1280, cap:`Say hello to our Headline Sponsor, Keybridge IT.
+
+Smart IT and cyber support, built around recruitment businesses. They are backing the biggest room in recruitment, and for good reason.
+
+CONNECTED 2026 tears up the standard conference and rebuilds it as one immersive day at BOX, an iconic London venue. Keynotes that land, PechaKucha with no waffle, and a whole lot more.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-deel.html',      title:'Deel (Gold)',     w:1280, h:1280, cap:`Proud to have Deel on board as a Gold Sponsor of CONNECTED 2026.
+
+Hire and pay talent anywhere, without the headaches.
+
+They will be in a room full of the industry's sharpest leaders. That is the real draw of CONNECTED: the kind of day where the right conversation finds you, and the contacts you make keep paying off long after you leave.
+
+Thursday 12 November 2026, BOX Piccadilly.
+
+Come and make the connections that matter.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-3r.html',        title:'3R (Gold)',       w:1280, h:1280, cap:`Proud to have 3R on board as a Gold Sponsor of CONNECTED 2026.
+
+Back office and funding that lets recruitment agencies scale with confidence.
+
+You will not have been to a recruitment event like CONNECTED. Unless, of course, you were with us in 2025. One immersive day at BOX Piccadilly that changes how you think about industry days.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Do not miss it this time.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-ringover.html',  title:'Ringover (Gold)', w:1280, h:1280, cap:`Proud to have Ringover on board as a Gold Sponsor of CONNECTED 2026.
+
+The conversation platform built for busy recruitment teams.
+
+Speaking of conversations, the KOSI podcast is recording live on the day. Kate O'Neill and Saeed Bor, real recruitment chat with no corporate waffle, right in the thick of one immersive day at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-bullhorn.html',  title:'Bullhorn (Gold)', w:1280, h:1280, cap:`Proud to have Bullhorn on board as a Gold Sponsor of CONNECTED 2026.
+
+The CRM at the heart of thousands of recruitment businesses.
+
+The morning feeds your head. The afternoon lifts the roof, with a live band, a DJ, a magician and games running right through to 5pm. Serious insight and a proper party, under one roof at BOX Piccadilly.
+
+Thursday 12 November 2026.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-xemplo.html',    title:'Xemplo (Silver)', w:1280, h:1280, cap:`Proud to have Xemplo on board as a Silver Sponsor of CONNECTED 2026.
+
+Workforce management made simple, from onboarding to pay.
+
+"That's how events are done. Awesome." That was the verdict from the room last time. CONNECTED 2026 is one immersive day at BOX Piccadilly, built to raise the bar all over again.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and see what the fuss is about.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-wave.html',      title:'Wave (Silver)',   w:1280, h:1280, cap:`Proud to have Wave on board as a Silver Sponsor of CONNECTED 2026.
+
+Payroll and back office support that just works.
+
+CONNECTED is where lasting connections get made. Relationships that keep paying off long after the day is done, formed over one immersive day at BOX Piccadilly. Powerful stories, real people, no slide decks.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-oneup.html',     title:'OneUp Sales (Silver)', w:1280, h:1280, cap:`Proud to have OneUp Sales on board as a Silver Sponsor of CONNECTED 2026.
+
+Gamified performance and sales tracking that gets recruitment teams competing, and winning.
+
+They know a thing or two about energy, and CONNECTED runs on it. High tempo from the first handshake to the last track, across one immersive day at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and feel it for yourself.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-shazamme.html',  title:'Shazamme (Gold)', w:1280, h:1280, cap:`Proud to have Shazamme on board as a Gold Sponsor of CONNECTED 2026.
+
+Recruitment websites and technology that win attention.
+
+Attention is the whole game at CONNECTED. Think PechaKucha: fast, punchy ideas with no waffle, alongside keynotes that actually land. One immersive day at BOX, an iconic London venue.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+      { group:'sponsors', file:'sponsor-paiger.html',    title:'Paiger (Silver)', w:1280, h:1280, cap:`Proud to have Paiger on board as a Silver Sponsor of CONNECTED 2026.
+
+AI-powered marketing and business development that keeps recruiters visible and ahead of the deal.
+
+Visibility is the whole point of CONNECTED. Real conversations with people worth knowing, across one immersive day at BOX Piccadilly.
+
+Thursday 12 November 2026, 9:30 to 5pm.
+
+Come and be in the room.
+recconnect.co/connected-2026
+
+#recruitment #CONNECTED2026` },
+    ];
+
+    const q = (url, extra) => BASE + url + (url.includes('?') ? '&' : '?') + extra;
+
+    document.getElementById('chips').innerHTML =
+      `<button class="chip active" data-filter="all">All</button>` +
+      GROUPS.map(g => `<button class="chip" data-filter="${g.key}">${g.label}</button>`).join('');
+
+    document.getElementById('grid').innerHTML = GROUPS.map(g => {
+      const items = CARDS.map((c,i)=>({...c,i})).filter(c => c.group === g.key);
+      if(!items.length) return '';
+      const figs = items.map(c => {
+        const scale = THUMB / c.w;
+        const fw = Math.round(THUMB), fh = Math.round(c.h * scale);
+        return `
+        <figure data-i="${c.i}" style="width:${fw}px">
+          <div class="frame" style="width:${fw}px;height:${fh}px">
+            <iframe src="${q(c.file,'embed=1')}" loading="lazy" scrolling="no" tabindex="-1"
+              style="width:${c.w}px;height:${c.h}px;transform:scale(${scale})"></iframe>
+            <div class="hover"><span class="pill">Preview &amp; download</span></div>
+          </div>
+          <figcaption>
+            <span class="t">${c.title}</span>
+            <span class="tag">${c.cap ? 'Image + caption' : 'Image'}</span>
+          </figcaption>
+        </figure>`;
+      }).join('');
+      return `<section data-group="${g.key}"><h2>${g.label}</h2><div class="row">${figs}</div></section>`;
+    }).join('');
+
+    /* ---- lightbox ---- */
+    const lb = document.getElementById('lb');
+    const lbFrame = document.getElementById('lbFrame');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbKicker = document.getElementById('lbKicker');
+    const lbCap = document.getElementById('lbCap');
+    const lbCapStep = document.getElementById('lbCapStep');
+    const lbCopy = document.getElementById('lbCopy');
+    const lbDownload = document.getElementById('lbDownload');
+    const lbFallback = document.getElementById('lbFallback');
+    const lbTip = document.getElementById('lbTip');
+    const PREV = 460;
+    let cur = null;
+
+    function openLb(i){
+      const c = CARDS[i]; cur = c;
+      const scale = PREV / c.w, fw = Math.round(PREV), fh = Math.round(c.h*scale);
+      lbFrame.style.width = fw+'px'; lbFrame.style.height = fh+'px';
+      lbFrame.innerHTML = `<iframe src="${q(c.file,'embed=1')}" scrolling="no" tabindex="-1"
+        style="border:0;transform-origin:top left;width:${c.w}px;height:${c.h}px;transform:scale(${scale})"></iframe>`;
+      lbKicker.textContent = GROUPS.find(g=>g.key===c.group).label;
+      lbTitle.textContent = c.title;
+      lbShareNote.classList.remove('lb-callout');
+      lbShareNote.innerHTML = "Opens LinkedIn with the image downloaded and post copied. Heads up: LinkedIn won't let anyone auto-fill a post, so you still attach the image and <b>paste the post</b> yourself.";
+      document.getElementById('lbCopied').textContent = '';
+      if(c.cap){ lbCapStep.classList.remove('hidden'); lbCap.value = c.cap; lbCap.classList.remove('flash');
+        lbTip.textContent = 'No caption gets posted automatically anywhere. Always paste it into the post yourself.'; }
+      else { lbCapStep.classList.add('hidden');
+        lbShareNote.innerHTML = "Opens LinkedIn with the image downloaded. This card has no caption, so add your own words in the post.";
+        lbTip.textContent = 'This is a visual card with no caption. Download it and add your own words on LinkedIn.'; }
+      lbFallback.innerHTML = '';
+      lb.classList.add('show'); lb.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    function closeLb(){ lb.classList.remove('show'); lb.setAttribute('aria-hidden','true');
+      lbFrame.innerHTML=''; document.body.style.overflow=''; cur=null; }
+
+    document.querySelectorAll('figure[data-i]').forEach(f =>
+      f.addEventListener('click', ()=>openLb(+f.dataset.i)));
+    lb.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeLb));
+    document.addEventListener('keydown', e => { if(e.key==='Escape' && lb.classList.contains('show')) closeLb(); });
+
+    // Render the card inside the preview iframe with a dl flag so the export +
+    // download happen in-page (no stranded tab).
+    function triggerDownload(c){
+      const ifr = lbFrame.querySelector('iframe');
+      if(ifr) ifr.src = q(c.file, 'embed=1&dl=2&t='+Date.now());
+      lbFallback.innerHTML = `Nothing downloaded? <a href="${q(c.file,'dl=2')}" target="_blank" rel="noopener">open the card in a new tab</a> and use its button.`;
+    }
+
+    lbDownload.addEventListener('click', () => {
+      if(!cur) return;
+      triggerDownload(cur);
+      lbDownload.textContent = 'Preparing…';
+      setTimeout(()=>{ lbDownload.innerHTML='&#8595; Download PNG'; }, 1800);
+    });
+
+    const lbCopied = document.getElementById('lbCopied');
+    function flashCaption(){
+      if(!cur || !cur.cap) return;
+      lbCap.classList.remove('flash'); void lbCap.offsetWidth; lbCap.classList.add('flash');
+      try { lbCap.focus(); lbCap.select(); } catch(e){}
+    }
+    async function copyCaption(){
+      if(!cur || !cur.cap) return false;
+      try { await navigator.clipboard.writeText(cur.cap); return true; }
+      catch(err){ try{ lbCap.select(); document.execCommand('copy'); return true; }catch(e){ return false; } }
+    }
+    lbCopy.addEventListener('click', async () => {
+      const ok = await copyCaption();
+      flashCaption();
+      lbCopied.textContent = ok ? 'Copied. Now paste into LinkedIn' : '';
+      lbCopy.textContent = ok ? 'Copied!' : 'Select all + Ctrl/Cmd C';
+      setTimeout(()=>{ lbCopy.innerHTML='&#128203; Copy post'; }, 1800);
+    });
+
+    // Mobile: try the native share sheet with the actual image file attached.
+    const LINKEDIN_COMPOSER = 'https://www.linkedin.com/feed/?shareActive=true';
+    async function tryNativeShare(c){
+      try{
+        const ifr = lbFrame.querySelector('iframe');
+        const node = ifr && ifr.contentDocument && ifr.contentDocument.getElementById('card');
+        if(!node || !window.captureCardBlob || !navigator.canShare) return false;
+        const blob = await window.captureCardBlob(node, 2);
+        const file = new File([blob], (c.title||'recconnect').replace(/[^\w]+/g,'-')+'.png', { type:'image/png' });
+        if(navigator.canShare({ files:[file] })){
+          await navigator.share({ files:[file], text: c.cap || '' });
+          return true;
+        }
+      }catch(err){ /* fall back below */ }
+      return false;
+    }
+
+    // Desktop: open the LinkedIn composer (sync, keeps the click gesture), then
+    // copy the caption and download the image so both are ready to drop in.
+    function shareDesktop(c){
+      window.open(LINKEDIN_COMPOSER, '_blank', 'noopener');
+      triggerDownload(c);
+      lbShareNote.classList.add('lb-callout');
+      if(c.cap){
+        copyCaption();
+        flashCaption();
+        lbCopied.textContent = 'Copied. Now paste into LinkedIn';
+        lbShareNote.innerHTML = '&#10003; <b>Image downloading, post copied.</b><br>Now in LinkedIn: click the <b>photo icon</b> to attach the image, then <b>paste the post (Ctrl/Cmd&nbsp;V)</b> into the box.';
+      } else {
+        lbShareNote.innerHTML = '&#10003; <b>Image downloading.</b><br>In LinkedIn, click the <b>photo icon</b> and attach it from your downloads.';
+      }
+    }
+
+    lbShare.addEventListener('click', async () => {
+      if(!cur) return;
+      const c = cur;
+      const isMobile = navigator.canShare && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+      if(isMobile){ const ok = await tryNativeShare(c); if(ok) return; }
+      shareDesktop(c);
+    });
+
+    /* ---- filters ---- */
+    const chips = document.querySelectorAll('.chip');
+    chips.forEach(c => c.addEventListener('click', () => {
+      chips.forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      const f = c.dataset.filter;
+      document.querySelectorAll('section[data-group]').forEach(s => {
+        s.classList.toggle('hidden', f !== 'all' && s.dataset.group !== f);
+      });
+    }));
+  </script>
+
+  <script type="module">
+    // Used only for mobile native share: capture a card's DOM (from the same-origin
+    // preview iframe) into a PNG blob so it can be attached via navigator.share.
+    import { snapdom } from 'https://cdn.jsdelivr.net/npm/@zumer/snapdom/dist/snapdom.mjs';
+    window.captureCardBlob = async (node, scale = 2) => {
+      const r = await snapdom(node, { scale, embedFonts: true });
+      return await r.toBlob({ format: 'png' });
+    };
+  </script>
+</body>
+</html>
