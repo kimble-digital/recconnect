@@ -1,0 +1,67 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// Early access register for 2027 events.
+// Form posts to /api/submit with formType "early-access" (Airtable row
+// typed "2027 early access signup" + team notification + confirmation).
+// ───────────────────────────────────────────────────────────────────
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import EventAlertSignup from '@/components/EventAlertSignup.astro';
+
+const perks = [
+  { title: 'Hear it first', body: 'Dates, venues and line-ups land in your inbox before they go public.' },
+  { title: 'First chance at tickets', body: 'Early access to tickets for next year\'s events, before general release.' },
+  { title: 'No noise', body: 'We only email when there is something worth knowing. Unsubscribe any time.' },
+];
+---
+
+<BaseLayout
+  title="Early access to 2027 events"
+  description="CONNECTED 2026 is a wrap. Register for early access to RecConnect events in 2027 and be first to hear about dates, line-ups and tickets."
+>
+  <PageHero
+    kicker="Early access"
+    title="Be first in line for"
+    accent="2027."
+    subtitle="CONNECTED 2026 is a wrap, and it was fun. We are already planning next year. Register now and you will hear about new events first, with first chance at tickets."
+  />
+
+  <section class="relative overflow-hidden bg-brand-navy py-16 md:py-24 border-y border-white/10">
+    <div class="absolute -top-16 -right-20 w-80 h-[30rem] bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+    <div class="container-wide relative z-10">
+      <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start max-w-5xl mx-auto">
+
+        <div>
+          <p class="kicker text-primary text-[0.8rem] mb-3">What you get</p>
+          <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-8">Register once. Hear first.</h2>
+          <ul class="space-y-6">
+            {perks.map((p) => (
+              <li class="flex items-start gap-3.5">
+                <span class="mt-0.5 w-7 h-7 flex-shrink-0 rounded-lg bg-primary/15 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                </span>
+                <div>
+                  <p class="font-semibold text-white text-sm">{p.title}</p>
+                  <p class="text-slate-400 text-sm leading-relaxed">{p.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="lg:pl-6">
+          <p class="kicker text-primary text-[0.8rem] mb-3">Register</p>
+          <h2 class="font-display uppercase text-white text-2xl md:text-3xl leading-[0.95] mb-5">Get on the early access list.</h2>
+          <EventAlertSignup
+            formType="early-access"
+            buttonLabel="Register for early access"
+            successText="You're on the early access list. We'll email you first when next year's events are announced."
+            successTextNamed="You're on the early access list, {first}. We'll email you first when next year's events are announced."
+          />
+          <p class="text-slate-500 text-xs mt-4 leading-relaxed">We only use your details to tell you about RecConnect events. See our <a href="/privacy" class="text-primary hover:text-white transition-colors">privacy policy</a>.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</BaseLayout>

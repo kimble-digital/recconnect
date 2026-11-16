@@ -1,5 +1,5 @@
 ---
-import { heroShots, EVENTBRITE_URL } from '@/data/connected';
+import { heroShots } from '@/data/connected';
 import EventSponsor from '@/components/home/EventSponsor.astro';
 ---
 
@@ -44,35 +44,21 @@ import EventSponsor from '@/components/home/EventSponsor.astro';
           </h1>
 
           <p class="c-fade-up max-w-xl text-lg md:text-xl text-white/70 font-light leading-relaxed mt-7 mb-7">
-            The iconic immersive experience for recruitment professionals. One day in the heart of London where the lights go down and the work gets done differently.
+            That's a wrap. CONNECTED 2026 is over, and it was fun. Thank you to everyone who joined us at BOX Piccadilly. Photos and highlights from the day are coming soon.
           </p>
 
           <p class="c-fade-up c-label-xs mb-10" style="color:rgba(255,255,255,0.62)">
-            Thu 12 Nov 2026 &nbsp;·&nbsp; 09:30-17:00 &nbsp;·&nbsp; BOX Piccadilly
+            Thu 12 Nov 2026 &nbsp;·&nbsp; BOX Piccadilly &nbsp;·&nbsp; Thanks for coming
           </p>
 
           <div class="c-fade-up flex flex-wrap items-center gap-7">
-            <a href={EVENTBRITE_URL} data-eb-checkout target="_blank" rel="noopener noreferrer" class="c-btn-orange group">
-              Get your tickets
-              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
-            <a href="#agenda" class="c-hero-link">See the day unfold</a>
+            <a href="#agenda" class="c-hero-link">See how the day unfolded</a>
           </div>
 
           <div class="c-fade-up" style="margin-top:2.25rem">
             <EventSponsor variant="inline" />
           </div>
 
-        </div>
-
-        <div class="c-hero-count c-fade-up" aria-hidden="true">
-          <p class="c-count-lead">Doors open in</p>
-          <div class="c-count-grid">
-            <div class="c-count-cell"><span class="c-count-n" data-d>--</span><span class="c-count-l">Days</span></div>
-            <div class="c-count-cell"><span class="c-count-n" data-h>--</span><span class="c-count-l">Hrs</span></div>
-            <div class="c-count-cell"><span class="c-count-n" data-m>--</span><span class="c-count-l">Mins</span></div>
-            <div class="c-count-cell"><span class="c-count-n" data-s>--</span><span class="c-count-l">Secs</span></div>
-          </div>
         </div>
 
       </div>
@@ -110,29 +96,5 @@ import EventSponsor from '@/components/home/EventSponsor.astro';
     showSlide(0);
     startHero();
     dots.forEach((d, i) => d.addEventListener('click', () => { showSlide(i); restartHero(); }));
-  }
-
-  // ─── Countdown to doors (Thu 12 Nov 2026, 09:30 London/GMT) ───
-  const cdTarget = new Date('2026-11-12T09:30:00Z').getTime();
-  const cd = document.querySelector('.c-hero-count');
-  if (cd) {
-    const dEl = cd.querySelector('[data-d]') as HTMLElement;
-    const hEl = cd.querySelector('[data-h]') as HTMLElement;
-    const mEl = cd.querySelector('[data-m]') as HTMLElement;
-    const sEl = cd.querySelector('[data-s]') as HTMLElement;
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const tickCd = () => {
-      let diff = Math.max(0, cdTarget - Date.now());
-      const days = Math.floor(diff / 86400000); diff -= days * 86400000;
-      const hrs = Math.floor(diff / 3600000); diff -= hrs * 3600000;
-      const mins = Math.floor(diff / 60000); diff -= mins * 60000;
-      const secs = Math.floor(diff / 1000);
-      dEl.textContent = String(days);
-      hEl.textContent = pad(hrs);
-      mEl.textContent = pad(mins);
-      sEl.textContent = pad(secs);
-    };
-    tickCd();
-    setInterval(tickCd, 1000);
   }
 </script>

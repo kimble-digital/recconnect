@@ -8,8 +8,8 @@ interface Props {
   successText?: string;
   /** Success message when a first name is given. "{first}" is replaced with it. */
   successTextNamed?: string;
-  /** "event-alert" (default) or "subscribe" (free Subscriber tier, weekly briefing). */
-  formType?: 'event-alert' | 'subscribe';
+  /** "event-alert" (default), "subscribe" (free Subscriber tier, weekly briefing) or "early-access" (2027 events list). */
+  formType?: 'event-alert' | 'subscribe' | 'early-access';
   class?: string;
 }
 const {

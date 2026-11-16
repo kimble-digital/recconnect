@@ -1,0 +1,25 @@
+---
+// ───────────────────────────────────────────────────────────────────
+// Home page band shown after CONNECTED 2026. Points visitors to the
+// early access register for next year's events. Place after <HeroSection />.
+// ───────────────────────────────────────────────────────────────────
+const EARLY_ACCESS_HREF = '/early-access';
+const RECAP_HREF = '/connected-2026';
+---
+
+<section class="relative overflow-hidden bg-brand-navy py-16 md:py-20 border-y border-white/10" aria-label="Early access to 2027 events">
+  <div class="absolute -top-16 -right-20 w-72 h-96 bg-primary/[0.06] rotate-12 pointer-events-none" style="clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);"></div>
+  <div class="container-wide relative z-10">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="kicker text-primary text-[0.8rem] mb-3">CONNECTED 2026 is a wrap</p>
+      <h2 class="font-display uppercase text-white text-3xl md:text-5xl leading-[0.95] mb-4">Get early access to next year's events.</h2>
+      <p class="text-slate-400 leading-relaxed mb-8 max-w-2xl mx-auto">
+        Thank you to everyone who joined us at BOX Piccadilly. We are already planning 2027. Register now and you will hear about new events first, with first chance at tickets.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href={EARLY_ACCESS_HREF} class="btn-primary text-base px-8 py-3.5">Register for early access</a>
+        <a href={RECAP_HREF} class="btn-outline-light text-base px-8 py-3.5">See CONNECTED 2026</a>
+      </div>
+    </div>
+  </div>
+</section>
